@@ -1,21 +1,24 @@
 <img src="https://raw.githubusercontent.com/MicaelliMedeiros/micaellimedeiros/master/image/computer-illustration.png" alt="ilustração de um computador" min-width="400px" max-width="400px" width="400px" align="right">
 
 <p align="left"> 
-  Faça uma breve apresentação sua com o seu nome e não esqueça a <strong>sua stack</strong>.<br>
-  Diga o que você está fazendo no momento, se trabalha ou estuda.
+  Olá! Meu nome é Lucas Mercer Leniar 👋<br>
+  Sou entusiasta de tecnologia, desenvolvedor e estudante sempre em busca de novos desafios. Atualmente, estou focado em projetos que envolvem programação, eletrônica e educação com base na BNCC.<br>
+  No momento, estou estudando e desenvolvendo projetos próprios enquanto aprimoro minhas habilidades técnicas.
 </p>
 
 <p align="left">
-  🦄 Linguagens: **Coloque as linguagens que você desenvolve.**
+  🦄 Linguagens: <strong>Python, C/C++ (para microcontroladores), JavaScript, HTML/CSS</strong>
 </p>
 
 <p align="left">
-  💼 Ferramentas: **Coloque as suas ferramentas de trabalho.**
+  💼 Ferramentas: <strong>Arduino IDE, VS Code, PlatformIO, Fritzing, Git/GitHub</strong>
 </p>
 
 <p align="left">
-  💌 Aqui vai uma mensagem para entrar em contato com você: ⤵️
+  Aqui vai uma mensagem para entrar em contato com você: ⤵️<br>
+  Me encontra no Instagram: <strong>@lucasmercerl</strong>. Vamos compartilhar ideias e criar juntos! 🚀
 </p>
+
 
 <p align="left">
   <a href="#" title="Gmail">
