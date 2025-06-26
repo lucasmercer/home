@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ARQUIVO_SCRIPT="$(readlink -f "$0")"
+ARQUIVO_SCRIPT="./wallpaper.sh"
 
 echo "Definindo permissão de execução no próprio script..."
 sudo chmod +x "$ARQUIVO_SCRIPT"
