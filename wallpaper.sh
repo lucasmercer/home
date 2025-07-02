@@ -1,75 +1,71 @@
 #!/bin/bash
 
-ARQUIVO_SCRIPT="$(readlink -f "$0")"
-
-echo "Definindo permissão de execução no próprio script..."
-sudo chmod +x "$ARQUIVO_SCRIPT"
-
-# Imagem temporária baixada
-IMAGEM_TEMP="/tmp/wallpaper.jpg"
-
-# URL da imagem
-URL="https://lucasleniar.com.br/wallpaper.jpg"
-
-# Pastas destino
-PASTA1="/usr/share/backgrounds/linuxmint"
-PASTA2="/usr/share/backgrounds/linuxmint/backdrops"
-PASTA_PADRAO="/usr/share/backgrounds/linuxmint"
-ARQUIVO_DEFAULT="$PASTA_PADRAO/default_background.jpg"
-
-echo "Baixando o wallpaper..."
-wget -O "$IMAGEM_TEMP" "$URL"
-
-if [ $? -ne 0 ]; then
-    echo "Erro ao baixar a imagem."
-    exit 1
+# Verifica se o script está sendo executado com permissões de root
+if [ "$(id -u)" -ne 0 ]; then
+  echo "Este script precisa ser executado com permissões de root. Por favor, use 'sudo'."
+  exit 1
 fi
 
-# Mudar o wallpaper temporariamente para evitar conflitos
-echo "Mudando o wallpaper temporariamente para evitar conflito..."
-xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/image-path -s "/usr/share/backgrounds/linuxmint/another_wallpaper.jpg"
+# Define a URL da nova imagem de fundo
+WALLPAPER_URL="http://www.lucasleniar.com.br/wallpaper.jpg"
 
-# Substituindo arquivos em $PASTA1 ...
-echo "Substituindo arquivos em $PASTA1 ..."
-for ARQ in "$PASTA1"/*; do
-    if [ -f "$ARQ" ]; then
-        sudo cp "$IMAGEM_TEMP" "$ARQ"
-        echo "Substituído: $ARQ"
-    fi
-done
+# Define os caminhos completos para os arquivos a serem substituídos
+DEST_PATH_LINUXMINT_DEFAULT="/usr/share/backgrounds/linuxmint/default_background.jpg"
+DEST_PATH_LINUXMINT_LMMINT="/usr/share/backgrounds/linuxmint/linuxmint.jpg"
 
-# Substituindo arquivos em $PASTA2 ...
-echo "Substituindo arquivos em $PASTA2 ..."
-for ARQ in "$PASTA2"/*; do
-    if [ -f "$ARQ" ]; then
-        sudo cp "$IMAGEM_TEMP" "$ARQ"
-        echo "Substituído: $ARQ"
-    fi
-done
+DEST_PATH_XFCE_BACKDROPS_DEFAULT="/usr/share/xfce4/backdrops/default_background.jpg"
+DEST_PATH_XFCE_BACKDROPS_LMMINT="/usr/share/xfce4/backdrops/linuxmint.jpg"
 
-# Substituindo o arquivo default_background.jpg
-echo "Substituindo o arquivo default_background.jpg..."
-if [ -f "$ARQUIVO_DEFAULT" ]; then
-    sudo cp "$IMAGEM_TEMP" "$ARQUIVO_DEFAULT"
-    echo "Arquivo default_background.jpg substituído com sucesso!"
+echo "Baixando a nova imagem de plano de fundo..."
+# Baixa a imagem e a salva temporariamente
+if ! wget -O /tmp/wallpaper.jpg "$WALLPAPER_URL"; then
+  echo "Erro ao baixar a imagem. Verifique a URL ou sua conexão com a internet."
+  exit 1
+fi
+
+# Função para Processar a Substituição de Imagens
+process_wallpaper_file() {
+  local target_path="$1"
+  local source_path="$2" # Caminho de onde a nova imagem será copiada
+
+  echo "Processando: $target_path"
+
+  if [ -f "$target_path" ]; then
+    echo "Fazendo backup de '$target_path'..."
+    mv "$target_path" "${target_path}.bak"
+  else
+    echo "O arquivo original '$target_path' não foi encontrado, nenhum backup será criado."
+  fi
+
+  echo "Copiando nova imagem para '$target_path'..."
+  cp "$source_path" "$target_path"
+
+  echo "Definindo permissões para '$target_path'..."
+  chmod 644 "$target_path"
+  chown root:root "$target_path"
+}
+
+# Executando a Substituição
+echo "--- Iniciando o processo de substituição de planos de fundo ---"
+
+# Move a imagem baixada para o primeiro local, para servir de fonte para os outros
+echo "Movendo a imagem baixada para '$DEST_PATH_LINUXMINT_DEFAULT'..."
+if [ -f "$DEST_PATH_LINUXMINT_DEFAULT" ]; then
+  mv "$DEST_PATH_LINUXMINT_DEFAULT" "${DEST_PATH_LINUXMINT_DEFAULT}.bak"
 else
-    echo "Erro: arquivo default_background.jpg não encontrado."
+  echo "O arquivo original '$DEST_PATH_LINUXMINT_DEFAULT' não foi encontrado, nenhum backup será criado."
 fi
+mv /tmp/wallpaper.jpg "$DEST_PATH_LINUXMINT_DEFAULT"
+chmod 644 "$DEST_PATH_LINUXMINT_DEFAULT"
+chown root:root "$DEST_PATH_LINUXMINT_DEFAULT"
 
-# Aplicando o novo wallpaper no XFCE...
+# Agora, use a imagem recém-movida como fonte para todas as outras cópias
+SOURCE_FOR_COPIES="$DEST_PATH_LINUXMINT_DEFAULT"
 
-# Aplica na área de trabalho principal
-echo "Aplicando o novo wallpaper na área de trabalho..."
-xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/image-path --create -t string -s "$IMAGEM_TEMP"
+process_wallpaper_file "$DEST_PATH_LINUXMINT_LMMINT" "$SOURCE_FOR_COPIES"
+process_wallpaper_file "$DEST_PATH_XFCE_BACKDROPS_DEFAULT" "$SOURCE_FOR_COPIES"
+process_wallpaper_file "$DEST_PATH_XFCE_BACKDROPS_LMMINT" "$SOURCE_FOR_COPIES"
 
-# Aplica na tela de bloqueio (se possível)
-echo "Aplicando o novo wallpaper na tela de bloqueio..."
-xfconf-query -c xfce4-desktop -p /screensaver/image-path --create -t string -s "$IMAGEM_TEMP" 2>/dev/null || echo "Aviso: não foi possível configurar o wallpaper do bloqueio."
-
-# Forçar a atualização da área de trabalho
-echo "Forçando atualização da área de trabalho..."
-# Executar xfdesktop no ambiente do usuário (evita erro de SESSION_MANAGER)
-DISPLAY=:0 XAUTHORITY=$HOME/.Xauthority xfdesktop --reload
-
-echo "Wallpaper atualizado e aplicado com sucesso!"
-
+echo "--- Concluído ---"
+echo "Todos os planos de fundo especificados foram alterados com sucesso."
+echo "Para que as alterações tenham efeito, pode ser necessário reiniciar as sessões dos usuários ou o sistema."
