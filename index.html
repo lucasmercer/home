@@ -33,47 +33,50 @@
 
     <meta name="theme-color" content="#ffffff" />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css?v=1.2.4" rel="stylesheet"/>
-        <script>
-        function setWeeklyCookie(name, value) {
-            const d = new Date();
-            d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000)); 
-            const expires = "expires=" + d.toUTCString();
-            document.cookie = name + "=" + value + ";" + expires + ";path=/";
-        }
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for(let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+<script>
+    function setWeeklyCookie(name, value) {
+        const d = new Date();
+        d.setTime(d.getTime() + (7 * 24 * 60 * 60 * 1000));
+        const expires = "expires=" + d.toUTCString();
+        document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/;Secure;SameSite=Lax";
+    }
+    function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(nameEQ) === 0) {
+                return decodeURIComponent(c.substring(nameEQ.length));
             }
-            return null;
         }
-        function deleteCookie(name) {
-            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;';
-        }
-        window.onload = function() {
-            const lastCleanedCookieName = "lastCookieCleaned"; 
-            const myDataCookieName = "meuCookieDeDados"; 
-            const lastCleanedDateString = getCookie(lastCleanedCookieName);
-            const now = new Date();
-            const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
-            if (lastCleanedDateString) {
-                const lastCleanedDate = new Date(lastCleanedDateString);
-                if ((now.getTime() - lastCleanedDate.getTime()) > oneWeekInMs) {
-                    console.log("Mais de uma semana se passou desde a última limpeza. Apagando e redefinindo cookies.");
-                    deleteCookie(myDataCookieName); 
-                    setWeeklyCookie(lastCleanedCookieName, now.toUTCString()); 
-                } else {
-                    console.log("Menos de uma semana se passou. Cookies ainda válidos.");
-                }
-            } else {
-                console.log("Cookie '" + lastCleanedCookieName + "' não encontrado. Definindo pela primeira vez.");
+        return null;
+    }
+    function deleteCookie(name) {
+        document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
+    }
+    window.onload = function () {
+        const lastCleanedCookieName = "lastCookieCleaned";
+        const myDataCookieName = "meuCookieDeDados";
+
+        const lastCleanedDateString = getCookie(lastCleanedCookieName);
+        const now = new Date();
+        const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+
+        if (lastCleanedDateString) {
+            const lastCleanedDate = new Date(lastCleanedDateString);
+            if ((now.getTime() - lastCleanedDate.getTime()) > oneWeekInMs) {
+                console.log("🧹 Mais de uma semana se passou. Limpando cookies...");
+                deleteCookie(myDataCookieName);
                 setWeeklyCookie(lastCleanedCookieName, now.toUTCString());
+            } else {
+                console.log("⏳ Ainda dentro da semana. Cookies mantidos.");
             }
-        };
-    </script>
+        } else {
+            console.log("🔧 Primeiro acesso ou controle ainda não definido. Criando cookie de controle.");
+            setWeeklyCookie(lastCleanedCookieName, now.toUTCString());
+        }
+    };
+</script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
