@@ -1,0 +1,6 @@
+# Permite que todos os robôs indexem o site
+User-agent: *
+Allow: /
+
+# Sitemap principal
+Sitemap: https://lucasleniar.com.br/sitemap.xml
