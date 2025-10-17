@@ -1,0 +1,26 @@
+/* LUCs Icons — personalizado pelo Professor Lucas Leniar */
+
+.lucs {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1.3em;
+  height: 1.3em;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Ícone personalizado */
+.lucs-escola {
+  background-image: url('utfpr-icone.png');
+}
+
+/* Suporte a tamanhos */
+.lucs-sm { width: 1em; height: 1em; }
+.lucs-md { width: 1.5em; height: 1.5em; }
+.lucs-lg { width: 2em; height: 2em; }
+
+/* Ajuste de cor via filtro (opcional) */
+.lucs[color="white"] {
+  filter: brightness(0) invert(1);
+}
