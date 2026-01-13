@@ -1,104 +1,121 @@
 #!/bin/bash
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+# ==========================================================================
+# Script de Atualização de Papel de Parede - Versão Independente (Cronológica)
+# Link: https://lucasleniar.com.br/wallpaper.jpg
+# ==========================================================================
 
-# Script adaptado para usar servidor pessoal e ignorar travas Educatron
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 export NC="\033[0m"
 export VERDE="\033[0;42m"
 export VERMELHO="\033[0;41m"
 
-arqLogDisto="/var/log/troca-wallpaper-custom.log"
-echo "Iniciando execucao em $(date)" >> "$arqLogDisto"
-
-# 1. Verificação de ROOT
+# 1. Verificação de privilégios de ROOT
 if [ "$EUID" -ne 0 ]; then 
-  echo -e "${VERMELHO}Erro: Execute como root (sudo)${NC}"
+  echo -e "${VERMELHO}Erro: Este script precisa ser executado como root (sudo).${NC}"
   exit 1
 fi
 
-# 2. Limpeza de processos antigos
+echo "Iniciando configuração de Papel de Parede Personalizado..."
+
+# 2. Limpeza de processos e serviços antigos da escola (se existirem)
 killall trocando-fundo-tela.sh 2>/dev/null
 systemctl stop trocando-fundo-de-tela.service 2>/dev/null
 
-# 3. Criação de diretórios necessários
+# 3. Criação da estrutura de pastas
 mkdir -p /root/bin
 mkdir -p /root/imgs-para-fundo-tela/papeldeparede
-mkdir -p /root/arquivos_originais
 
-# 4. Criando o script de sincronização e troca (O CORAÇÃO DO SISTEMA)
-cat > "/root/bin/trocando-fundo-tela.sh" << 'EOF_TROCAR_FUNDO_TELA'
+# 4. CRIAÇÃO DO SCRIPT DE LOOP (O que fica rodando em segundo plano)
+cat > "/root/bin/trocando-fundo-tela.sh" << 'EOF_TROCAR'
 #!/bin/bash
-# Configurações do Servidor
+
+# Configurações do seu servidor pessoal
 URL_IMG="https://lucasleniar.com.br/wallpaper.jpg"
 URL_VER="https://lucasleniar.com.br/version.txt"
+
 DIR_BASE="/root/imgs-para-fundo-tela"
 ARQ_LOCAL="$DIR_BASE/wallpaper.jpg"
 VER_LOCAL="$DIR_BASE/versao_atual.txt"
-arqLogDisto="/var/log/troca-wallpaper-status.log"
+LOG_ARQ="/var/log/wallpaper_custom.log"
 
-verificar_atualizacao() {
+verificar_cronologia() {
+    # Garante que a pasta existe
     mkdir -p "$DIR_BASE/papeldeparede"
-    cd "$DIR_BASE"
     
-    # Tenta baixar a versão remota
+    # 1. Tenta baixar o arquivo de versão do servidor
     wget -qO /tmp/v_remota.txt "$URL_VER"
     
-    V_REMOTA=$(cat /tmp/v_remota.txt 2>/dev/null)
-    V_ATUAL=$(cat "$VER_LOCAL" 2>/dev/null)
+    # 2. Limpa os dados (remove espaços ou caracteres estranhos)
+    V_REMOTA=$(cat /tmp/v_remota.txt 2>/dev/null | tr -d -c '0-9')
+    V_ATUAL=$(cat "$VER_LOCAL" 2>/dev/null | tr -d -c '0-9')
 
-    if [ "$V_REMOTA" != "$V_ATUAL" ] || [ ! -f "$ARQ_LOCAL" ]; then
-        echo "$(date): Nova versao ($V_REMOTA) detectada. Baixando..." >> "$arqLogDisto"
+    # 3. Se não houver versão local, define como 0
+    [ -z "$V_ATUAL" ] && V_ATUAL=0
+    [ -z "$V_REMOTA" ] && V_REMOTA=0
+
+    # 4. COMPARAÇÃO CRONOLÓGICA (Só baixa se a remota for MAIOR que a local)
+    if [ "$V_REMOTA" -gt "$V_ATUAL" ] || [ ! -f "$ARQ_LOCAL" ]; then
+        echo "$(date): Nova versao encontrada ($V_REMOTA). Versao antiga era ($V_ATUAL). Baixando..." >> "$LOG_ARQ"
+        
         if wget -qO "$ARQ_LOCAL" "$URL_IMG"; then
-            cp /tmp/v_remota.txt "$VER_LOCAL"
+            echo "$V_REMOTA" > "$VER_LOCAL"
             cp "$ARQ_LOCAL" "$DIR_BASE/papeldeparede/wallpaper.jpg"
+            return 0 # Indica que houve atualização
         fi
+    else
+        echo "$(date): Versao local ($V_ATUAL) esta atualizada em relacao ao servidor ($V_REMOTA)." >> "$LOG_ARQ"
     fi
+    return 1
 }
 
-# Loop de aplicação do Wallpaper
 while true; do
-    verificar_atualizacao
+    # Verifica atualização
+    verificar_cronologia
     
-    IMAGEM_PARA_USAR="$DIR_BASE/papeldeparede/wallpaper.jpg"
+    IMG_FINAL="$DIR_BASE/papeldeparede/wallpaper.jpg"
     
-    if [ -f "$IMAGEM_PARA_USAR" ]; then
-        # Detecta usuários logados e aplica o wallpaper para cada um
+    if [ -f "$IMG_FINAL" ]; then
+        # Aplica para todos os usuários logados na interface gráfica
         for usuario in $(users | tr ' ' '\n' | sort -u); do
-            # Se for Cinnamon
-            sudo -u "$usuario" DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $usuario)/bus \
-            gsettings set org.cinnamon.desktop.background picture-uri "file://$IMAGEM_PARA_USAR" 2>/dev/null
+            USER_ID=$(id -u "$usuario")
+            # Comandos para Cinnamon e XFCE
+            sudo -u "$usuario" DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$USER_ID/bus \
+            gsettings set org.cinnamon.desktop.background picture-uri "file://$IMG_FINAL" 2>/dev/null
             
-            # Se for XFCE
-            sudo -u "$usuario" DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $usuario)/bus \
-            xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$IMAGEM_PARA_USAR" 2>/dev/null
+            sudo -u "$usuario" DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$USER_ID/bus \
+            xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s "$IMG_FINAL" 2>/dev/null
         done
     fi
     
-    sleep 300 # Verifica atualizações a cada 5 minutos
+    sleep 600 # Verifica novamente em 10 minutos
 done
-EOF_TROCAR_FUNDO_TELA
+EOF_TROCAR
 
 chmod +x /root/bin/trocando-fundo-tela.sh
 
-# 5. Criando o Serviço do Sistema (SystemD) para rodar sempre
+# 5. CRIAÇÃO DO SERVIÇO SYSTEMD (Para iniciar com o PC)
 cat > "/etc/systemd/system/trocando-fundo-de-tela.service" << EOF
 [Unit]
-Description=Servico de Troca de Papel de Parede Personalizado
-After=network.target
+Description=Servico de Wallpaper Cronologico Lucas Leniar
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
 ExecStart=/root/bin/trocando-fundo-tela.sh
 Restart=always
+RestartSec=10
 User=root
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-# 6. Ativando o serviço
+# 6. Ativação e Início imediato
 systemctl daemon-reload
 systemctl enable trocando-fundo-de-tela.service
 systemctl start trocando-fundo-de-tela.service
 
-echo -e "${VERDE}Sucesso! O script está rodando e monitorando seu site.${NC}"
-echo "Logs podem ser vistos em: tail -f /var/log/troca-wallpaper-status.log"
+echo -e "${VERDE}Concluído!${NC}"
+echo "O sistema agora monitora a cronologia em: https://lucasleniar.com.br/version.txt"
+echo "Para ver o que está acontecendo, use: tail -f /var/log/wallpaper_custom.log"
