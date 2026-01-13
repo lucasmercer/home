@@ -16,7 +16,6 @@ systemctl stop trocando-fundo-de-tela.service 2>/dev/null
 mkdir -p /var/local/lucas-wallpaper
 VER_LOCAL="/var/local/lucas-wallpaper/versao.txt"
 
-# 3. CRIAR O SCRIPT MONITOR
 cat > "/usr/local/bin/lucas-wallpaper-monitor.sh" << 'EOF_LUCAS'
 #!/bin/bash
 
@@ -93,4 +92,5 @@ systemctl start lucas-wallpaper.service
 echo "-------------------------------------------------------"
 echo "CONCLUÍDO! O sistema de monitoramento está ativo."
 echo "-------------------------------------------------------"
+
 
