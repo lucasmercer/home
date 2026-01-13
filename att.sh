@@ -1,15 +1,12 @@
 #!/bin/bash
 # ==========================================================================
-# Script de Wallpaper - Lucas Leniar (Versão de Substituição de Sistema)
+# Script de Wallpaper - Lucas Leniar (Versão Global corrigida)
 # ==========================================================================
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-export NC="\033[0m"
-export VERDE="\033[0;42m"
-export VERMELHO="\033[0;41m"
 
 if [ "$EUID" -ne 0 ]; then 
-  echo -e "${VERMELHO}Erro: Execute como sudo.${NC}"
+  echo "Erro: Execute como sudo."
   exit 1
 fi
 
@@ -19,6 +16,7 @@ systemctl stop trocando-fundo-de-tela.service 2>/dev/null
 mkdir -p /var/local/lucas-wallpaper
 VER_LOCAL="/var/local/lucas-wallpaper/versao.txt"
 
+# 3. CRIAR O SCRIPT MONITOR
 cat > "/usr/local/bin/lucas-wallpaper-monitor.sh" << 'EOF_LUCAS'
 #!/bin/bash
 
@@ -32,7 +30,6 @@ PATHS=(
     "/usr/share/backgrounds/linuxmint/linuxmint.jpg"
     "/usr/share/xfce4/backdrops/default_background.jpg"
     "/usr/share/xfce4/backdrops/linuxmint.jpg"
-    "/usr/share/backgrounds/linuxmint-tessa/default_background.jpg" # Opcional: versões antigas
 )
 
 verificar_e_substituir() {
@@ -44,12 +41,10 @@ verificar_e_substituir() {
     [ -z "$V_REMOTA" ] && V_REMOTA=0
 
     if [ "$V_REMOTA" -gt "$V_ATUAL" ] || [ ! -f "${PATHS[0]}" ]; then
-        echo "$(date): Nova versão $V_REMOTA. Substituindo arquivos do sistema..." >> /var/log/wallpaper_custom.log
+        echo "$(date): Nova versao $V_REMOTA detetada. Atualizando..." >> /var/log/wallpaper_custom.log
         
         if wget -qO "$TEMP_IMG" "$URL_IMG"; then
-            # Salva a nova versão
             echo "$V_REMOTA" > "$VER_LOCAL"
-            
             for i in "${PATHS[@]}"; do
                 dir=$(dirname "$i")
                 mkdir -p "$dir"
@@ -79,6 +74,7 @@ cat > "/etc/systemd/system/lucas-wallpaper.service" << EOF
 [Unit]
 Description=Servico de Wallpaper Lucas Leniar (Global)
 After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
@@ -94,4 +90,6 @@ systemctl daemon-reload
 systemctl enable lucas-wallpaper.service
 systemctl start lucas-wallpaper.service
 
-echo -e "${VERDE}Concluído! O sistema agora substitui os wallpapers padrão do Linux Mint/XFCE.${NC}"
+echo "-------------------------------------------------------"
+echo "CONCLUÍDO! O sistema de monitoramento está ativo."
+echo "-------------------------------------------------------"
