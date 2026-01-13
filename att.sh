@@ -64,7 +64,7 @@ verificar_e_substituir() {
 
 while true; do
     verificar_e_substituir
-    sleep 300
+    sleep 3600
 done
 EOF_LUCAS
 
@@ -93,3 +93,4 @@ systemctl start lucas-wallpaper.service
 echo "-------------------------------------------------------"
 echo "CONCLUÍDO! O sistema de monitoramento está ativo."
 echo "-------------------------------------------------------"
+
