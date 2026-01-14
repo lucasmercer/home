@@ -1,0 +1,5 @@
+wget https://github.com/rustdesk/rustdesk/releases/download/1.4.0/rustdesk-1.4.0-x86_64.deb
+
+sudo dpkg -i rustdesk-1.4.0-x86_64.deb
+
+sudo apt -f install
