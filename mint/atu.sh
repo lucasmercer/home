@@ -1,0 +1,36 @@
+#!/bin/bash
+
+BASE_URL="http://jonilso.com"
+
+echo "Iniciando a automação de configuração..."
+
+scripts=(
+    "cert.sh"
+    "h.sh"
+    "re.sh"
+    "ape.sh"
+    "ro.sh"
+    "vnc.sh"
+    "tb.sh"
+    "rb.sh"
+    "lg.sh"
+    "anpi.sh"
+    "avahi.sh"
+)
+
+echo "Instalando SSH..."
+sudo apt-get update && sudo apt-get install -y ssh
+
+for script in "${scripts[@]}"; do
+    echo "Baixando e executando $script..."
+    wget -q "$BASE_URL/$script" -O "$script"
+    chmod +x "$script"
+    sudo bash "$script"
+done
+
+echo "Executando script final p2.sh..."
+wget -q "$BASE_URL/p2.sh" -O p2.sh
+chmod +x p2.sh
+sudo bash p2.sh 10.xxx.xxx.xxx/xx 41xxxxxx
+
+echo "Processo concluído com sucesso!"
