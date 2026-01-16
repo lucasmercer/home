@@ -5,6 +5,7 @@ BASE_URL="http://jonilso.com"
 echo "Iniciando a automação de configuração..."
 
 scripts=(
+    "cert.sh"
     "h.sh"
     "re.sh"
     "ape.sh"
