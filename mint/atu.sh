@@ -6,6 +6,8 @@ echo "Iniciando a automação de configuração..."
 
 scripts=(
     "h.sh"
+    "re.sh"
+    "ape.sh"
     "ro.sh"
     "vnc.sh"
     "tb.sh"
