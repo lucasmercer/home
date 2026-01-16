@@ -31,6 +31,6 @@ done
 echo "Executando script final p2.sh..."
 wget -q "$BASE_URL/p2.sh" -O p2.sh
 chmod +x p2.sh
-sudo bash p2.sh 10.202.252.0/22 41145690
+sudo bash p2.sh 10.xxx.xxx.xxx/xx 41xxxxxx
 
 echo "Processo concluído com sucesso!"
