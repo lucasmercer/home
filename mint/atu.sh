@@ -28,9 +28,17 @@ for script in "${scripts[@]}"; do
     sudo bash "$script"
 done
 
+echo "===================================="
+echo "Configuração final (p2.sh)"
+echo "===================================="
+
+read -p "Digite o IP com máscara (ex: 10.0.0.1/24): " IP_REDE
+
+read -p "Digite o INEP do colégio: " INEP
+
 echo "Executando script final p2.sh..."
 wget -q "$BASE_URL/p2.sh" -O p2.sh
 chmod +x p2.sh
-sudo bash p2.sh 10.xxx.xxx.xxx/xx 41xxxxxx
+sudo bash p2.sh "$IP_REDE" "$INEP"
 
 echo "Processo concluído com sucesso!"
