@@ -19,6 +19,8 @@ scripts=(
 )
 
 echo "Instalando SSH..."
+
+sudo apt-get  install -y sshpass fping
 sudo apt-get update && sudo apt-get install -y ssh
 
 for script in "${scripts[@]}"; do
