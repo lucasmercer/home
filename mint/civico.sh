@@ -7,6 +7,7 @@ echo "Iniciando a automação de configuração..."
 scripts=(
     "re.sh"
     "cert.sh"
+    "cert2.sh"
     "h.sh"
     "ape.sh"
     "ro.sh"
@@ -43,7 +44,7 @@ wget -q "$BASE_URL/p2.sh" -O p2.sh
 chmod +x p2.sh
 sudo bash p2.sh "$IP_REDE" "$INEP"
 
-wget "lucasleniar.com.br/mint/2-wallpaper.sh"
-sudo bash 2-wallpaper.sh
+wget "lucasleniar.com.br/mint/wallpaper.sh"
+sudo bash wallpaper.sh
 
 echo "Processo concluído com sucesso!"
