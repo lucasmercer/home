@@ -89,13 +89,34 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
           ))}
         </div>
 
-        <motion.button
-          whileHover={{ x: 5 }}
-          className="flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-bold rounded-full text-sm uppercase tracking-widest hover:bg-emerald-500 transition-colors shadow-[0_10px_30px_rgba(16,185,129,0.2)]"
-          onClick={onNext}
-        >
-          Ver Pilares <ArrowRight size={18} />
-        </motion.button>
+<div className="flex flex-wrap gap-4">
+  {/* Ver Pilares */}
+  <motion.button
+    whileHover={{ x: 5 }}
+    className="flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-bold rounded-full text-sm uppercase tracking-widest hover:bg-emerald-500 transition-colors shadow-[0_10px_30px_rgba(16,185,129,0.2)]"
+    onClick={onNext}
+  >
+    Ver Pilares <ArrowRight size={18} />
+  </motion.button>
+
+  {/* Certificados */}
+  <motion.a
+    whileHover={{ x: 5 }}
+    href="./certificados/"
+    className="flex items-center gap-2 px-8 py-4 border border-emerald-600 text-emerald-600 font-bold rounded-full text-sm uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-colors"
+  >
+    Certificados <ArrowRight size={18} />
+  </motion.a>
+
+  {/* UTFPR */}
+  <motion.a
+    whileHover={{ x: 5 }}
+    href="./utfpr/"
+    className="flex items-center gap-2 px-8 py-4 border border-black/20 text-black/70 font-bold rounded-full text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-colors"
+  >
+    UTFPR <ArrowRight size={18} />
+  </motion.a>
+</div>
       </motion.div>
 
       <motion.div 
