@@ -5,11 +5,11 @@
 
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import Layout from './components/Layout';
-import HomeSection from './components/sections/HomeSection';
-import ComputationalThinking from './components/sections/ComputationalThinking';
-import ITSection from './components/sections/ITSection';
-import LifeSection from './components/sections/LifeSection';
+import Layout from '@/components/Layout';
+import HomeSection from '@/components/sections/HomeSection';
+import ComputationalThinking from '@/components/sections/ComputationalThinking';
+import ITSection from '@/components/sections/ITSection';
+import LifeSection from '@/components/sections/LifeSection';
 
 type SectionId = 'home' | 'computational' | 'tech' | 'life';
 
