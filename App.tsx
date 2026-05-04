@@ -108,7 +108,7 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
           <div className="absolute -inset-4 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-700" />
           <div className="relative w-[300px] h-[300px] md:w-[480px] md:h-[480px] rounded-3xl overflow-hidden border-4 border-white shadow-2xl shadow-emerald-500/10">
              <img 
-               src="https://lucasleniar.com.br/image/home.png" 
+               src="https://lucasmercer.github.io/home/home.png" 
                alt="Lucas Leniar" 
                className="w-full h-full object-contain scale-x-[-1] bg-white/5"
                referrerPolicy="no-referrer"
