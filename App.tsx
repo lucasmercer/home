@@ -28,7 +28,6 @@ import {
   ArrowRight
 } from 'lucide-react';
 
-// --- Types ---
 type SectionId = 'home' | 'computational' | 'tech' | 'life';
 
 interface Section {
@@ -43,8 +42,6 @@ const SECTIONS: Section[] = [
   { id: 'tech', label: 'TI & Técnico', icon: <Terminal size={20} /> },
   { id: 'life', label: 'Sobre Mim', icon: <User size={20} /> },
 ];
-
-// --- Sub-Components (Sections) ---
 
 const HomeSection = ({ onNext }: { onNext: () => void }) => (
   <div className="h-full flex flex-col justify-center max-w-6xl">
@@ -252,7 +249,7 @@ const LifeSection = () => (
         </div>
         <h2 className="text-4xl font-bold mb-6 italic text-black tracking-tighter">Minha História</h2>
         <div className="space-y-4 text-black/50 leading-relaxed max-w-md">
-          <p>Professor entusiasta da educação e tecnologia. Acredito que o conhecimento compartilhado transforma realidades.</p>
+          <p>Professor entusiasta da educação e tecnologia. Sempre curioso, Lucas explora o mundo da programação e do design, ajustando projetos, corrigindo erros de deploy e aprimorando cada detalhe como se cada linha de código fosse uma peça de um quebra-cabeça maior. Essa mesma dedicação aparece quando ele trabalha com conteúdos educativos, como quizzes, aulas e materiais interativos voltados para seus alunos.<br/>No fim, Lucas é alguém que constrói pontes — entre educação e tecnologia, lógica e criatividade, código e pedagogia.</p>
         </div>
       </motion.div>
       <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="space-y-6">
@@ -277,8 +274,6 @@ const LifeSection = () => (
     </div>
   </div>
 );
-
-// --- Main App Component ---
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<SectionId>('home');
@@ -356,4 +351,3 @@ export default function App() {
     </div>
   );
 }
-
