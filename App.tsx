@@ -261,9 +261,9 @@ const LifeSection = () => (
         <div className="space-y-4">
           {[
             { icon: <Mail size={18} />, label: "Email", value: "lucasleniar@gmail.com" },
-            { icon: <MapPin size={18} />, label: "Localização", value: "Brasil" },
+            { icon: <MapPin size={18} />, label: "Localização", value: "Paraná - Brasil" },
             { icon: <Coffee size={18} />, label: "Interesses", value: "Tecnologia, Educação" },
-            { icon: <Calendar size={18} />, label: "Experiência", value: "Desde 2010" },
+            { icon: <Calendar size={18} />, label: "Experiência", value: "Desde 2006" },
           ].map((info, i) => (
             <div key={i} className="flex items-center gap-4 p-4 rounded-xl border border-black/[0.03] bg-black/[0.01] hover:bg-white transition-all">
               <div className="text-emerald-600">{info.icon}</div>
