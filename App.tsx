@@ -244,7 +244,11 @@ const LifeSection = () => (
         <div className="relative mb-8 group inline-block">
           <div className="absolute inset-0 bg-emerald-600 rounded-2xl blur-xl opacity-10" />
           <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-2xl bg-black/[0.02] border border-black/5 flex items-center justify-center">
-             <User size={64} className="text-black/10" />
+               <img
+                   src="https://lucasleniar.com.br/home.png"
+                   alt="Lucas Leniar"
+                   className="w-full h-full object-cover"
+                 />
           </div>
         </div>
         <h2 className="text-4xl font-bold mb-6 italic text-black tracking-tighter">Minha História</h2>
