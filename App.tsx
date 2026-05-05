@@ -318,7 +318,7 @@ export default function App() {
         <div className="px-6 space-y-4 pt-6 border-t border-black/5 md:block hidden text-black/30">
            <div className="flex gap-4">
               <a href="#" className="hover:text-emerald-600 transition-colors"><Github size={18} /></a>
-              <a href="#" className="hover:text-emerald-600 transition-colors"><Linkedin size={18} /></a>
+              <a href="https://www.linkedin.com/in/lucasleniar/" className="hover:text-emerald-600 transition-colors"><Linkedin size={18} /></a>
               <a href="#" className="hover:text-emerald-600 transition-colors"><Globe size={18} /></a>
            </div>
            <p className="text-[10px] font-mono">© {new Date().getFullYear()} ALL RIGHTS RESERVED</p>
