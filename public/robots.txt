@@ -1,20 +1,8 @@
 # Robots.txt - Lucas Leniar
 
+# Permite que todos os robôs indexem o site
 User-agent: *
 Allow: /
-
-# Bloqueia áreas sensíveis (boas práticas)
-Disallow: /admin/
-Disallow: /api/
-Disallow: /private/
-Disallow: /dist/
-Disallow: /node_modules/
-Disallow: /.git/
-
-# Evita indexação de arquivos de build e configs
-Disallow: *.json$
-Disallow: *.log$
-Disallow: *.env$
 
 # Sitemap principal
 Sitemap: https://lucasleniar.com.br/sitemap.xml
