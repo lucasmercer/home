@@ -245,7 +245,7 @@ const LifeSection = () => (
           <div className="absolute inset-0 bg-emerald-600 rounded-2xl blur-xl opacity-10" />
           <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-2xl bg-black/[0.02] border border-black/5 flex items-center justify-center">
                <img
-                   src="https://lucasleniar.com.br/home.png"
+                   src="https://lucasleniar.com.br/lucas.png"
                    alt="Lucas Leniar"
                    className="w-full h-full object-cover"
                  />
