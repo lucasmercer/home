@@ -111,7 +111,7 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   <motion.a
     whileHover={{ x: 5 }}
     href="./utfpr/"
-    className="flex items-center gap-2 px-8 py-4 border border-black/20 text-black/70 font-bold rounded-full text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-colors"
+    className="flex items-center gap-2 px-8 py-4 border border-black/20 text-black/70 font-bold rounded-full text-sm uppercase tracking-widest hover:bg-yellow-400 hover:text-black transition-colors"
   >
     UTFPR <ArrowRight size={18} />
   </motion.a>
