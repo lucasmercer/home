@@ -42,7 +42,7 @@ const SECTIONS: Section[] = [
   { id: 'home', label: 'Início', icon: <Home size={20} /> },
   { id: 'computational', label: 'Pensam. Computacional', icon: <Brain size={20} /> },
   { id: 'tech', label: 'TI & Técnico', icon: <Terminal size={20} /> },
-  { id: 'life', label: 'Sobre Lucas', icon: <User size={20} /> },
+  { id: 'life', label: 'Sobre Mim', icon: <User size={20} /> },
 ];
 
 const HomeSection = ({ onNext }: { onNext: () => void }) => (
@@ -97,7 +97,7 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   >
     Ver Pilares <ArrowRight size={18} />
   </motion.button>
-
+<br />
   {/* Certificados */}
   <motion.a
     whileHover={{ x: 5 }}
@@ -106,7 +106,7 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   >
     Gerador Certificados <ArrowRight size={18} />
   </motion.a>
-
+<br />
   {/* UTFPR */}
   <motion.a
     whileHover={{ x: 5 }}
@@ -115,8 +115,33 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   >
     UTFPR <ArrowRight size={18} />
   </motion.a>
-  </motion.div>
 </div>
+      </motion.div>
+
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="flex-shrink-0 order-1 md:order-2"
+      >
+        <div className="relative group">
+          <div className="absolute -inset-4 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-700" />
+          <div className="relative w-[300px] h-[300px] md:w-[480px] md:h-[480px] rounded-3xl overflow-hidden border-4 border-white shadow-2xl shadow-emerald-500/10">
+             <img 
+               src="https://lucasmercer.github.io/home/home.png" 
+               alt="Lucas Leniar" 
+               className="w-full h-full object-contain scale-x-[-1] bg-white/5"
+               referrerPolicy="no-referrer"
+             />
+          </div>
+          <div className="absolute -bottom-4 -left-4 w-20 h-20 opacity-20 pointer-events-none" 
+            style={{ backgroundImage: 'radial-gradient(black 1px, transparent 0)', backgroundSize: '10px 10px' }} 
+          />
+        </div>
+      </motion.div>
+    </div>
+  </div>
+);
 
 const ComputationalThinking = () => {
   const pillars = [
