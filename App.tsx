@@ -124,7 +124,7 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
     href="./horario/"
     className="flex items-center gap-2 px-8 py-4 border border-black/20 text-black/70 font-bold rounded-full text-sm uppercase tracking-widest hover:bg-blue-400 hover:text-black hover:shadow-lg transition-all duration-300"
   >
-    UTFPR <ArrowRight size={18} />
+    Gerador Horários <ArrowRight size={18} />
   </motion.a>
 </div>
       </motion.div>
