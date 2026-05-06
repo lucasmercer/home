@@ -195,9 +195,11 @@ const ITSection = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="md:col-span-2">
           <h2 className="text-4xl font-bold mb-8 text-black tracking-tighter">Tecnologia da Informação</h2>
           <div className="space-y-8">
-            <p className="text-black/50 leading-relaxed text-lg italic">Atuação voltada para infraestrutura, redes, hardware e sistemas, com foco na formação de profissionais técnicos preparados para os desafios do mundo real. <br />
-  A proposta vai além do ensino operacional: busca desenvolver o raciocínio lógico, a autonomia e a capacidade de diagnosticar, compreender e resolver problemas complexos em ambientes tecnológicos. <br />
-  Unindo teoria e prática, a formação é direcionada para criar profissionais capazes de não apenas utilizar ferramentas, mas entender profundamente como a tecnologia funciona e como aplicá-la de forma estratégica.</p>
+            <p className="text-black/50 leading-relaxed text-lg italic">Atuação sólida em Tecnologia da Informação, com foco em infraestrutura, redes, hardware e <br />
+              sistemas operacionais, voltada à formação de profissionais técnicos preparados para os desafios do mundo real. <br />
+              O processo de ensino vai além da execução de tarefas: busca desenvolver pensamento crítico, raciocínio lógico e autonomia na resolução de problemas. <br />
+              A proposta integra teoria e prática de forma estratégica, capacitando os alunos a compreenderem profundamente o funcionamento das <br />
+              tecnologias, diagnosticar falhas e construir soluções eficientes em diferentes contextos profissionais.</p>
             <div className="grid grid-cols-2 gap-4">
               <div className="p-6 rounded-xl border border-black/[0.05] bg-black/[0.01] space-y-4 hover:border-emerald-600/20 transition-colors group">
                  <Server className="text-black/30 group-hover:text-emerald-600 transition-colors" size={24} />
