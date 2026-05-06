@@ -124,7 +124,12 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   >
     Gerador Horários <ArrowRight size={18} />
   </motion.a>
-
+  </motion.div>
+        
+    </div>
+  </div>
+);
+    
 </div>
 
 const ComputationalThinking = () => {
