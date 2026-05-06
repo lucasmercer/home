@@ -102,7 +102,7 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   <motion.a
     whileHover={{ x: 5 }}
     href="https://lucasmercer.github.io/certificado/"
-    className="flex items-center gap-2 px-8 py-4 border border-emerald-600 text-emerald-600 font-bold rounded-full text-sm uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-colors"
+    className="flex items-center gap-2 px-8 py-4 border border-emerald-600 text-emerald-600 font-bold rounded-full text-sm uppercase tracking-widest hover:bg-[#003366] hover:text-white transition-colors"
   >
     Gerador Certificados <ArrowRight size={18} />
   </motion.a>
