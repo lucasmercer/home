@@ -127,7 +127,8 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   </motion.a>
 
 </div>
-);
+  );
+};
 
 const ComputationalThinking = () => {
   const pillars = [
