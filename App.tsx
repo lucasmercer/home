@@ -115,11 +115,11 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   >
     UTFPR <ArrowRight size={18} />
   </motion.a>
-  {/* HORARIO */}
+  {/* HORÁRIO */}
   <motion.a
     whileHover={{ x: 5 }}
-    href="./horario/"
-    className="flex items-center gap-2 px-8 py-4 border border-black/20 text-black/70 font-bold rounded-full text-sm uppercase tracking-widest hover:bg-blue-400 hover:text-black hover:shadow-lg transition-all duration-300"
+    href="https://lucasmercer.github.io/horario/"
+    className="flex items-center gap-2 px-8 py-4 border border-black/20 text-black/70 font-bold rounded-full text-sm uppercase tracking-widest hover:bg-blue-400 hover:border-blue-400 hover:text-black hover:shadow-lg transition-all duration-300"
     >
     Gerador Horários <ArrowRight size={18} />
   </motion.a>
