@@ -42,7 +42,7 @@ const SECTIONS: Section[] = [
   { id: 'home', label: 'Início', icon: <Home size={20} /> },
   { id: 'computational', label: 'Pensam. Computacional', icon: <Brain size={20} /> },
   { id: 'tech', label: 'TI & Técnico', icon: <Terminal size={20} /> },
-  { id: 'life', label: 'Sobre Mim', icon: <User size={20} /> },
+  { id: 'life', label: 'Sobre Lucas', icon: <User size={20} /> },
 ];
 
 const HomeSection = ({ onNext }: { onNext: () => void }) => (
