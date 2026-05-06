@@ -89,7 +89,6 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
         </div>
 
 <div className="flex flex-wrap gap-4">
-
   {/* Ver Pilares */}
   <motion.button
     whileHover={{ x: 5 }}
@@ -127,8 +126,6 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   </motion.a>
 
 </div>
-  );
-};
 
 const ComputationalThinking = () => {
   const pillars = [
