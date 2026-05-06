@@ -97,7 +97,7 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   >
     Ver Pilares <ArrowRight size={18} />
   </motion.button>
-
+<br />
   {/* Certificados */}
   <motion.a
     whileHover={{ x: 5 }}
@@ -106,7 +106,7 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   >
     Gerador Certificados <ArrowRight size={18} />
   </motion.a>
-
+<br />
   {/* UTFPR */}
   <motion.a
     whileHover={{ x: 5 }}
