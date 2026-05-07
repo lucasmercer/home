@@ -115,6 +115,7 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   >
     UTFPR <ArrowRight size={18} />
   </motion.a>
+  <br />
   {/* HORÁRIO */}
   <motion.a
     whileHover={{ x: 5 }}
