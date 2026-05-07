@@ -27,7 +27,7 @@ import {
   MapPin, 
   Coffee, 
   Calendar,
-  share,
+  Share2,
   ArrowRight
 } from 'lucide-react';
 
@@ -334,11 +334,11 @@ export default function App() {
         <div className="px-6 space-y-4 pt-6 border-t border-black/5 md:block hidden text-black/30">
            <div className="flex gap-4">
               <a href="#" className="hover:text-emerald-600 transition-colors"><Github size={18} /></a>
-              <a href="https://www.linkedin.com/in/lucasleniar/" target="_blank" className="hover:text-emerald-600 transition-colors"><Linkedin size={18} /></a>
-              <a href="https://www.instagram.com/lucasmercerl/" target="_blank" className="hover:text-emerald-600 transition-colors"><Instagram size={18} /></a>
-              <a href="https://www.facebook.com/lucasmercerl/" target="_blank" className="hover:text-emerald-600 transition-colors"><Facebook size={18} /></a>
-             <a href="https://wa.me/?text=Conheça%20o%20site%20do%20Professor%20Lucas%20Leniar:%20https://lucasleniar.com.br/" target="_blank" className="hover:text-emerald-600 transition-colors"><share size={18} /></a>
-              <a href="#" className="hover:text-emerald-600 transition-colors"><Globe size={18} /></a>
+              <a href="https://www.linkedin.com/in/lucasleniar/" target="_blank" className="hover:text-emerald-600 transition-colors"><Linkedin size={19} /></a>
+              <a href="https://www.instagram.com/lucasmercerl/" target="_blank" className="hover:text-emerald-600 transition-colors"><Instagram size={19} /></a>
+              <a href="https://www.facebook.com/lucasmercerl/" target="_blank" className="hover:text-emerald-600 transition-colors"><Facebook size={19} /></a>
+             <a href="https://wa.me/?text=Conheça%20o%20site%20do%20Professor%20Lucas%20Leniar:%20https://lucasleniar.com.br/" target="_blank" className="hover:text-emerald-600 transition-colors"><Share2 size={19} /></a>
+              <a href="#" className="hover:text-emerald-600 transition-colors"><Globe size={19} /></a>
            </div>
            <p className="text-[10px] font-mono">© {new Date().getFullYear()} ALL RIGHTS RESERVED</p>
         </div>
