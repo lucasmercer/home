@@ -64,7 +64,7 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
         <p className="text-lg md:text-xl text-black/50 max-w-2xl leading-relaxed mb-10">
           Explorando as fronteiras entre a educação e a tecnologia. Especialista em 
           <span className="text-black/80 font-semibold"> pensamento computacional</span> e infraestrutura de TI, 
-          ajudando a formar a próxima geração de técnicos em informática.
+          contribuindo para a formação dos profissionais do futuro.
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
