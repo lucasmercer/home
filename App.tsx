@@ -615,8 +615,8 @@ export default function App() {
           ))}
         </div>
 
-        <div className="px-6 space-y-4 pt-6 border-t border-black/5 md:block hidden text-black/30">
-           <div className="flex gap-4">
+        <div className="px-6 space-y-4 pt-6 border-t border-black/5 md:block hidden text-black/30 text-center">
+           <div className="flex gap-4 justify-center">
               <a href="https://www.linkedin.com/in/lucasleniar/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors"><Linkedin size={18} /></a>
               <a href="https://www.instagram.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors"><Instagram size={18} /></a>
               <a href="https://www.facebook.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors"><Facebook size={18} /></a>
