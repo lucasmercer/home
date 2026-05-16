@@ -13,6 +13,58 @@ const DEFAULT_DESCRIPTION = "A Direção do Colégio Estadual Cívico-Militar Gr
 
 type PdfTemplate = string;
 
+function CertificatePreview({ pdfBytes, template }: { pdfBytes: Uint8Array | null, template: string }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isRendering, setIsRendering] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (pdfBytes) {
+      const render = async () => {
+        // Wait for canvas to be in DOM
+        for (let i = 0; i < 20; i++) {
+          if (canvasRef.current || !isMounted) break;
+          await new Promise(r => setTimeout(r, 50));
+        }
+
+        if (canvasRef.current && isMounted) {
+          setIsRendering(true);
+          await renderPdfToCanvas(pdfBytes, canvasRef.current);
+          if (isMounted) setIsRendering(false);
+        }
+      };
+      render();
+    }
+    return () => { isMounted = false; };
+  }, [pdfBytes]);
+
+  if (!pdfBytes) return null;
+
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center relative">
+      <div className="relative group/canvas max-w-full max-h-full">
+        <div className="absolute -inset-1 bg-gradient-to-tr from-blue-500/10 to-transparent rounded-lg blur-xl opacity-0 group-hover/canvas:opacity-100 transition-opacity" />
+        <canvas 
+          ref={canvasRef} 
+          className="max-w-full max-h-full rounded shadow-2xl border border-slate-200 bg-white mx-auto" 
+        />
+        {isRendering && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm rounded">
+            <Loader2 className="animate-spin text-blue-600" size={32} />
+          </div>
+        )}
+      </div>
+      <div className="mt-4 lg:mt-8 flex flex-wrap justify-center items-center gap-4 bg-white/80 backdrop-blur px-4 py-2 rounded-full shadow-sm border border-slate-100 italic text-[9px] lg:text-[11px] text-slate-400 font-medium tracking-wide">
+        <span>PRÉ-VISUALIZAÇÃO A4</span>
+        <span className="w-1 h-1 bg-slate-200 rounded-full"></span>
+        <span>200 DPI QUALITY</span>
+        <span className="w-1 h-1 bg-slate-200 rounded-full"></span>
+        <span className="uppercase">ESTILO: {template}</span>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [names, setNames] = useState("Lucas Mercer Leniar, Pedro Albuquerque");
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -52,8 +104,6 @@ export default function App() {
   const [isRenderingCanvas, setIsRenderingCanvas] = useState(false);
   const [previewPdfBytes, setPreviewPdfBytes] = useState<Uint8Array | null>(null);
   
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
   // Limpar cache e invalidar arquivos antigos ao carregar a tela de login
   useEffect(() => {
     if (!isAuthenticated) {
@@ -132,38 +182,12 @@ export default function App() {
     try {
       const pdfBytes = await generateCertificate(studentData);
       setPreviewPdfBytes(pdfBytes);
-      setIsRenderingCanvas(true);
     } catch (error) {
       console.error("Preview failed:", error);
     } finally {
       setIsPreviewing(false);
     }
   };
-
-  useEffect(() => {
-    let isMounted = true;
-    if (previewPdfBytes) {
-      const render = async () => {
-        // Retry logic to wait for the canvas element to mount within AnimatePresence
-        for (let i = 0; i < 10; i++) {
-          if (canvasRef.current || !isMounted) break;
-          await new Promise(r => setTimeout(r, 100));
-        }
-
-        if (canvasRef.current && isMounted) {
-          const success = await renderPdfToCanvas(previewPdfBytes, canvasRef.current);
-          if (isMounted) {
-            setIsRenderingCanvas(false);
-            if (!success) {
-              alert("Erro ao renderizar o PDF no canvas. Tente novamente.");
-            }
-          }
-        }
-      };
-      render();
-    }
-    return () => { isMounted = false; };
-  }, [previewPdfBytes]);
 
   const handleDownloadAll = async () => {
     const studentNames = names.split(',').map(n => n.trim()).filter(n => n !== "");
@@ -292,49 +316,49 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-full bg-[#F8FAFC] text-slate-800 font-sans overflow-hidden">
+    <div className="flex flex-col min-h-screen w-full bg-[#F8FAFC] text-slate-800 font-sans">
       {/* Header */}
-      <header className="h-16 border-b border-slate-200 px-8 flex items-center justify-between bg-white shrink-0">
+      <header className="h-16 border-b border-slate-200 px-4 lg:px-8 flex items-center justify-between bg-white shrink-0 sticky top-0 z-50">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-sm">
-            <FileText size={20} />
+          <div className="w-8 h-8 lg:w-10 lg:h-10 bg-blue-600 rounded-lg lg:rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
+            <FileText size={18} />
           </div>
           <div>
-            <h1 className="text-sm font-bold tracking-tight text-slate-900 leading-none">
+            <h1 className="text-xs lg:text-sm font-bold tracking-tight text-slate-900 leading-none">
               GERADOR DE CERTIFICADOS
             </h1>
-            <p className="text-[10px] font-medium text-slate-500 uppercase tracking-widest mt-1">
+            <p className="text-[8px] lg:text-[10px] font-medium text-slate-500 uppercase tracking-widest mt-1">
               CECM Gregório Szeremeta
             </p>
           </div>
         </div>
-        <div className="hidden sm:flex items-center gap-6">
-          <div className="flex flex-col items-end">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter leading-none">Engine de Renderização</span>
+        <div className="flex items-center gap-2 lg:gap-6">
+          <div className="hidden sm:flex flex-col items-end">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter leading-none">Engine</span>
             <span className="text-[10px] font-mono text-blue-600 font-bold">PDF-LIB v8.5</span>
           </div>
-          <div className="h-8 w-px bg-slate-200"></div>
+          <div className="hidden sm:block h-8 w-px bg-slate-200"></div>
           <div className="flex items-center gap-2">
-            <div className={cn("w-2 h-2 rounded-full", isDownloading || isPreviewing || isRenderingCanvas ? "bg-amber-400 animate-pulse" : "bg-emerald-500")} />
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">
-              {isDownloading ? "Processando Lote" : isPreviewing || isRenderingCanvas ? "Pintando Canvas" : "Sistema Pronto"}
+            <div className={cn("w-2 h-2 rounded-full", isDownloading || isPreviewing ? "bg-amber-400 animate-pulse" : "bg-emerald-500")} />
+            <span className="text-[8px] lg:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">
+              {isDownloading ? "Processando Lote" : isPreviewing ? "Pintando Canvas" : "Sistema Pronto"}
             </span>
           </div>
           <div className="h-8 w-px bg-slate-200"></div>
           <button 
             onClick={() => setIsAuthenticated(false)}
-            className="flex items-center gap-2 px-3 py-2 bg-slate-50 hover:bg-red-50 text-slate-600 hover:text-red-600 rounded-lg transition-all border border-slate-200 hover:border-red-100 group"
+            className="flex items-center gap-2 px-2 py-1.5 lg:px-3 lg:py-2 bg-slate-50 hover:bg-red-50 text-slate-600 hover:text-red-600 rounded-lg transition-all border border-slate-200 hover:border-red-100 group"
             title="Sair do Sistema"
           >
             <LogOut size={16} className="group-hover:translate-x-0.5 transition-transform" />
-            <span className="text-[10px] font-bold uppercase tracking-tight">Sair</span>
+            <span className="hidden lg:block text-[10px] font-bold uppercase tracking-tight">Sair</span>
           </button>
         </div>
       </header>
 
-      <main className="flex-1 flex overflow-hidden">
+      <main className="flex-1 flex flex-col lg:flex-row lg:overflow-hidden overflow-y-auto">
         {/* Sidebar Controls */}
-        <aside className="w-80 border-r border-slate-200 bg-white p-6 flex flex-col gap-6 overflow-y-auto shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+        <aside className="w-full lg:w-80 border-r border-slate-200 bg-white p-6 flex flex-col gap-6 lg:overflow-y-auto shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
           <div className="space-y-6">
             <section className="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50">
               <label className="text-[10px] font-bold text-blue-600 uppercase tracking-widest block mb-3">
@@ -660,6 +684,21 @@ export default function App() {
                 className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all outline-none text-slate-700 leading-relaxed hover:border-slate-300"
               />
             </section>
+
+            {/* Mobile-only Preview */}
+            <section className="lg:hidden animate-in fade-in slide-in-from-top-4 duration-500">
+              <label className="text-[11px] font-bold text-blue-600 uppercase tracking-widest block mb-3">Prévia do Certificado</label>
+              <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 shadow-inner min-h-[200px] flex items-center justify-center">
+                {previewPdfBytes ? (
+                  <CertificatePreview pdfBytes={previewPdfBytes} template={template} />
+                ) : (
+                  <div className="text-center p-6 bg-white/50 rounded-xl border border-dashed border-slate-300 w-full">
+                    <FileText className="mx-auto text-slate-300 mb-2" size={24} />
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Clique em Visualizar Amostra</p>
+                  </div>
+                )}
+              </div>
+            </section>
           </div>
 
           <div className="mt-auto flex flex-col gap-3 pt-6 border-t border-slate-100">
@@ -682,8 +721,7 @@ export default function App() {
           </div>
         </aside>
 
-        {/* Workspace area */}
-        <section className="flex-1 p-8 lg:p-12 flex flex-col overflow-hidden bg-slate-50/50">
+        <section className="hidden lg:flex flex-1 p-8 lg:p-12 flex-col lg:overflow-hidden bg-slate-50/50">
           <div className="flex-1 bg-white rounded-[32px] border border-slate-200 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.05)] flex items-center justify-center relative overflow-hidden group">
             {/* Artistic dots pattern */}
             <div className="absolute inset-0 opacity-[0.4] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#CBD5E1 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
@@ -695,22 +733,9 @@ export default function App() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.98 }}
-                  className="w-full h-full flex flex-col items-center justify-center p-6 lg:p-12 z-10"
+                  className="w-full h-full p-6 lg:p-12 z-10"
                 >
-                  <div className="relative group/canvas max-w-full max-h-full">
-                    <div className="absolute -inset-1 bg-gradient-to-tr from-blue-500/10 to-transparent rounded-lg blur-xl opacity-0 group-hover/canvas:opacity-100 transition-opacity" />
-                    <canvas 
-                      ref={canvasRef} 
-                      className="max-w-full max-h-full rounded shadow-2xl border border-slate-200 bg-white" 
-                    />
-                  </div>
-                  <div className="mt-8 flex items-center gap-8 bg-white/80 backdrop-blur px-6 py-3 rounded-full shadow-sm border border-slate-100 italic text-[11px] text-slate-400 font-medium tracking-wide">
-                    <span>PRÉ-VISUALIZAÇÃO A4</span>
-                    <span className="w-1 h-1 bg-slate-200 rounded-full"></span>
-                    <span>200 DPI QUALITY</span>
-                    <span className="w-1 h-1 bg-slate-200 rounded-full"></span>
-                    <span>ESTILO: {template.toUpperCase()}</span>
-                  </div>
+                  <CertificatePreview pdfBytes={previewPdfBytes} template={template} />
                 </motion.div>
               ) : (
                 <motion.div
