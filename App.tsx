@@ -53,33 +53,28 @@ const SECTIONS: Section[] = [
   { id: 'life', label: 'Sobre Lucas', icon: <User size={20} /> },
 ];
 
-const HomeSection = ({ onNext }: { onNext: () => void }) => (
-  <div className="h-full flex flex-col justify-center max-w-6xl">
-    <div className="flex flex-col md:flex-row items-center gap-12">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="flex-1 order-1 md:order-2 flex justify-center"
-      >
-        <div className="relative group">
-          <div className="absolute inset-0 bg-emerald-600 rounded-2xl blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
-          <div className="relative w-64 h-80 md:w-96 md:h-[500px] rounded-2xl bg-black/[0.02] border border-black/5 overflow-hidden shadow-2xl flex items-end">
-            <img
-              src="https://lucasleniar.com.br/home.png"
-              alt="Lucas Leniar"
-              className="w-full h-full object-contain scale-x-[-1] transform-gpu"
-              referrerPolicy="no-referrer"
-            />
-          </div>
-        </div>
-      </motion.div>
+const ProfileImage = () => (
+  <div className="relative group w-full max-w-xs md:max-w-none flex justify-center">
+    <div className="absolute inset-0 bg-emerald-600 rounded-2xl blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
+    <div className="relative w-full aspect-[3/4] md:w-96 md:h-[500px] rounded-2xl bg-black/[0.02] border border-black/5 overflow-hidden shadow-2xl flex items-end">
+      <img
+        src="https://lucasleniar.com.br/home.png"
+        alt="Lucas Leniar"
+        className="w-full h-full object-contain scale-x-[-1] transform-gpu origin-bottom"
+        referrerPolicy="no-referrer"
+      />
+    </div>
+  </div>
+);
 
+const HomeSection = ({ onNext }: { onNext: () => void }) => (
+  <div className="min-h-full flex flex-col justify-center py-12 md:py-0 max-w-6xl">
+    <div className="flex flex-col md:flex-row items-center gap-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="flex-1 order-2 md:order-1"
+        className="flex-1 order-1 md:order-1"
       >
         <span className="inline-block px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 text-[10px] font-mono tracking-widest uppercase mb-6 border border-emerald-500/20">
           Olá, Mundo.
@@ -87,6 +82,12 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-tight mb-6 text-black">
           Eu sou o <span className="text-emerald-600">Professor Lucas Mercer Leniar</span>.
         </h1>
+
+        {/* Mobile Profile Image */}
+        <div className="md:hidden mb-10 flex justify-center w-full">
+          <ProfileImage />
+        </div>
+
         <p className="text-lg md:text-xl text-black/50 max-w-2xl leading-relaxed mb-10">
           Explorando as fronteiras entre a educação e a tecnologia. Especialista em 
           <span className="text-black/80 font-semibold"> pensamento computacional</span> e infraestrutura de TI, 
@@ -154,7 +155,7 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
           <motion.a
             whileHover={{ x: 5 }}
             href="https://lucasmercer.github.io/certificado/"
-            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-emerald-600 text-emerald-600 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-[#003366] hover:border-[#004a8f] hover:text-white transition-all duration-300"
+            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-black/10 text-black/70 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-[#003366] hover:border-[#004a8f] hover:text-white transition-all duration-300"
           >
             Gerador Certificados <ArrowRight size={18} />
           </motion.a>
@@ -168,6 +169,15 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
             Gerador Horários <ArrowRight size={18} />
           </motion.a>
         </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="flex-1 order-2 md:order-2 hidden md:flex justify-center w-full"
+      >
+        <ProfileImage />
       </motion.div>
     </div>
   </div>
