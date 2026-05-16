@@ -1,5 +1,10 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Home, 
   Brain, 
@@ -27,11 +32,12 @@ import {
   MapPin, 
   Coffee, 
   Calendar,
-  Share2,
-  ArrowRight
+  ArrowRight,
+  Box,
+  Bot
 } from 'lucide-react';
 
-type SectionId = 'home' | 'computational' | 'tech' | 'life';
+type SectionId = 'home' | 'computational' | 'robotics' | 'tech' | 'life';
 
 interface Section {
   id: SectionId;
@@ -41,7 +47,8 @@ interface Section {
 
 const SECTIONS: Section[] = [
   { id: 'home', label: 'Início', icon: <Home size={20} /> },
-  { id: 'computational', label: 'Pensam. Computacional', icon: <Brain size={20} /> },
+  { id: 'computational', label: 'Pensamento Computacional', icon: <Brain size={20} /> },
+  { id: 'robotics', label: 'Robótica Educacional', icon: <Bot size={20} /> },
   { id: 'tech', label: 'TI & Técnico', icon: <Terminal size={20} /> },
   { id: 'life', label: 'Sobre Lucas', icon: <User size={20} /> },
 ];
@@ -69,84 +76,78 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {[
-            { icon: <Code2 size={24} />, label: "Desenvolvimento" },
-            { icon: <Cpu size={24} />, label: "Hardware" },
-            { icon: <GraduationCap size={24} />, label: "Educação" },
-            { icon: <Laptop size={24} />, label: "Sistemas" },
-          ].map((item, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 + (i * 0.1) }}
-              className="p-3 rounded-xl border border-black/[0.05] bg-black/[0.01] flex flex-col items-center gap-2 hover:border-emerald-500/30 transition-colors group cursor-default"
-            >
-              <div className="text-black/20 group-hover:text-emerald-600 transition-colors">
-                {item.icon}
-              </div>
-              <span className="text-[10px] font-semibold text-black/40 text-center">{item.label}</span>
-            </motion.div>
-          ))}
+            { icon: <Code2 size={24} />, label: "Desenvolvimento", color: "emerald" },
+            { icon: <Cpu size={24} />, label: "Hardware", color: "blue" },
+            { icon: <GraduationCap size={24} />, label: "Educação", color: "purple" },
+            { icon: <Laptop size={24} />, label: "Sistemas", color: "orange" },
+          ].map((item, i) => {
+            const hoverBorderColor = {
+              emerald: 'hover:border-emerald-500/30',
+              blue: 'hover:border-blue-500/30',
+              purple: 'hover:border-purple-500/30',
+              orange: 'hover:border-orange-500/30',
+            }[item.color as 'emerald' | 'blue' | 'purple' | 'orange'];
+
+            const hoverIconColor = {
+              emerald: 'group-hover:text-emerald-600',
+              blue: 'group-hover:text-blue-600',
+              purple: 'group-hover:text-purple-600',
+              orange: 'group-hover:text-orange-600',
+            }[item.color as 'emerald' | 'blue' | 'purple' | 'orange'];
+
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + (i * 0.1) }}
+                className={`p-3 rounded-xl border border-black/[0.05] bg-black/[0.01] flex flex-col items-center gap-2 ${hoverBorderColor} transition-colors group cursor-default`}
+              >
+                <div className={`text-black/20 ${hoverIconColor} transition-colors`}>
+                  {item.icon}
+                </div>
+                <span className="text-[10px] font-semibold text-black/40 text-center">{item.label}</span>
+              </motion.div>
+            );
+          })}
         </div>
 
-<div className="flex flex-wrap gap-4">
-  {/* Ver Pilares */}
-  <motion.button
-    whileHover={{ x: 5 }}
-    className="flex items-center gap-2 px-8 py-4 bg-emerald-600 text-white font-bold rounded-full text-sm uppercase tracking-widest hover:bg-emerald-500 transition-colors shadow-[0_10px_30px_rgba(16,185,129,0.2)]"
-    onClick={onNext}
-  >
-    Ver Pilares <ArrowRight size={18} />
-  </motion.button>
-<br />
-  {/* Certificados */}
-  <motion.a
-    whileHover={{ x: 5 }}
-    href="https://lucasmercer.github.io/certificado/"
-    className="flex items-center gap-2 px-8 py-4 border border-black/20 text-black/70 font-bold rounded-full text-sm uppercase tracking-widest hover:bg-[#003366] hover:text-white hover:border-[#66B2FF] hover:shadow-[0_0_20px_rgba(102,178,255,0.5)] transition-all duration-300"
-  >
-  Gerador Certificados <ArrowRight size={18} />
-</motion.a>
-<br />
-  {/* UTFPR */}
-  <motion.a
-    whileHover={{ x: 5 }}
-    href="./utfpr/"
-    className="flex items-center gap-2 px-8 py-4 border border-black/20 text-black/70 font-bold rounded-full text-sm uppercase tracking-widest hover:bg-yellow-400 hover:text-black hover:shadow-lg transition-all duration-300"
-  >
-    UTFPR <ArrowRight size={18} />
-  </motion.a>
-  <br />
-  {/* HORÁRIO */}
-  <motion.a
-    whileHover={{ x: 5 }}
-    href="https://lucasmercer.github.io/horario/"
-    className="flex items-center gap-2 px-8 py-4 border border-black/20 text-black/70 font-bold rounded-full text-sm uppercase tracking-widest hover:bg-blue-400 hover:border-blue-400 hover:text-black hover:shadow-lg transition-all duration-300"
-    >
-    Gerador Horários <ArrowRight size={18} />
-  </motion.a>
-</div>
-      </motion.div>
+        <div className="flex flex-wrap gap-4 mt-4">
+          {/* Ver Pilares */}
+          <motion.button
+            whileHover={{ x: 5 }}
+            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 bg-emerald-600 text-white font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-emerald-500 transition-colors shadow-[0_10px_30px_rgba(16,185,129,0.2)] cursor-pointer"
+            onClick={onNext}
+          >
+            Ver Pilares <ArrowRight size={18} />
+          </motion.button>
 
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="flex-shrink-0 order-1 md:order-2"
-      >
-        <div className="relative group">
-          <div className="absolute -inset-4 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-all duration-700" />
-          <div className="relative w-[300px] h-[300px] md:w-[480px] md:h-[480px] rounded-3xl overflow-hidden border-4 border-white shadow-2xl shadow-emerald-500/10">
-             <img 
-               src="https://lucasmercer.github.io/home/home.png" 
-               alt="Lucas Leniar" 
-               className="w-full h-full object-contain scale-x-[-1] bg-white/5"
-               referrerPolicy="no-referrer"
-             />
-          </div>
-          <div className="absolute -bottom-4 -left-4 w-20 h-20 opacity-20 pointer-events-none" 
-            style={{ backgroundImage: 'radial-gradient(black 1px, transparent 0)', backgroundSize: '10px 10px' }} 
-          />
+          {/* UTFPR */}
+          <motion.a
+            whileHover={{ x: 5 }}
+            href="./utfpr/"
+            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-black/10 text-black/70 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-yellow-400 hover:border-yellow-500 hover:text-black hover:shadow-lg transition-all duration-300"
+          >
+            UTFPR <ArrowRight size={18} />
+          </motion.a>
+
+          {/* Certificados */}
+          <motion.a
+            whileHover={{ x: 5 }}
+            href="https://lucasmercer.github.io/certificado/"
+            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-emerald-600 text-emerald-600 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-[#003366] hover:border-[#004a8f] hover:text-white transition-all duration-300"
+          >
+            Gerador Certificados <ArrowRight size={18} />
+          </motion.a>
+
+          {/* HORARIO */}
+          <motion.a
+            whileHover={{ x: 5 }}
+            href="./horario/"
+            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-black/10 text-black/70 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-blue-400 hover:border-blue-500 hover:text-black hover:shadow-lg transition-all duration-300"
+          >
+            Gerador Horários <ArrowRight size={18} />
+          </motion.a>
         </div>
       </motion.div>
     </div>
@@ -162,11 +163,11 @@ const ComputationalThinking = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col pt-12 md:pt-20 uppercase tracking-tighter">
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-5xl">
-        <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif text-black">Pensamento Computacional</h2>
-        <p className="text-black/30 max-w-2xl mb-12 uppercase text-[10px] tracking-[0.2em] font-mono font-bold">Os 4 pilares para resolver qualquer problema.</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="h-full flex flex-col pt-6 md:pt-20 uppercase tracking-tighter overflow-visible">
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-5xl w-full">
+        <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif text-black px-1">Pensamento Computacional</h2>
+        <p className="text-black/30 max-w-2xl mb-8 md:mb-12 uppercase text-[10px] tracking-[0.2em] font-mono font-bold px-1">Os 4 pilares para resolver qualquer problema.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
           {pillars.map((pillar, i) => (
             <motion.div
               key={pillar.title}
@@ -190,6 +191,43 @@ const ComputationalThinking = () => {
   );
 };
 
+const RoboticsSection = () => {
+  const features = [
+    { title: "Arduino & ESP32", desc: "Desenvolvimento de protótipos e sistemas embarcados.", icon: <Cpu className="text-orange-500" size={32} /> },
+    { title: "Lógica de Programação", desc: "Aplicação prática de algoritmos em hardware.", icon: <Layers className="text-blue-500" size={32} /> },
+    { title: "Projetos Maker", desc: "Criação de soluções interativas e automatizadas.", icon: <Box className="text-emerald-500" size={32} /> },
+    { title: "Educação Tecnológica", desc: "Metodologias ativas aplicadas à robótica.", icon: <GraduationCap className="text-purple-500" size={32} /> }
+  ];
+
+  return (
+    <div className="h-full flex flex-col pt-6 md:pt-20 uppercase tracking-tighter">
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-5xl w-full">
+        <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif text-black px-1">Robótica Educacional</h2>
+        <p className="text-black/30 max-w-2xl mb-8 md:mb-12 uppercase text-[10px] tracking-[0.2em] font-mono font-bold px-1">Transformando teoria em movimento e inovação.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+          {features.map((feature, i) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="p-8 rounded-2xl bg-black/[0.01] border border-black/[0.05] hover:bg-white hover:shadow-xl hover:shadow-emerald-500/5 transition-all group relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10">{feature.icon}</div>
+              <div className="relative z-10">
+                <div className="mb-4">{feature.icon}</div>
+                <h3 className="text-xl font-bold mb-3 tracking-tight group-hover:text-emerald-600 transition-colors text-black/80">{feature.title}</h3>
+                <p className="text-black/40 leading-relaxed text-sm font-sans normal-case tracking-normal">{feature.desc}</p>
+              </div>
+              <div className="absolute bottom-0 left-0 h-1 w-0 bg-emerald-500 group-hover:w-full transition-all duration-500" />
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 const ITSection = () => {
   const skills = [
     { name: "Suporte Técnico", level: 95 },
@@ -200,17 +238,19 @@ const ITSection = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col pt-12 md:pt-20">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="md:col-span-2">
-          <h2 className="text-4xl font-bold mb-8 text-black tracking-tighter">Tecnologia da Informação</h2>
-          <div className="space-y-8">
-            <p className="text-black/50 leading-relaxed text-lg italic">Atuação sólida em Tecnologia da Informação, com foco em infraestrutura, redes, hardware e <br />
-              sistemas operacionais, voltada à formação de profissionais técnicos preparados para os desafios do mundo real. <br />
-              O processo de ensino vai além da execução de tarefas: busca desenvolver pensamento crítico, raciocínio lógico e autonomia na resolução de problemas. <br />
-              A proposta integra teoria e prática de forma estratégica, capacitando os alunos a compreenderem profundamente o funcionamento das <br />
-              tecnologias, diagnosticar falhas e construir soluções eficientes em diferentes contextos profissionais.</p>
-            <div className="grid grid-cols-2 gap-4">
+    <div className="h-full flex flex-col pt-6 md:pt-20 pb-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12 max-w-6xl w-full">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="lg:col-span-2">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 md:mb-8 text-black tracking-tighter">Tecnologia da Informação</h2>
+          <div className="space-y-6 md:space-y-8">
+            <p className="text-black/50 leading-relaxed text-base md:text-lg italic">
+              Atuação sólida em Tecnologia da Informação, com foco em infraestrutura, redes, hardware e sistemas operacionais, voltada à formação de profissionais técnicos preparados para os desafios do mundo real.
+              <br className="hidden md:block" />
+              O processo de ensino vai além da execução de tarefas: busca desenvolver pensamento crítico, raciocínio lógico e autonomia na resolução de problemas.
+              <br className="hidden md:block" />
+              A proposta integra teoria e prática de forma estratégica, capacitando os alunos a compreenderem profundamente o funcionamento das tecnologias, diagnosticar falhas e construir soluções eficientes em diferentes contextos profissionais.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-6 rounded-xl border border-black/[0.05] bg-black/[0.01] space-y-4 hover:border-emerald-600/20 transition-colors group">
                  <Server className="text-black/30 group-hover:text-emerald-600 transition-colors" size={24} />
                  <h4 className="font-bold text-black/80">Infraestrutura</h4>
@@ -254,38 +294,44 @@ const ITSection = () => {
 };
 
 const LifeSection = () => (
-  <div className="h-full flex flex-col pt-12 md:pt-20">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl">
+  <div className="h-full flex flex-col pt-6 md:pt-20 pb-12">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 max-w-5xl w-full">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="relative mb-8 group inline-block">
+        <div className="relative mb-6 md:mb-8 group inline-block">
           <div className="absolute inset-0 bg-emerald-600 rounded-2xl blur-xl opacity-10" />
-          <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-2xl bg-black/[0.02] border border-black/5 flex items-center justify-center">
+          <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-2xl bg-black/[0.02] border border-black/5 flex items-center justify-center overflow-hidden">
                <img
                    src="https://lucasleniar.com.br/lucas.png"
                    alt="Lucas Leniar"
                    className="w-full h-full object-cover"
+                   referrerPolicy="no-referrer"
                  />
           </div>
         </div>
-        <h2 className="text-4xl font-bold mb-6 italic text-black tracking-tighter">Minha História</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-6 italic text-black tracking-tighter">Minha História</h2>
         <div className="space-y-4 text-black/50 leading-relaxed max-w-md">
-          <p>Professor entusiasta da educação e tecnologia. Sempre curioso, Lucas explora o mundo da programação e do design, ajustando projetos, corrigindo erros de deploy e aprimorando cada detalhe como se cada linha de código fosse uma peça de um quebra-cabeça maior. Essa mesma dedicação aparece quando ele trabalha com conteúdos educativos, como quizzes, aulas e materiais interativos voltados para seus alunos.<br/>No fim, Lucas é alguém que constrói pontes — entre educação e tecnologia, lógica e criatividade, código e pedagogia.</p>
+          <p>
+            Professor entusiasta da educação e tecnologia. Sempre curioso, Lucas explora o mundo da programação e do design, ajustando projetos, corrigindo erros de deploy e aprimorando cada detalhe como se cada linha de código fosse uma peça de um quebra-cabeça maior.
+            Essa mesma dedicação aparece quando ele trabalha com conteúdos educativos, como quizzes, aulas e materiais interativos voltados para seus alunos.
+            <br className="mt-4" />
+            No fim, Lucas é alguém que constrói pontes — entre educação e tecnologia, lógica e criatividade, código e pedagogia.
+          </p>
         </div>
       </motion.div>
       <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="space-y-6">
         <h3 className="text-xl font-bold mb-6 uppercase tracking-widest text-emerald-700 font-mono text-[11px]">Conecte-se</h3>
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
           {[
             { icon: <Mail size={18} />, label: "Email", value: "lucasleniar@gmail.com" },
             { icon: <MapPin size={18} />, label: "Localização", value: "Paraná - Brasil" },
             { icon: <Coffee size={18} />, label: "Interesses", value: "Tecnologia, Educação" },
             { icon: <Calendar size={18} />, label: "Experiência", value: "Desde 2006" },
           ].map((info, i) => (
-            <div key={i} className="flex items-center gap-4 p-4 rounded-xl border border-black/[0.03] bg-black/[0.01] hover:bg-white transition-all">
+            <div key={i} className="flex items-center gap-4 p-4 rounded-xl border border-black/[0.03] bg-black/[0.01] hover:bg-white transition-all shadow-sm">
               <div className="text-emerald-600">{info.icon}</div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-[10px] uppercase tracking-wider text-black/30 font-bold">{info.label}</p>
-                <p className="text-sm font-semibold text-black/80">{info.value}</p>
+                <p className="text-sm font-semibold text-black/80 truncate">{info.value}</p>
               </div>
             </div>
           ))}
@@ -312,7 +358,7 @@ export default function App() {
             <button
               key={section.id}
               onClick={() => setActiveSection(section.id)}
-              className={`w-full flex items-center justify-start gap-4 px-3 py-3 rounded-lg transition-all duration-300 group ${
+              className={`w-full cursor-pointer flex items-center justify-start gap-3 px-3 py-3 rounded-lg transition-all duration-300 group ${
                 activeSection === section.id 
                   ? 'bg-emerald-500/10 text-emerald-600' 
                   : 'text-black/40 hover:text-black/80 hover:bg-black/5'
@@ -321,7 +367,7 @@ export default function App() {
               <div className={`flex-shrink-0 ${activeSection === section.id ? 'scale-110' : 'group-hover:scale-110'}`}>
                 {section.icon}
               </div>
-              <div className="hidden md:block font-semibold text-sm tracking-tight">{section.label}</div>
+              <div className="hidden md:block font-semibold text-xs lg:text-sm tracking-tight text-left leading-tight">{section.label}</div>
               {activeSection === section.id && (
                 <div className="ml-auto hidden md:block">
                   <ChevronRight size={14} className="text-emerald-600" />
@@ -333,24 +379,23 @@ export default function App() {
 
         <div className="px-6 space-y-4 pt-6 border-t border-black/5 md:block hidden text-black/30">
            <div className="flex gap-4">
-              <a href="#" className="hover:text-emerald-600 transition-colors"><Github size={18} /></a>
-              <a href="https://www.linkedin.com/in/lucasleniar/" target="_blank" className="hover:text-emerald-600 transition-colors"><Linkedin size={19} /></a>
-              <a href="https://www.instagram.com/lucasmercerl/" target="_blank" className="hover:text-emerald-600 transition-colors"><Instagram size={19} /></a>
-              <a href="https://www.facebook.com/lucasmercerl/" target="_blank" className="hover:text-emerald-600 transition-colors"><Facebook size={19} /></a>
-             <a href="https://wa.me/?text=Conheça%20o%20site%20do%20Professor%20Lucas%20Leniar:%20https://lucasleniar.com.br/" target="_blank" className="hover:text-emerald-600 transition-colors"><Share2 size={19} /></a>
-              <a href="#" className="hover:text-emerald-600 transition-colors"><Globe size={19} /></a>
+              <a href="https://github.com/lucasmercer" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors"><Github size={18} /></a>
+              <a href="https://www.linkedin.com/in/lucasleniar/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors"><Linkedin size={18} /></a>
+              <a href="https://www.instagram.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors"><Instagram size={18} /></a>
+              <a href="https://www.facebook.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors"><Facebook size={18} /></a>
+              <a href="https://lucasleniar.com.br" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors"><Globe size={18} /></a>
            </div>
            <p className="text-[10px] font-mono">© {new Date().getFullYear()} ALL RIGHTS RESERVED</p>
         </div>
       </nav>
 
       {/* Main Content Area */}
-      <main className="flex-1 relative overflow-hidden bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.02)_0%,transparent_100%)]">
+      <main className="flex-1 relative overflow-y-auto bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.02)_0%,transparent_100%)]">
         <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
           style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
         />
         
-        <div className="relative z-10 w-full h-full p-6 md:p-12">
+        <div className="relative z-10 w-full h-full min-h-full p-6 md:p-12 overflow-x-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
@@ -362,6 +407,7 @@ export default function App() {
             >
               {activeSection === 'home' && <HomeSection onNext={() => setActiveSection('computational')} />}
               {activeSection === 'computational' && <ComputationalThinking />}
+              {activeSection === 'robotics' && <RoboticsSection />}
               {activeSection === 'tech' && <ITSection />}
               {activeSection === 'life' && <LifeSection />}
             </motion.div>
