@@ -57,6 +57,25 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
   <div className="h-full flex flex-col justify-center max-w-6xl">
     <div className="flex flex-col md:flex-row items-center gap-12">
       <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="flex-1 order-1 md:order-2 flex justify-center"
+      >
+        <div className="relative group">
+          <div className="absolute inset-0 bg-emerald-600 rounded-2xl blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
+          <div className="relative w-64 h-80 md:w-96 md:h-[500px] rounded-2xl bg-black/[0.02] border border-black/5 overflow-hidden shadow-2xl flex items-end">
+            <img
+              src="https://lucasleniar.com.br/home.png"
+              alt="Lucas Leniar"
+              className="w-full h-full object-contain scale-x-[-1] transform-gpu"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
