@@ -237,7 +237,7 @@ export default function App() {
             <div className="inline-flex p-3 bg-blue-50 text-blue-600 rounded-xl mb-2">
               <Users size={32} />
             </div>
-            <h1 className="text-2xl font-bold text-slate-800 tracking-tight text-center">Sistema CECM</h1>
+            <h1 className="text-2xl font-bold text-slate-800 tracking-tight text-center">Certificados CECM</h1>
             <p className="text-slate-500 text-sm font-medium text-center">Colégio Estadual Cívico-Militar Gregório Szeremeta</p>
           </div>
 
