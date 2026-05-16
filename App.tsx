@@ -34,10 +34,13 @@ import {
   Calendar,
   ArrowRight,
   Box,
-  Bot
+  Bot,
+  FileCode,
+  Copy,
+  Check
 } from 'lucide-react';
 
-type SectionId = 'home' | 'computational' | 'robotics' | 'tech' | 'life' | 'utfpr' | 'certificados' | 'horarios';
+type SectionId = 'home' | 'computational' | 'robotics' | 'tech' | 'life' | 'utfpr' | 'certificados' | 'horarios' | 'scripts';
 
 interface Section {
   id: SectionId;
@@ -53,6 +56,7 @@ const SECTIONS: Section[] = [
   { id: 'utfpr', label: 'UTFPR', icon: <GraduationCap size={20} /> },
   { id: 'certificados', label: 'Certificados', icon: <ShieldCheck size={20} /> },
   { id: 'horarios', label: 'Horários', icon: <Calendar size={20} /> },
+  { id: 'scripts', label: 'Arquivos SH', icon: <FileCode size={20} /> },
   { id: 'life', label: 'Sobre Lucas', icon: <User size={20} /> },
 ];
 
@@ -399,6 +403,173 @@ const IFrameSection = ({ url, title }: { url: string; title: string }) => (
   </div>
 );
 
+const ShellFilesSection = () => {
+  const [password, setPassword] = useState('');
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [error, setError] = useState('');
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const SH_FILES = [
+    { name: 'civico.sh', url: 'https://lucasleniar.com.br/mint/civico.sh', description: 'Script para configuração do Civico no Mint' },
+    { name: 'wallpaper.sh', url: 'https://lucasleniar.com.br/mint/wallpaper.sh', description: 'Script para gerenciar wallpapers customizados' },
+  ];
+
+  const handleCopy = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === 'lucas123') { // Senha padrão solicitada: lucas123 (ou similar)
+      setIsAuthorized(true);
+      setError('');
+    } else {
+      setError('Senha incorreta. Tente novamente.');
+    }
+  };
+
+  if (!isAuthorized) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md w-full p-8 rounded-3xl bg-white border border-black/5 shadow-2xl relative overflow-hidden"
+        >
+          <div className="absolute top-0 left-0 w-full h-1 bg-emerald-600" />
+          <div className="flex flex-col items-center text-center space-y-6">
+            <div className="p-4 bg-emerald-500/10 rounded-2xl text-emerald-600">
+              <ShieldCheck size={48} />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold tracking-tight text-black">Repositório Protegido</h2>
+              <p className="text-sm text-black/40 font-sans normal-case tracking-normal">Insira a senha de acesso para visualizar os scripts .sh</p>
+            </div>
+            <form onSubmit={handleLogin} className="w-full space-y-4">
+              <input 
+                type="password" 
+                autoFocus
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Senha de acesso"
+                className="w-full px-5 py-4 rounded-2xl border border-black/10 bg-black/[0.01] focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all font-mono text-center text-lg tracking-widest"
+              />
+              {error && (
+                <motion.p 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-xs text-red-500 font-bold uppercase tracking-wider"
+                >
+                  {error}
+                </motion.p>
+              )}
+              <button 
+                type="submit"
+                className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-500 transition-all active:scale-[0.98] shadow-lg shadow-emerald-600/20"
+              >
+                Acessar Repositório
+              </button>
+            </form>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-full flex flex-col pt-6 md:pt-4">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-5xl w-full">
+         <div className="flex items-center justify-between mb-8 px-1">
+            <div>
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tight italic font-serif text-black mb-2">Arquivos SH</h2>
+              <p className="text-black/30 uppercase text-[10px] tracking-[0.2em] font-mono font-bold">Repositório privado de automação e scripts Bash.</p>
+            </div>
+            <button 
+              onClick={() => setIsAuthorized(false)}
+              className="px-4 py-2 border border-black/10 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
+            >
+              Sair
+            </button>
+         </div>
+         
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {SH_FILES.map((file, i) => (
+              <motion.div
+                key={file.name}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.1 }}
+                className="p-8 rounded-3xl bg-white border border-black/[0.05] shadow-sm hover:shadow-xl transition-all group relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                   <Terminal size={64} />
+                </div>
+                
+                <div className="relative z-10">
+                  <div className="mb-6 flex items-center justify-between">
+                     <div className="p-3 bg-emerald-500/10 rounded-2xl text-emerald-600">
+                        <FileCode size={24} />
+                     </div>
+                     <span className="text-[10px] font-mono font-bold text-black/20 group-hover:text-emerald-600/40 transition-colors">.sh extension</span>
+                  </div>
+                  
+                  <h3 className="text-xl font-bold text-black mb-3 tracking-tight">{file.name}</h3>
+                  <p className="text-sm text-black/40 mb-6 font-sans normal-case leading-relaxed">{file.description}</p>
+                  
+                  <div className="space-y-4 mb-8">
+                    <div className="space-y-2">
+                      <label className="text-[9px] font-bold uppercase tracking-widest text-black/30">Comando de download</label>
+                      <div className="relative group/copy">
+                        <code className="block w-full p-4 bg-black/[0.03] border border-black/5 rounded-xl text-[11px] font-mono text-emerald-700 break-all pr-12">
+                          wget {file.url.replace('https://', '')}
+                        </code>
+                        <button 
+                          onClick={() => handleCopy(`wget ${file.url.replace('https://', '')}`, file.name)}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-black/20 hover:text-emerald-600 transition-colors"
+                        >
+                          {copiedId === file.name ? <Check size={16} /> : <Copy size={16} />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
+                      <p className="text-[10px] text-emerald-800 leading-relaxed">
+                        <span className="font-bold block mb-1">COMO EXECUTAR:</span>
+                        Para rodar o comando precisa estar no usuário <span className="font-bold underline">Administrador</span> da máquina e executar:
+                        <code className="block mt-2 font-mono font-bold text-emerald-900 bg-emerald-900/5 p-2 rounded-lg">sudo bash {file.name}</code>
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <a 
+                      href={file.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 text-center py-3 bg-black text-white text-[10px] font-bold rounded-xl hover:bg-emerald-600 transition-all uppercase tracking-widest"
+                    >
+                       Visualizar
+                    </a>
+                    <a 
+                      href={file.url}
+                      download={file.name}
+                      className="p-3 border border-black/5 rounded-xl hover:bg-black/5 transition-colors text-black/40 hover:text-black"
+                      title="Download"
+                    >
+                       <ArrowRight size={18} />
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+         </div>
+      </motion.div>
+    </div>
+  );
+};
+
 export default function App() {
   const [activeSection, setActiveSection] = useState<SectionId>('home');
 
@@ -470,6 +641,7 @@ export default function App() {
               {activeSection === 'utfpr' && <IFrameSection url="https://lucasleniar.com.br/utfpr/" title="UTFPR" />}
               {activeSection === 'certificados' && <IFrameSection url="https://lucasmercer.github.io/certificado/" title="Gerador de Certificados" />}
               {activeSection === 'horarios' && <IFrameSection url="https://lucasmercer.github.io/horario/" title="Gerador de Horários" />}
+              {activeSection === 'scripts' && <ShellFilesSection />}
               {activeSection === 'life' && <LifeSection />}
             </motion.div>
           </AnimatePresence>
