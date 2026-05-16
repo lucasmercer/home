@@ -37,7 +37,7 @@ import {
   Bot
 } from 'lucide-react';
 
-type SectionId = 'home' | 'computational' | 'robotics' | 'tech' | 'life';
+type SectionId = 'home' | 'computational' | 'robotics' | 'tech' | 'life' | 'utfpr' | 'certificados' | 'horarios';
 
 interface Section {
   id: SectionId;
@@ -50,6 +50,9 @@ const SECTIONS: Section[] = [
   { id: 'computational', label: 'Pensamento Computacional', icon: <Brain size={20} /> },
   { id: 'robotics', label: 'Robótica Educacional', icon: <Bot size={20} /> },
   { id: 'tech', label: 'TI & Técnico', icon: <Terminal size={20} /> },
+  { id: 'utfpr', label: 'UTFPR', icon: <GraduationCap size={20} /> },
+  { id: 'certificados', label: 'Certificados', icon: <ShieldCheck size={20} /> },
+  { id: 'horarios', label: 'Horários', icon: <Calendar size={20} /> },
   { id: 'life', label: 'Sobre Lucas', icon: <User size={20} /> },
 ];
 
@@ -67,7 +70,7 @@ const ProfileImage = () => (
   </div>
 );
 
-const HomeSection = ({ onNext }: { onNext: () => void }) => (
+const HomeSection = ({ onNavigate }: { onNavigate: (id: SectionId) => void }) => (
   <div className="min-h-full flex flex-col justify-center py-12 md:py-0 max-w-6xl">
     <div className="flex flex-col md:flex-row items-center gap-12">
       <motion.div
@@ -137,37 +140,37 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
           <motion.button
             whileHover={{ x: 5 }}
             className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 bg-emerald-600 text-white font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-emerald-500 transition-colors shadow-[0_10px_30px_rgba(16,185,129,0.2)] cursor-pointer"
-            onClick={onNext}
+            onClick={() => onNavigate('computational')}
           >
             Ver Pilares <ArrowRight size={18} />
           </motion.button>
 
           {/* UTFPR */}
-          <motion.a
+          <motion.button
             whileHover={{ x: 5 }}
-            href="./utfpr/"
-            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-black/10 text-black/70 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-yellow-400 hover:border-yellow-500 hover:text-black hover:shadow-lg transition-all duration-300"
+            onClick={() => onNavigate('utfpr')}
+            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-black/10 text-black/70 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-yellow-400 hover:border-yellow-500 hover:text-black hover:shadow-lg transition-all duration-300 cursor-pointer"
           >
             UTFPR <ArrowRight size={18} />
-          </motion.a>
+          </motion.button>
 
           {/* Certificados */}
-          <motion.a
+          <motion.button
             whileHover={{ x: 5 }}
-            href="https://lucasmercer.github.io/certificado/"
-            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-black/10 text-black/70 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-[#003366] hover:border-[#004a8f] hover:text-white transition-all duration-300"
+            onClick={() => onNavigate('certificados')}
+            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-black/10 text-black/70 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-[#003366] hover:border-[#004a8f] hover:text-white transition-all duration-300 cursor-pointer"
           >
             Gerador Certificados <ArrowRight size={18} />
-          </motion.a>
+          </motion.button>
 
           {/* HORARIO */}
-          <motion.a
+          <motion.button
             whileHover={{ x: 5 }}
-            href="https://lucasmercer.github.io/horario/"
-            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-black/10 text-black/70 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-blue-400 hover:border-blue-500 hover:text-black hover:shadow-lg transition-all duration-300"
+            onClick={() => onNavigate('horarios')}
+            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-black/10 text-black/70 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-blue-400 hover:border-blue-500 hover:text-black hover:shadow-lg transition-all duration-300 cursor-pointer"
           >
             Gerador Horários <ArrowRight size={18} />
-          </motion.a>
+          </motion.button>
         </div>
       </motion.div>
 
@@ -370,6 +373,32 @@ const LifeSection = () => (
   </div>
 );
 
+const IFrameSection = ({ url, title }: { url: string; title: string }) => (
+  <div className="w-full h-full flex flex-col pt-6 md:pt-4">
+    <div className="mb-4 flex items-center justify-between px-1">
+      <h2 className="text-2xl md:text-3xl font-bold tracking-tight italic font-serif text-black">{title}</h2>
+      <div className="flex gap-2">
+        <a 
+          href={url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-[10px] uppercase tracking-widest font-mono font-bold text-emerald-600 hover:text-emerald-500 flex items-center gap-1 transition-colors"
+        >
+          Abrir em nova aba <Globe size={12} />
+        </a>
+      </div>
+    </div>
+    <div className="flex-1 w-full bg-white rounded-2xl border border-black/5 overflow-hidden shadow-2xl relative">
+      <iframe 
+        src={url} 
+        className="w-full h-full border-0" 
+        title={title}
+        referrerPolicy="no-referrer"
+      />
+    </div>
+  </div>
+);
+
 export default function App() {
   const [activeSection, setActiveSection] = useState<SectionId>('home');
 
@@ -434,10 +463,13 @@ export default function App() {
               transition={{ duration: 0.4, ease: "easeInOut" }}
               className="h-full"
             >
-              {activeSection === 'home' && <HomeSection onNext={() => setActiveSection('computational')} />}
+              {activeSection === 'home' && <HomeSection onNavigate={setActiveSection} />}
               {activeSection === 'computational' && <ComputationalThinking />}
               {activeSection === 'robotics' && <RoboticsSection />}
               {activeSection === 'tech' && <ITSection />}
+              {activeSection === 'utfpr' && <IFrameSection url="https://lucasleniar.com.br/utfpr/" title="UTFPR" />}
+              {activeSection === 'certificados' && <IFrameSection url="https://lucasmercer.github.io/certificado/" title="Gerador de Certificados" />}
+              {activeSection === 'horarios' && <IFrameSection url="https://lucasmercer.github.io/horario/" title="Gerador de Horários" />}
               {activeSection === 'life' && <LifeSection />}
             </motion.div>
           </AnimatePresence>
