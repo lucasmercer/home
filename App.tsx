@@ -526,20 +526,30 @@ const ShellFilesSection = () => {
                           wget {file.url.replace('https://', '')}
                         </code>
                         <button 
-                          onClick={() => handleCopy(`wget ${file.url.replace('https://', '')}`, file.name)}
+                          onClick={() => handleCopy(`wget ${file.url.replace('https://', '')}`, file.name + '-download')}
                           className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-black/20 hover:text-emerald-600 transition-colors"
                         >
-                          {copiedId === file.name ? <Check size={16} /> : <Copy size={16} />}
+                          {copiedId === file.name + '-download' ? <Check size={16} /> : <Copy size={16} />}
                         </button>
                       </div>
                     </div>
 
                     <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
-                      <p className="text-[10px] text-emerald-800 leading-relaxed">
-                        <span className="font-bold block mb-1">COMO EXECUTAR:</span>
+                      <p className="text-[10px] text-emerald-800 leading-relaxed mb-2">
+                        <span className="font-bold block mb-1 uppercase">Como Executar:</span>
                         Para rodar o comando precisa estar no usuário <span className="font-bold underline">Administrador</span> da máquina e executar:
-                        <code className="block mt-2 font-mono font-bold text-emerald-900 bg-emerald-900/5 p-2 rounded-lg">sudo bash {file.name}</code>
                       </p>
+                      <div className="relative group/exec">
+                        <code className="block font-mono font-bold text-emerald-900 bg-emerald-900/10 p-3 rounded-xl pr-10 text-[11px]">
+                          sudo bash {file.name}
+                        </code>
+                        <button 
+                          onClick={() => handleCopy(`sudo bash ${file.name}`, file.name + '-exec')}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-emerald-800/30 hover:text-emerald-900 transition-colors"
+                        >
+                          {copiedId === file.name + '-exec' ? <Check size={14} /> : <Copy size={14} />}
+                        </button>
+                      </div>
                     </div>
                   </div>
                   
