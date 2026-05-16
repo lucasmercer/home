@@ -170,7 +170,7 @@ const HomeSection = ({ onNavigate }: { onNavigate: (id: SectionId) => void }) =>
           <motion.button
             whileHover={{ x: 5 }}
             onClick={() => onNavigate('horarios')}
-            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-black/10 text-black/70 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-blue-400 hover:border-blue-500 hover:text-black hover:shadow-lg transition-all duration-300 cursor-pointer"
+            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-black/10 text-black/70 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-[#657c36] hover:border-[#2d3818] hover:text-white hover:shadow-lg transition-all duration-300 cursor-pointer"
           >
             Gerador Horários <ArrowRight size={18} />
           </motion.button>
