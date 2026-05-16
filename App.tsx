@@ -162,7 +162,7 @@ const HomeSection = ({ onNext }: { onNext: () => void }) => (
           {/* HORARIO */}
           <motion.a
             whileHover={{ x: 5 }}
-            href="./horario/"
+            href="https://lucasmercer.github.io/horario/"
             className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border border-black/10 text-black/70 font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-blue-400 hover:border-blue-500 hover:text-black hover:shadow-lg transition-all duration-300"
           >
             Gerador Horários <ArrowRight size={18} />
