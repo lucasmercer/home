@@ -97,13 +97,13 @@ const HomeSection = ({ onNavigate }: { onNavigate: (id: SectionId) => void }) =>
           <ProfileImage />
         </div>
 
-        <div className="text-lg md:text-xl text-black/50 max-w-2xl leading-relaxed mb-10">
-          <p className="mb-4">
+        <div className="text-[17.5px] md:text-[19.5px] text-black/50 max-w-2xl leading-normal mb-10">
+          <p className="mb-2">
             Explorando as fronteiras entre a educação e a tecnologia.
           </p>
           <p>
             Especialista em <span className="text-black font-semibold">pensamento computacional</span> e <span className="text-black font-semibold">infraestrutura de TI</span>, 
-            atuo na formação de estudantes por meio dos quatro movimentos essenciais: decompor problemas, identificar padrões, abstrair informações e construir algoritmos.
+            atuo na formação de estudantes por meio dos quatro pilares essenciais: decompor problemas, identificar padrões, abstrair informações e construir algoritmos.
           </p>
         </div>
 
