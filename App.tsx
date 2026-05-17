@@ -64,11 +64,14 @@ const ProfileImage = () => (
     <div className="absolute inset-0 bg-emerald-600 rounded-2xl blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
     <div className="relative w-full aspect-[3/4] md:w-96 md:h-[500px] rounded-2xl bg-black/[0.02] border border-black/5 overflow-hidden shadow-2xl flex items-end">
       <img
-        src="https://lucasleniar.com.br/home.gif"
-        alt="Lucas Mercer Leniar"
+        src="https://lucasleniar.com.br/home.png"
+        alt="Lucas Leniar"
         className="w-full h-full object-contain scale-x-[-1] transform-gpu origin-bottom"
         referrerPolicy="no-referrer"
       />
+      <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/40 to-transparent">
+        <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Professor Lucas Leniar</p>
+      </div>
     </div>
   </div>
 );
