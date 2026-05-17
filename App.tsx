@@ -88,7 +88,7 @@ const HomeSection = ({ onNavigate }: { onNavigate: (id: SectionId) => void }) =>
         <span className="inline-block px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 text-[10px] font-mono tracking-widest uppercase mb-6 border border-emerald-500/20">
           Olá, Mundo.
         </span>
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-tight mb-6 text-black">
+        <h1 className="text-[32px] md:text-[54px] font-bold tracking-tighter leading-tight mb-6 text-black">
           Eu sou o <span className="text-emerald-600">Professor Lucas Mercer Leniar</span>.
         </h1>
 
