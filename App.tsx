@@ -97,11 +97,15 @@ const HomeSection = ({ onNavigate }: { onNavigate: (id: SectionId) => void }) =>
           <ProfileImage />
         </div>
 
-        <p className="text-lg md:text-xl text-black/50 max-w-2xl leading-relaxed mb-10">
-          Explorando as fronteiras entre a educação e a tecnologia. Especialista em 
-          <span className="text-black/80 font-semibold"> pensamento computacional</span> e infraestrutura de TI, 
-          contribuindo para a formação dos profissionais do futuro.
-        </p>
+        <div className="text-lg md:text-xl text-black/50 max-w-2xl leading-relaxed mb-10">
+          <p className="mb-4">
+            Explorando as fronteiras entre a educação e a tecnologia.
+          </p>
+          <p>
+            Especialista em <span className="text-black font-semibold">pensamento computacional</span> e <span className="text-black font-semibold">infraestrutura de TI</span>, 
+            atuo na formação de estudantes por meio dos quatro movimentos essenciais: decompor problemas, identificar padrões, abstrair informações e construir algoritmos.
+          </p>
+        </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {[
