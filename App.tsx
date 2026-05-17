@@ -266,28 +266,52 @@ const RoboticsSection = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col pt-6 md:pt-20 uppercase tracking-tighter">
+    <div className="h-full flex flex-col pt-6 md:pt-20 uppercase tracking-tighter overflow-visible">
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-5xl w-full">
         <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif text-black px-1">Robótica Educacional</h2>
         <p className="text-black/30 max-w-2xl mb-8 md:mb-12 uppercase text-[10px] tracking-[0.2em] font-mono font-bold px-1">Transformando teoria em movimento e inovação.</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-          {features.map((feature, i) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="p-8 rounded-2xl bg-black/[0.01] border border-black/[0.05] hover:bg-white hover:shadow-xl hover:shadow-emerald-500/5 transition-all group relative overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10">{feature.icon}</div>
-              <div className="relative z-10">
-                <div className="mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold mb-3 tracking-tight group-hover:text-emerald-600 transition-colors text-black/80">{feature.title}</h3>
-                <p className="text-black/40 leading-relaxed text-sm font-sans normal-case tracking-normal">{feature.desc}</p>
+        <div className="flex flex-col lg:flex-row gap-8 md:gap-12 items-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 flex-1">
+            {features.map((feature, i) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="p-8 rounded-2xl bg-black/[0.01] border border-black/[0.05] hover:bg-white hover:shadow-xl hover:shadow-emerald-500/5 transition-all group relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10">{feature.icon}</div>
+                <div className="relative z-10">
+                  <div className="mb-4">{feature.icon}</div>
+                  <h3 className="text-xl font-bold mb-3 tracking-tight group-hover:text-emerald-600 transition-colors text-black/80">{feature.title}</h3>
+                  <p className="text-black/40 leading-relaxed text-sm font-sans normal-case tracking-normal">{feature.desc}</p>
+                </div>
+                <div className="absolute bottom-0 left-0 h-1 w-0 bg-emerald-500 group-hover:w-full transition-all duration-500" />
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
+            className="w-full lg:w-72 shrink-0 lg:sticky lg:top-8"
+          >
+            <div className="relative group">
+              <div className="absolute inset-0 bg-emerald-600 rounded-3xl blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
+              <div className="relative rounded-3xl border border-black/5 overflow-hidden shadow-2xl bg-black/[0.02]">
+                <img 
+                  src="https://lucasleniar.com.br/robotica.gif" 
+                  alt="Robótica Educacional" 
+                  className="w-full h-auto scale-105 group-hover:scale-110 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/20 to-transparent">
+                  <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Tecnologia e Inovação</p>
+                </div>
               </div>
-              <div className="absolute bottom-0 left-0 h-1 w-0 bg-emerald-500 group-hover:w-full transition-all duration-500" />
-            </motion.div>
-          ))}
+            </div>
+          </motion.div>
         </div>
       </motion.div>
     </div>
