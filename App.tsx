@@ -360,10 +360,26 @@ const ITSection = () => {
             </div>
           </div>
         </motion.div>
-        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="bg-black/[0.02] border border-black/[0.05] rounded-2xl p-8">
-          <h3 className="text-xl font-bold mb-8 flex items-center gap-2 italic uppercase tracking-tighter text-black">
-            <span className="w-8 h-[2px] bg-emerald-600"></span> Expertises
-          </h3>
+        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="space-y-8">
+          <div className="bg-black/[0.02] border border-black/[0.05] rounded-2xl p-8">
+            <div className="relative group mb-8">
+              <div className="absolute inset-0 bg-blue-600 rounded-3xl blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
+              <div className="relative rounded-2xl border border-black/5 overflow-hidden shadow-2xl bg-black/[0.02]">
+                <img 
+                  src="https://lucasleniar.com.br/titecnico.png" 
+                  alt="Montagem de computador gamer" 
+                  className="w-full h-auto scale-105 group-hover:scale-110 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/40 to-transparent">
+                  <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Montagem de computador gamer</p>
+                </div>
+              </div>
+            </div>
+
+            <h3 className="text-xl font-bold mb-8 flex items-center gap-2 italic uppercase tracking-tighter text-black">
+              <span className="w-8 h-[2px] bg-emerald-600"></span> Expertises
+            </h3>
           <div className="space-y-6">
             {skills.map((skill, i) => (
               <div key={skill.name}>
@@ -377,9 +393,10 @@ const ITSection = () => {
               </div>
             ))}
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </div>
+  </div>
   );
 };
 
