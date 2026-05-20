@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Home, 
@@ -695,6 +695,16 @@ const ShellFilesSection = ({
 export default function App() {
   const [activeSection, setActiveSection] = useState<SectionId>('home');
   const [isMaximized, setIsMaximized] = useState(false);
+
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
 
   const handleSectionChange = (section: SectionId) => {
     setActiveSection(section);
