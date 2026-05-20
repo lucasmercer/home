@@ -36,7 +36,9 @@ import {
   Bot,
   FileCode,
   Copy,
-  Check
+  Check,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 
 type SectionId = 'home' | 'computational' | 'robotics' | 'tech' | 'life' | 'utfpr' | 'certificados' | 'horarios' | 'scripts';
@@ -448,19 +450,39 @@ const LifeSection = () => (
   </div>
 );
 
-const IFrameSection = ({ url, title }: { url: string; title: string }) => (
-  <div className="w-full h-full flex flex-col pt-6 md:pt-4">
-    <div className="mb-4 flex items-center justify-between px-1">
-      <h2 className="text-2xl md:text-3xl font-bold tracking-tight italic font-serif text-black">{title}</h2>
+const IFrameSection = ({ 
+  url, 
+  title, 
+  isMaximized, 
+  onToggleMaximize 
+}: { 
+  url: string; 
+  title: string; 
+  isMaximized?: boolean; 
+  onToggleMaximize?: () => void; 
+}) => (
+  <div className={`w-full h-full flex flex-col ${isMaximized ? 'pt-2' : 'pt-4 md:pt-3'}`}>
+    <div className={`flex items-center justify-between px-1 ${isMaximized ? 'mb-2' : 'mb-3'}`}>
+      <h2 className={`font-bold tracking-tight italic font-serif text-black leading-none ${isMaximized ? 'text-lg md:text-xl' : 'text-xl md:text-2xl'}`}>{title}</h2>
       <div className="flex gap-2">
-        <a 
-          href={url} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="text-[10px] uppercase tracking-widest font-mono font-bold text-emerald-600 hover:text-emerald-500 flex items-center gap-1 transition-colors"
-        >
-          Abrir em nova aba <Globe size={12} />
-        </a>
+        {onToggleMaximize && (
+          <button
+            onClick={onToggleMaximize}
+            className={`uppercase tracking-widest font-mono font-bold text-emerald-600 hover:text-emerald-500 flex items-center gap-1.5 transition-all bg-emerald-500/10 rounded-full border border-emerald-500/20 cursor-pointer hover:bg-emerald-500/20 ${
+              isMaximized ? 'text-[9px] px-2.5 py-1' : 'text-[9.5px] px-3 py-1.2'
+            }`}
+          >
+            {isMaximized ? (
+              <>
+                Restaurar Layout <Minimize2 size={11} />
+              </>
+            ) : (
+              <>
+                Maximizar <Maximize2 size={11} />
+              </>
+            )}
+          </button>
+        )}
       </div>
     </div>
     <div className="flex-1 w-full bg-white rounded-2xl border border-black/5 overflow-hidden shadow-2xl relative">
@@ -474,7 +496,13 @@ const IFrameSection = ({ url, title }: { url: string; title: string }) => (
   </div>
 );
 
-const ShellFilesSection = () => {
+const ShellFilesSection = ({ 
+  isMaximized, 
+  onToggleMaximize 
+}: { 
+  isMaximized?: boolean; 
+  onToggleMaximize?: () => void; 
+}) => {
   const [password, setPassword] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [error, setError] = useState('');
@@ -550,19 +578,41 @@ const ShellFilesSection = () => {
   }
 
   return (
-    <div className="h-full flex flex-col pt-6 md:pt-4">
+    <div className={`h-full flex flex-col ${isMaximized ? 'pt-2' : 'pt-4 md:pt-3'}`}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-5xl w-full">
-         <div className="flex items-center justify-between mb-8 px-1">
+         <div className={`flex items-center justify-between px-1 ${isMaximized ? 'mb-4' : 'mb-6 md:mb-8'}`}>
             <div>
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight italic font-serif text-black mb-2">Arquivos SH</h2>
-              <p className="text-black/30 uppercase text-[10px] tracking-[0.2em] font-mono font-bold">Repositório privado de automação e scripts Bash.</p>
+              <h2 className={`font-bold tracking-tight italic font-serif text-black leading-none mb-1 md:mb-2 ${isMaximized ? 'text-xl md:text-2xl' : 'text-2xl md:text-4xl'}`}>Arquivos SH</h2>
+              <p className="text-black/30 uppercase text-[9px] tracking-[0.2em] font-mono font-bold">Repositório privado de automação e scripts Bash.</p>
             </div>
-            <button 
-              onClick={() => setIsAuthorized(false)}
-              className="px-4 py-2 border border-black/10 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
-            >
-              Sair
-            </button>
+            <div className="flex gap-2">
+              {onToggleMaximize && (
+                <button
+                  onClick={onToggleMaximize}
+                  className={`uppercase tracking-widest font-mono font-bold text-emerald-600 hover:text-emerald-500 flex items-center gap-1.5 transition-all bg-emerald-500/10 rounded-full border border-emerald-500/20 cursor-pointer hover:bg-emerald-500/20 ${
+                    isMaximized ? 'text-[9px] px-2.5 py-1' : 'text-[9.5px] px-3 py-1.2'
+                  }`}
+                >
+                  {isMaximized ? (
+                    <>
+                      Restaurar Layout <Minimize2 size={11} />
+                    </>
+                  ) : (
+                    <>
+                      Maximizar <Maximize2 size={11} />
+                    </>
+                  )}
+                </button>
+              )}
+              <button 
+                onClick={() => setIsAuthorized(false)}
+                className={`border border-black/10 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all cursor-pointer ${
+                  isMaximized ? 'px-3 py-1.5 text-[9px]' : 'px-4 py-2'
+                }`}
+              >
+                Sair
+              </button>
+            </div>
          </div>
          
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -627,19 +677,10 @@ const ShellFilesSection = () => {
                   <div className="flex items-center gap-3">
                     <a 
                       href={file.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 text-center py-3 bg-black text-white text-[10px] font-bold rounded-xl hover:bg-emerald-600 transition-all uppercase tracking-widest"
-                    >
-                       Visualizar
-                    </a>
-                    <a 
-                      href={file.url}
                       download={file.name}
-                      className="p-3 border border-black/5 rounded-xl hover:bg-black/5 transition-colors text-black/40 hover:text-black"
-                      title="Download"
+                      className="flex-1 text-center py-3 bg-black text-white text-[10px] font-bold rounded-xl hover:bg-emerald-600 transition-all uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer"
                     >
-                       <ArrowRight size={18} />
+                       Baixar Script <ArrowRight size={14} />
                     </a>
                   </div>
                 </div>
@@ -653,50 +694,58 @@ const ShellFilesSection = () => {
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<SectionId>('home');
+  const [isMaximized, setIsMaximized] = useState(false);
+
+  const handleSectionChange = (section: SectionId) => {
+    setActiveSection(section);
+    setIsMaximized(false);
+  };
 
   return (
     <div className="flex h-screen w-full bg-white text-[#1a1a1a] font-sans overflow-hidden selection:bg-emerald-500/20 selection:text-emerald-600">
       {/* Sidebar Navigation */}
-      <nav className="w-20 md:w-64 border-r border-black/5 flex flex-col py-8 bg-[#fcfcfc] z-20">
-        <div className="px-6 mb-12 hidden md:block">
-          <h1 className="text-xl font-bold tracking-tighter text-emerald-600">LUCAS LENIAR</h1>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-black/40 font-mono font-semibold">Systems Architect & Educator</p>
-        </div>
+      {!isMaximized && (
+        <nav className="w-20 md:w-64 border-r border-black/5 flex flex-col py-8 bg-[#fcfcfc] z-20">
+          <div className="px-6 mb-12 hidden md:block">
+            <h1 className="text-xl font-bold tracking-tighter text-emerald-600">LUCAS LENIAR</h1>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-black/40 font-mono font-semibold">Systems Architect & Educator</p>
+          </div>
 
-        <div className="flex-1 space-y-2 px-3">
-          {SECTIONS.map((section) => (
-            <button
-              key={section.id}
-              onClick={() => setActiveSection(section.id)}
-              className={`w-full cursor-pointer flex items-center justify-start gap-3 px-3 py-3 rounded-lg transition-all duration-300 group ${
-                activeSection === section.id 
-                  ? 'bg-emerald-500/10 text-emerald-600' 
-                  : 'text-black/40 hover:text-black/80 hover:bg-black/5'
-              }`}
-            >
-              <div className={`flex-shrink-0 ${activeSection === section.id ? 'scale-110' : 'group-hover:scale-110'}`}>
-                {section.icon}
-              </div>
-              <div className="hidden md:block font-semibold text-xs lg:text-sm tracking-tight text-left leading-tight">{section.label}</div>
-              {activeSection === section.id && (
-                <div className="ml-auto hidden md:block">
-                  <ChevronRight size={14} className="text-emerald-600" />
+          <div className="flex-1 space-y-2 px-3">
+            {SECTIONS.map((section) => (
+              <button
+                key={section.id}
+                onClick={() => handleSectionChange(section.id)}
+                className={`w-full cursor-pointer flex items-center justify-start gap-3 px-3 py-3 rounded-lg transition-all duration-300 group ${
+                  activeSection === section.id 
+                    ? 'bg-emerald-500/10 text-emerald-600' 
+                    : 'text-black/40 hover:text-black/80 hover:bg-black/5'
+                }`}
+              >
+                <div className={`flex-shrink-0 ${activeSection === section.id ? 'scale-110' : 'group-hover:scale-110'}`}>
+                  {section.icon}
                 </div>
-              )}
-            </button>
-          ))}
-        </div>
+                <div className="hidden md:block font-semibold text-xs lg:text-sm tracking-tight text-left leading-tight">{section.label}</div>
+                {activeSection === section.id && (
+                  <div className="ml-auto hidden md:block">
+                    <ChevronRight size={14} className="text-emerald-600" />
+                  </div>
+                )}
+              </button>
+            ))}
+          </div>
 
-        <div className="px-6 space-y-4 pt-6 border-t border-black/5 md:block hidden text-black/30 text-center">
-           <div className="flex gap-4 justify-center">
-              <a href="https://www.linkedin.com/in/lucasleniar/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors"><Linkedin size={18} /></a>
-              <a href="https://www.instagram.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors"><Instagram size={18} /></a>
-              <a href="https://www.facebook.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors"><Facebook size={18} /></a>
-              <a href="https://lucasleniar.com.br" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors"><Globe size={18} /></a>
-           </div>
-           <p className="text-[10px] font-mono">© {new Date().getFullYear()} ALL RIGHTS RESERVED</p>
-        </div>
-      </nav>
+          <div className="px-6 space-y-4 pt-6 border-t border-black/5 md:block hidden text-black/30 text-center">
+             <div className="flex gap-4 justify-center">
+                <a href="https://www.linkedin.com/in/lucasleniar/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-650 transition-colors"><Linkedin size={18} /></a>
+                <a href="https://www.instagram.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-650 transition-colors"><Instagram size={18} /></a>
+                <a href="https://www.facebook.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-650 transition-colors"><Facebook size={18} /></a>
+                <a href="https://lucasleniar.com.br" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-650 transition-colors"><Globe size={18} /></a>
+             </div>
+             <p className="text-[10px] font-mono">© {new Date().getFullYear()} ALL RIGHTS RESERVED</p>
+          </div>
+        </nav>
+      )}
 
       {/* Main Content Area */}
       <main className="flex-1 relative overflow-y-auto bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.02)_0%,transparent_100%)]">
@@ -704,7 +753,7 @@ export default function App() {
           style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
         />
         
-        <div className="relative z-10 w-full h-full min-h-full p-6 md:p-12 overflow-x-hidden">
+        <div className={`relative z-10 w-full h-full min-h-full transition-all duration-300 overflow-x-hidden ${isMaximized ? 'p-0' : 'p-6 md:p-12'}`}>
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
@@ -714,18 +763,54 @@ export default function App() {
               transition={{ duration: 0.4, ease: "easeInOut" }}
               className="h-full"
             >
-              {activeSection === 'home' && <HomeSection onNavigate={setActiveSection} />}
+              {activeSection === 'home' && <HomeSection onNavigate={handleSectionChange} />}
               {activeSection === 'computational' && <ComputationalThinking />}
               {activeSection === 'robotics' && <RoboticsSection />}
               {activeSection === 'tech' && <ITSection />}
-              {activeSection === 'utfpr' && <IFrameSection url="https://lucasleniar.com.br/utfpr/" title="UTFPR" />}
-              {activeSection === 'certificados' && <IFrameSection url="https://lucasmercer.github.io/certificado/" title="Gerador de Certificados" />}
-              {activeSection === 'horarios' && <IFrameSection url="https://lucasmercer.github.io/horario/" title="Gerador de Horários" />}
-              {activeSection === 'scripts' && <ShellFilesSection />}
+              {activeSection === 'utfpr' && (
+                <IFrameSection 
+                  url="https://lucasleniar.com.br/utfpr/" 
+                  title="UTFPR" 
+                  isMaximized={isMaximized}
+                  onToggleMaximize={() => setIsMaximized(!isMaximized)}
+                />
+              )}
+              {activeSection === 'certificados' && (
+                <IFrameSection 
+                  url="https://lucasmercer.github.io/certificado/" 
+                  title="Gerador de Certificados" 
+                  isMaximized={isMaximized}
+                  onToggleMaximize={() => setIsMaximized(!isMaximized)}
+                />
+              )}
+              {activeSection === 'horarios' && (
+                <IFrameSection 
+                  url="https://lucasmercer.github.io/horario/" 
+                  title="Gerador de Horários" 
+                  isMaximized={isMaximized}
+                  onToggleMaximize={() => setIsMaximized(!isMaximized)}
+                />
+              )}
+              {activeSection === 'scripts' && (
+                <ShellFilesSection 
+                  isMaximized={isMaximized}
+                  onToggleMaximize={() => setIsMaximized(!isMaximized)}
+                />
+              )}
               {activeSection === 'life' && <LifeSection />}
             </motion.div>
           </AnimatePresence>
         </div>
+
+        {isMaximized && (
+          <button
+            onClick={() => setIsMaximized(false)}
+            className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3.5 bg-emerald-600 text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-emerald-500 shadow-2xl transition-all cursor-pointer border border-emerald-500/20 hover:scale-105 active:scale-95"
+            title="Sair da Tela Cheia"
+          >
+            <Minimize2 size={16} /> Sair da Tela Cheia
+          </button>
+        )}
 
         <div className="absolute top-4 right-4 w-12 h-12 border-t border-r border-emerald-600/10 pointer-events-none" />
         <div className="absolute bottom-4 left-4 w-12 h-12 border-b border-l border-emerald-600/10 pointer-events-none" />
