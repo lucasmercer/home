@@ -42,7 +42,9 @@ import {
   Sun,
   Moon,
   Play,
-  Award
+  Award,
+  Menu,
+  X
 } from 'lucide-react';
 
 type SectionId = 'home' | 'computational' | 'robotics' | 'tech' | 'life' | 'utfpr' | 'certificados' | 'horarios' | 'scripts';
@@ -55,6 +57,7 @@ interface Section {
 
 const SECTIONS: Section[] = [
   { id: 'home', label: 'Início', icon: <Home size={20} /> },
+  { id: 'life', label: 'Sobre Lucas', icon: <User size={20} /> },
   { id: 'computational', label: 'Pensamento Computacional', icon: <Brain size={20} /> },
   { id: 'robotics', label: 'Robótica Educacional', icon: <Bot size={20} /> },
   { id: 'tech', label: 'TI & Técnico', icon: <Terminal size={20} /> },
@@ -62,7 +65,6 @@ const SECTIONS: Section[] = [
   { id: 'certificados', label: 'Certificados', icon: <ShieldCheck size={20} /> },
   { id: 'horarios', label: 'Horários', icon: <Calendar size={20} /> },
   { id: 'scripts', label: 'Arquivos SH', icon: <FileCode size={20} /> },
-  { id: 'life', label: 'Sobre Lucas', icon: <User size={20} /> },
 ];
 
 const ProfileImage = () => (
@@ -2028,42 +2030,54 @@ const IFrameSection = ({
   onToggleMaximize?: () => void; 
   isDarkMode: boolean;
 }) => (
-  <div className={`w-full flex flex-col transition-all duration-300 ${
-    isMaximized 
-      ? 'h-[88vh] md:h-[94vh] pt-2 px-4 md:px-8' 
-      : 'h-[75vh] md:h-[82vh] min-h-[550px] md:min-h-[700px] pt-4 md:pt-3'
+  <div className={`w-full flex-1 flex flex-col min-h-0 relative ${
+    isMaximized ? 'h-full' : ''
   }`}>
-    <div className={`flex items-center justify-between px-1 ${isMaximized ? 'mb-2' : 'mb-3'}`}>
-      <h2 className={`font-bold tracking-tight italic font-serif leading-none ${isMaximized ? 'text-lg md:text-xl' : 'text-xl md:text-2xl'} ${isDarkMode ? 'text-white' : 'text-black'}`}>{title}</h2>
-      <div className="flex gap-2">
+    {isMaximized ? (
+      <>
         {onToggleMaximize && (
           <button
             onClick={onToggleMaximize}
-            className={`uppercase tracking-widest font-mono font-bold text-emerald-600 hover:text-emerald-500 flex items-center gap-1.5 transition-all bg-emerald-500/10 rounded-full border border-emerald-500/20 cursor-pointer hover:bg-emerald-500/20 ${
-              isMaximized ? 'text-[9px] px-2.5 py-1' : 'text-[9.5px] px-3 py-1.2'
-            }`}
+            className="absolute top-4 right-4 z-50 p-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full transition-all duration-250 shadow-2xl border border-emerald-400/20 cursor-pointer hover:scale-110 active:scale-95 flex items-center justify-center"
+            title="Restaurar Layout"
           >
-            {isMaximized ? (
-              <>
-                Restaurar Layout <Minimize2 size={11} />
-              </>
-            ) : (
-              <>
-                Maximizar <Maximize2 size={11} />
-              </>
-            )}
+            <Minimize2 size={16} />
           </button>
         )}
-      </div>
-    </div>
-    <div className={`flex-1 w-full bg-white rounded-2xl border overflow-hidden shadow-2xl relative ${isDarkMode ? 'border-white/5' : 'border-black/5'}`}>
-      <iframe 
-        src={url} 
-        className="w-full h-full border-0" 
-        title={title}
-        referrerPolicy="no-referrer"
-      />
-    </div>
+        <div className="w-full h-full bg-white overflow-hidden relative">
+          <iframe 
+            src={url} 
+            className="w-full h-full border-0 m-0 p-0" 
+            title={title}
+            referrerPolicy="no-referrer"
+          />
+        </div>
+      </>
+    ) : (
+      <>
+        <div className="flex items-center justify-between px-1 mb-3 shrink-0">
+          <h2 className={`font-bold tracking-tight italic font-serif leading-none text-xl md:text-2xl ${isDarkMode ? 'text-white' : 'text-black'}`}>{title}</h2>
+          <div className="flex gap-2">
+            {onToggleMaximize && (
+              <button
+                onClick={onToggleMaximize}
+                className="uppercase tracking-widest font-mono font-bold text-emerald-600 hover:text-emerald-500 flex items-center gap-1.5 transition-all bg-emerald-500/10 rounded-full border border-emerald-500/20 cursor-pointer hover:bg-emerald-500/20 text-[9.5px] px-3 py-1.2"
+              >
+                Maximizar <Maximize2 size={11} />
+              </button>
+            )}
+          </div>
+        </div>
+        <div className={`flex-1 w-full bg-white rounded-2xl border overflow-hidden shadow-2xl relative min-h-0 ${isDarkMode ? 'border-white/5' : 'border-black/5'}`}>
+          <iframe 
+            src={url} 
+            className="w-full h-full border-0" 
+            title={title}
+            referrerPolicy="no-referrer"
+          />
+        </div>
+      </>
+    )}
   </div>
 );
 
@@ -2444,6 +2458,9 @@ const ShellFilesSection = ({
 export default function App() {
   const [activeSection, setActiveSection] = useState<SectionId>('home');
   const [isMaximized, setIsMaximized] = useState(false);
+  const [hoveredSection, setHoveredSection] = useState<SectionId | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isIFrameSection = ['utfpr', 'certificados', 'horarios'].includes(activeSection);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     const saved = localStorage.getItem('lucas-leniar-theme');
     return saved ? saved === 'true' : false;
@@ -2469,12 +2486,158 @@ export default function App() {
   };
 
   return (
-    <div className={`flex h-screen w-full font-sans overflow-hidden transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-600 ${
+    <div className={`flex flex-col md:flex-row h-screen w-full font-sans overflow-hidden transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-600 ${
       isDarkMode ? 'bg-[#0a0f12] text-slate-100' : 'bg-white text-[#1a1a1a]'
     }`}>
-      {/* Sidebar Navigation */}
+      {/* Mobile Header Bar */}
       {!isMaximized && (
-        <nav className={`w-20 md:w-64 border-r flex flex-col py-8 transition-all duration-300 z-20 ${
+        <div className={`md:hidden flex items-center justify-between px-5 py-4 border-b shrink-0 z-30 transition-colors duration-300 ${
+          isDarkMode ? 'bg-[#0f151a] border-white/5 text-white' : 'bg-[#fcfcfc] border-black/5 text-black'
+        }`}>
+          <div>
+            <h1 className={`text-md font-bold tracking-tighter ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>LUCAS LENIAR</h1>
+            <p className={`text-[8px] uppercase tracking-[0.15em] font-mono leading-none ${isDarkMode ? 'text-emerald-400/40' : 'text-black/40'}`}>Systems Architect & Educator</p>
+          </div>
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className={`p-2.5 rounded-lg cursor-pointer transition-colors ${
+              isDarkMode ? 'hover:bg-white/5 text-emerald-400' : 'hover:bg-black/5 text-emerald-650'
+            }`}
+            title="Abrir Menu"
+          >
+            <Menu size={22} />
+          </button>
+        </div>
+      )}
+
+      {/* Mobile Drawer Navigation overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && !isMaximized && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black z-40 md:hidden"
+            />
+            {/* Drawer container */}
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
+              className={`fixed top-0 left-0 bottom-0 w-72 max-w-[85vw] z-50 flex flex-col py-6 shadow-2xl md:hidden ${
+                isDarkMode ? 'bg-[#0a0f12] border-r border-white/5 text-slate-100' : 'bg-white border-r border-black/5 text-[#1a1a1a]'
+              }`}
+            >
+              <div className="px-6 mb-8 flex items-center justify-between">
+                <div>
+                  <h1 className={`text-lg font-bold tracking-tighter ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>LUCAS LENIAR</h1>
+                  <p className={`text-[9px] uppercase tracking-[0.15em] font-mono ${isDarkMode ? 'text-emerald-400/40' : 'text-black/40'}`}>Systems Architect & Educator</p>
+                </div>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`p-2 rounded-lg cursor-pointer transition-colors ${
+                    isDarkMode ? 'hover:bg-white/5 text-white/60' : 'hover:bg-black/5 text-black/60'
+                  }`}
+                  title="Fechar Menu"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="flex-1 space-y-1.5 px-3 overflow-y-auto">
+                {SECTIONS.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => {
+                      handleSectionChange(section.id);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    onMouseEnter={() => setHoveredSection(section.id)}
+                    onMouseLeave={() => setHoveredSection(null)}
+                    className={`w-full cursor-pointer flex items-center justify-start gap-4 px-3.5 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden ${
+                      activeSection === section.id 
+                        ? isDarkMode 
+                          ? 'bg-emerald-500/10 text-emerald-400 font-semibold' 
+                          : 'bg-emerald-500/10 text-emerald-600 font-semibold'
+                        : isDarkMode 
+                          ? 'text-white/50 hover:text-white/90 hover:bg-white/5' 
+                          : 'text-black/50 hover:text-black/90 hover:bg-black/5'
+                    }`}
+                  >
+                    <div className={`flex-shrink-0 transition-transform ${activeSection === section.id ? 'scale-110' : 'group-hover:scale-110'} ${
+                      activeSection === section.id ? 'text-emerald-500' : ''
+                    }`}>
+                      {section.icon}
+                    </div>
+                    <div className="font-semibold text-sm tracking-tight text-left leading-tight z-10">{section.label}</div>
+                    {activeSection === section.id && (
+                      <div className="ml-auto z-10">
+                        <ChevronRight size={14} className={isDarkMode ? 'text-emerald-400' : 'text-emerald-600'} />
+                      </div>
+                    )}
+
+                    {/* Sweep loading hover effect */}
+                    {hoveredSection === section.id && (
+                      <div className="absolute bottom-0 left-0 w-full h-[2.5px] bg-emerald-500/10 overflow-hidden">
+                        <motion.div
+                          className="h-full bg-gradient-to-r from-emerald-500 via-emerald-300 to-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
+                          initial={{ x: "-100%" }}
+                          animate={{ x: "100%" }}
+                          transition={{ 
+                            repeat: Infinity, 
+                            duration: 1.2, 
+                            ease: "linear" 
+                          }}
+                          style={{ width: "100%" }}
+                        />
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              {/* Theme switcher */}
+              <div className={`px-4 py-3 border-t mx-3 mb-4 rounded-xl transition-all duration-300 ${isDarkMode ? 'border-white/5 bg-white/[0.01]' : 'border-black/5 bg-black/[0.01]'}`}>
+                <button
+                  onClick={() => setIsDarkMode(!isDarkMode)}
+                  className={`w-full flex items-center justify-start gap-3 p-2 rounded-lg transition-all duration-300 group cursor-pointer ${
+                    isDarkMode 
+                      ? 'text-emerald-400 hover:bg-white/5' 
+                      : 'text-black/60 hover:bg-black/5'
+                  }`}
+                  title={isDarkMode ? "Mudar para Modo Claro" : "Mudar para Modo Escuro"}
+                >
+                  <div className="flex-shrink-0 group-hover:scale-110 transition-transform">
+                    {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+                  </div>
+                  <div className="font-semibold text-xs tracking-tight text-left leading-tight">
+                    {isDarkMode ? 'Modo Claro' : 'Modo Escuro'}
+                  </div>
+                </button>
+              </div>
+
+              {/* Social icons */}
+              <div className={`px-6 space-y-4 pt-6 mt-2 border-t text-center ${isDarkMode ? 'border-white/5 text-white/20' : 'border-black/5 text-black/30'}`}>
+                 <div className="flex gap-4 justify-center">
+                    <a href="https://www.linkedin.com/in/lucasleniar/" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-emerald-400' : 'hover:text-emerald-650'}`}><Linkedin size={18} /></a>
+                    <a href="https://www.instagram.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-emerald-400' : 'hover:text-emerald-650'}`}><Instagram size={18} /></a>
+                    <a href="https://www.facebook.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-emerald-400' : 'hover:text-emerald-650'}`}><Facebook size={18} /></a>
+                    <a href="https://lucasleniar.com.br" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-emerald-400' : 'hover:text-emerald-650'}`}><Globe size={18} /></a>
+                 </div>
+                 <p className="text-[10px] font-mono">© {new Date().getFullYear()} ALL RIGHTS RESERVED</p>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Sidebar Navigation */}
+      {!isMaximized && (
+        <nav className={`hidden md:flex w-20 md:w-64 border-r flex-col py-8 transition-all duration-300 z-20 shrink-0 ${
           isDarkMode ? 'bg-[#0f151a] border-white/5' : 'bg-[#fcfcfc] border-black/5'
         }`}>
           <div className="px-6 mb-12 hidden md:block">
@@ -2487,7 +2650,9 @@ export default function App() {
               <button
                 key={section.id}
                 onClick={() => handleSectionChange(section.id)}
-                className={`w-full cursor-pointer flex items-center justify-start gap-3 px-3 py-3 rounded-lg transition-all duration-300 group ${
+                onMouseEnter={() => setHoveredSection(section.id)}
+                onMouseLeave={() => setHoveredSection(null)}
+                className={`w-full cursor-pointer flex items-center justify-start gap-3 px-3 py-3 rounded-lg transition-all duration-300 group relative overflow-hidden ${
                   activeSection === section.id 
                     ? isDarkMode 
                       ? 'bg-emerald-500/10 text-emerald-400' 
@@ -2497,15 +2662,32 @@ export default function App() {
                       : 'text-black/40 hover:text-black/80 hover:bg-black/5'
                 }`}
               >
-                <div className={`flex-shrink-0 ${activeSection === section.id ? 'scale-110' : 'group-hover:scale-110'} ${
+                <div className={`flex-shrink-0 transition-transform ${activeSection === section.id ? 'scale-110' : 'group-hover:scale-110'} ${
                   activeSection === section.id ? 'text-emerald-500' : ''
                 }`}>
                   {section.icon}
                 </div>
-                <div className="hidden md:block font-semibold text-xs lg:text-sm tracking-tight text-left leading-tight">{section.label}</div>
+                <div className="hidden md:block font-semibold text-xs lg:text-sm tracking-tight text-left leading-tight z-10">{section.label}</div>
                 {activeSection === section.id && (
-                  <div className="ml-auto hidden md:block">
+                  <div className="ml-auto hidden md:block z-10">
                     <ChevronRight size={14} className={isDarkMode ? 'text-emerald-400' : 'text-emerald-600'} />
+                  </div>
+                )}
+
+                {/* Embedded High-tech sweep loading effect on hover */}
+                {hoveredSection === section.id && (
+                  <div className="absolute bottom-0 left-0 w-full h-[2.5px] bg-emerald-500/10 overflow-hidden">
+                    <motion.div
+                      className="h-full bg-gradient-to-r from-emerald-500 via-emerald-300 to-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
+                      initial={{ x: "-100%" }}
+                      animate={{ x: "100%" }}
+                      transition={{ 
+                        repeat: Infinity, 
+                        duration: 1.2, 
+                        ease: "linear" 
+                      }}
+                      style={{ width: "100%" }}
+                    />
                   </div>
                 )}
               </button>
@@ -2545,7 +2727,13 @@ export default function App() {
       )}
 
       {/* Main Content Area */}
-      <main className="flex-1 relative overflow-y-auto">
+      <main className={`flex-1 relative flex flex-col min-h-0 ${
+        isMaximized 
+          ? 'overflow-hidden h-screen' 
+          : isIFrameSection 
+            ? 'h-full overflow-hidden' 
+            : 'overflow-y-auto'
+      }`}>
         <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
           style={{ 
             backgroundImage: isDarkMode 
@@ -2555,7 +2743,13 @@ export default function App() {
           }} 
         />
         
-        <div className={`relative z-10 w-full min-h-full transition-all duration-300 overflow-x-hidden ${isMaximized ? 'p-0' : 'p-6 md:p-12'}`}>
+        <div className={`relative z-10 w-full transition-all duration-300 ${
+          isMaximized 
+            ? 'p-0 h-screen flex flex-col overflow-hidden' 
+            : isIFrameSection 
+              ? 'px-2 md:px-4 pt-4 md:pt-5 pb-[3px] h-full flex flex-col overflow-hidden max-w-full' 
+              : 'min-h-full p-6 md:p-12 overflow-x-hidden'
+        }`}>
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
@@ -2563,7 +2757,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="min-h-full flex flex-col"
+              className={isIFrameSection ? "flex-1 flex flex-col min-h-0 overflow-hidden" : "min-h-full flex flex-col"}
             >
               {activeSection === 'home' && <HomeSection onNavigate={handleSectionChange} isDarkMode={isDarkMode} />}
               {activeSection === 'computational' && <ComputationalThinking isDarkMode={isDarkMode} />}
@@ -2608,7 +2802,7 @@ export default function App() {
           </AnimatePresence>
         </div>
 
-        {isMaximized && (
+        {isMaximized && !isIFrameSection && (
           <button
             onClick={() => setIsMaximized(false)}
             className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3.5 bg-emerald-600 text-white font-bold rounded-full text-xs uppercase tracking-widest hover:bg-emerald-500 shadow-2xl transition-all cursor-pointer border border-emerald-500/20 hover:scale-105 active:scale-95"
