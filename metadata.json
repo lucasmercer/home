@@ -1,6 +1,8 @@
 {
-  "name": "Lucas Mercer Leniar - Professor",
-  "description": "Um portfólio interativo focado em Pensamento Computacional, Tecnologia da Informação e trajetória pessoal de Lucas Leniar.",
+  "name": "Lucas Mercer Leniar - Portfólio",
+  "description": "Portfólio do Professor Lucas Mercer Leniar, arquiteto de sistemas e educador, com seções dedicadas ao ensino de pensamento computacional, robótica e expertise em TI.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
