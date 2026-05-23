@@ -73,7 +73,7 @@ const ProfileImage = () => (
     <div className="relative w-full aspect-[3/4] md:w-96 md:h-[500px] rounded-2xl bg-black/[0.02] border border-black/5 overflow-hidden shadow-2xl flex items-end">
       <img
         src="https://lucasleniar.com.br/home.gif"
-        alt="Lucas Leniar"
+        alt="Computador retro animado representando a paixão do Professor Lucas Leniar por tecnologia e hardware"
         className="w-full h-full object-contain scale-x-[-1] transform-gpu origin-bottom"
         referrerPolicy="no-referrer"
       />
@@ -351,9 +351,10 @@ const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
               <div className={`relative rounded-3xl border overflow-hidden shadow-2xl transition-colors ${isDarkMode ? 'bg-black/40 border-white/5' : 'bg-black/[0.02] border-black/5'}`}>
                 <img 
                   src="https://lucasleniar.com.br/certificado.gif" 
-                  alt="Lucas Mercer" 
+                  alt="Animação representativa de Certificação Acadêmica de TI e Redes do Professor Lucas Leniar" 
                   className="w-full h-auto scale-105 group-hover:scale-110 transition-transform duration-700"
                   referrerPolicy="no-referrer"
+                  loading="lazy"
                 />
                 <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/50 to-transparent">
                   <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Professor Lucas Leniar</p>
@@ -804,9 +805,10 @@ void loop() {
               <div className={`relative rounded-3xl overflow-hidden shadow-2xl border ${isDarkMode ? 'border-white/5 bg-white/[0.02]' : 'border-black/5 bg-black/[0.02]'}`}>
                 <img 
                   src="https://lucasleniar.com.br/robotica.gif" 
-                  alt="Robótica Educacional" 
+                  alt="Braço robótico industrial animado representando os ensinamentos práticos de robótica escolar" 
                   className="w-full h-auto scale-105 group-hover:scale-110 transition-transform duration-700"
                   referrerPolicy="no-referrer"
+                  loading="lazy"
                 />
                 <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/50 to-transparent">
                   <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em] font-mono leading-none">Protótipos em Movimento</p>
@@ -1314,9 +1316,10 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
             <div className={`relative rounded-2xl overflow-hidden shadow-xl border ${isDarkMode ? 'border-white/5 bg-white/[0.02]' : 'border-black/5 bg-black/[0.02]'}`}>
               <img 
                 src="https://lucasleniar.com.br/titecnico.png" 
-                alt="Manutenção e Redes" 
+                alt="Diagrama e mesa técnica de hardware e redes de computadores para suporte de TI" 
                 className="w-full h-auto scale-105 group-hover:scale-110 transition-transform duration-700"
                 referrerPolicy="no-referrer"
+                loading="lazy"
               />
               <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
                 <p className="text-[9px] font-bold text-white uppercase tracking-[0.2em] font-mono leading-none">Mesa de Diagnóstico</p>
@@ -1666,15 +1669,16 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
               }`}>
                 <img
                   src="https://lucasleniar.com.br/lucas.png"
-                  alt="Lucas Mercer Leniar"
+                  alt="Lucas Mercer Leniar - Professor de Programação e Engenheiro de Software"
                   className="w-full h-full object-cover rounded-xl"
                   referrerPolicy="no-referrer"
+                  loading="lazy"
                 />
                 
                 {/* Floating identity pill */}
                 <div className="absolute inset-x-0 bottom-0 py-3 bg-gradient-to-t from-black/95 to-black/20 text-center">
                   <span className="text-[9px] font-mono font-bold tracking-[0.25em] text-emerald-400 uppercase leading-none block">
-                    PROFESSOR & ENGENHEIRO
+                    PROFESSOR & ENGENHEIRO DE SOFTWARE
                   </span>
                 </div>
               </div>
@@ -1700,10 +1704,10 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
               isDarkMode ? 'text-white/70' : 'text-slate-600'
             }`}>
               <p>
-                Professor apaixonado e dedicado à forte interposição entre a tecnologia industrial avançada e o aprendizado moderno de sistemas escolares. Com mais de 15 anos de imersão corporativa e acadêmica contínua no setor de TI, o <strong>Professor Lucas Mercer Leniar</strong> atua como um educador focado em desmistificar infraestruturas e potencializar a lógica.
+                Professor apaixonado e dedicado à forte interposição entre a tecnologia industrial avançada e o aprendizado moderno de sistemas escolares. Com mais de 15 anos de imersão corporativa e acadêmica contínua no setor de TI, o <strong>Professor Lucas Mercer Leniar</strong> atua como um educador focado em desmistificar os quatro pilares do pensamento computacional.
               </p>
               <p>
-                Sua abordagem integra o Pensamento Computacional de forma descomplicada, transformando termos intrincados em tarefas interativas estimulantes. Lucas acredita firmemente que a autonomia prática é o pilar central: capacitar o estudante a decifrar loops, planejar sub-redes e depurar processos é torná-lo autor de sua própria carreira técnica.
+                Sua abordagem integra o Pensamento Computacional de forma descomplicada, transformando termos complexos em metodologias práticas e instigantes. Lucas acredita firmemente que o desenvolvimento do raciocínio estruturado é o pilar central: capacitar o estudante a decompor problemas complexos, identificar padrões lógicos, focar no essencial por meio da abstração e formular algoritmos precisos é torná-lo autor de sua própria autonomia intelectual e técnica.
               </p>
             </div>
 
@@ -2400,6 +2404,28 @@ const ShellFilesSection = ({
                         </button>
                       </div>
                     </div>
+
+                    <div className="space-y-2 pt-2 border-t border-dashed border-emerald-500/10">
+                      <div className="flex items-center justify-between">
+                        <label className={`text-[9px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-emerald-400/80' : 'text-emerald-700/80'}`}>💡 Execução Direta Expressa (Sem Salvar Arquivo)</label>
+                        <span className="text-[8px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-mono">Mais Prático</span>
+                      </div>
+                      <div className="relative group/direct">
+                        <code className={`block w-full p-4 border rounded-xl text-[11px] font-mono break-all pr-12 ${
+                          isDarkMode ? 'bg-black/60 border-emerald-500/15 text-emerald-300' : 'bg-emerald-50/40 border-emerald-500/10 text-emerald-850'
+                        }`}>
+                          wget -qO- {file.url.replace('https://', '')} | sudo bash
+                        </code>
+                        <button 
+                          onClick={() => handleCopy(`wget -qO- ${file.url.replace('https://', '')} | sudo bash`, file.name + '-direct')}
+                          className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 transition-colors ${
+                            isDarkMode ? 'text-white/20 hover:text-emerald-450' : 'text-black/20 hover:text-emerald-600'
+                          }`}
+                        >
+                          {copiedId === file.name + '-direct' ? <Check size={16} /> : <Copy size={16} />}
+                        </button>
+                      </div>
+                    </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
@@ -2558,7 +2584,9 @@ export default function App() {
                     }}
                     onMouseEnter={() => setHoveredSection(section.id)}
                     onMouseLeave={() => setHoveredSection(null)}
-                    className={`w-full cursor-pointer flex items-center justify-start gap-4 px-3.5 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden ${
+                    aria-current={activeSection === section.id ? 'page' : undefined}
+                    aria-label={`Menu: ir para seção ${section.label}`}
+                    className={`w-full cursor-pointer flex items-center justify-start gap-4 px-3.5 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 ${
                       activeSection === section.id 
                         ? isDarkMode 
                           ? 'bg-emerald-500/10 text-emerald-400 font-semibold' 
@@ -2652,7 +2680,9 @@ export default function App() {
                 onClick={() => handleSectionChange(section.id)}
                 onMouseEnter={() => setHoveredSection(section.id)}
                 onMouseLeave={() => setHoveredSection(null)}
-                className={`w-full cursor-pointer flex items-center justify-start gap-3 px-3 py-3 rounded-lg transition-all duration-300 group relative overflow-hidden ${
+                aria-current={activeSection === section.id ? 'page' : undefined}
+                aria-label={`Menu: ir para seção ${section.label}`}
+                className={`w-full cursor-pointer flex items-center justify-start gap-3 px-3 py-3 rounded-lg transition-all duration-300 group relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 ${
                   activeSection === section.id 
                     ? isDarkMode 
                       ? 'bg-emerald-500/10 text-emerald-400' 
