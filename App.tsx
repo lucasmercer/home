@@ -2813,7 +2813,7 @@ export default function App() {
               )}
               {activeSection === 'horarios' && (
                 <IFrameSection 
-                  url="https://lucasmercer.github.io/horario/" 
+                  url="https://lucasmercer.github.io/horarios/" 
                   title="Gerador de Horários" 
                   isMaximized={isMaximized}
                   onToggleMaximize={() => setIsMaximized(!isMaximized)}
