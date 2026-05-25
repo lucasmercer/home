@@ -2795,7 +2795,7 @@ export default function App() {
               {activeSection === 'tech' && <ITSection isDarkMode={isDarkMode} />}
               {activeSection === 'utfpr' && (
                 <IFrameSection 
-                  url="https://lucasleniar.com.br/utfpr/" 
+                  url="https://utfpr.lucasleniar.com.br" 
                   title="UTFPR" 
                   isMaximized={isMaximized}
                   onToggleMaximize={() => setIsMaximized(!isMaximized)}
