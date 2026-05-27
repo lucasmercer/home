@@ -84,7 +84,37 @@ const ProfileImage = () => (
   </div>
 );
 
-const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) => void; isDarkMode: boolean }) => (
+const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) => void; isDarkMode: boolean }) => {
+  const [activeExpertise, setActiveExpertise] = useState<number | null>(null);
+
+  const expertises = [
+    { 
+      icon: <Code2 size={24} />, 
+      label: "Desenvolvimento", 
+      color: "emerald",
+      desc: "Experiência robusta em automação com scripts Bash, desenvolvimento web moderno com React/Node.js, e criação de soluções escaláveis em Python." 
+    },
+    { 
+      icon: <Cpu size={24} />, 
+      label: "Hardware", 
+      color: "blue",
+      desc: "Especialista em manutenção e diagnóstico avançado. Projetos de eletrônica com Arduino e ESP32, unindo o mundo físico ao software." 
+    },
+    { 
+      icon: <GraduationCap size={24} />, 
+      label: "Educação", 
+      color: "purple",
+      desc: "Foco no desenvolvimento do pensamento computacional e ensino de robótica educacional. Formando os pensadores e engenheiros do amanhã." 
+    },
+    { 
+      icon: <Laptop size={24} />, 
+      label: "Sistemas", 
+      color: "orange",
+      desc: "Arquitetura e administração de redes, gestão de servidores Linux e infraestrutura com foco em desempenho, segurança e open-source." 
+    },
+  ];
+
+  return (
   <div className="min-h-full flex flex-col justify-center py-12 md:py-0 max-w-6xl">
     <div className="flex flex-col md:flex-row items-center gap-12">
       <motion.div
@@ -117,13 +147,8 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          {[
-            { icon: <Code2 size={24} />, label: "Desenvolvimento", color: "emerald" },
-            { icon: <Cpu size={24} />, label: "Hardware", color: "blue" },
-            { icon: <GraduationCap size={24} />, label: "Educação", color: "purple" },
-            { icon: <Laptop size={24} />, label: "Sistemas", color: "orange" },
-          ].map((item, i) => {
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          {expertises.map((item, i) => {
             const hoverBorderColor = {
               emerald: 'hover:border-emerald-500/30',
               blue: 'hover:border-blue-500/30',
@@ -138,28 +163,91 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
               orange: 'group-hover:text-orange-400',
             }[item.color as 'emerald' | 'blue' | 'purple' | 'orange'];
 
+            const activeStylesMap = {
+              emerald: isDarkMode ? 'bg-white/[0.08] border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.15)]' : 'bg-black/[0.06] border-emerald-500/50 shadow-md',
+              blue: isDarkMode ? 'bg-white/[0.08] border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.15)]' : 'bg-black/[0.06] border-blue-500/50 shadow-md',
+              purple: isDarkMode ? 'bg-white/[0.08] border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.15)]' : 'bg-black/[0.06] border-purple-500/50 shadow-md',
+              orange: isDarkMode ? 'bg-white/[0.08] border-orange-500/50 shadow-[0_0_15px_rgba(249,115,22,0.15)]' : 'bg-black/[0.06] border-orange-500/50 shadow-md',
+            };
+            const activeStyles = activeExpertise === i ? activeStylesMap[item.color as 'emerald' | 'blue' | 'purple' | 'orange'] : '';
+
             return (
-              <motion.div
+              <motion.button
                 key={i}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + (i * 0.1) }}
-                className={`p-3 rounded-xl border flex flex-col items-center gap-2 transition-all duration-300 group cursor-default ${
+                onClick={() => setActiveExpertise(activeExpertise === i ? null : i)}
+                className={`p-3 rounded-xl border flex flex-col items-center gap-2 transition-all duration-300 group cursor-pointer ${
                   isDarkMode 
-                    ? 'border-white/5 bg-white/[0.02] hover:bg-white/[0.04]' 
+                    ? 'border-white/5 bg-white/[0.02] hover:bg-white/[0.06]' 
                     : 'border-black/[0.05] bg-black/[0.01] hover:bg-black/[0.03]'
-                } ${hoverBorderColor}`}
+                } ${hoverBorderColor} ${activeStyles}`}
               >
-                <div className={`text-black/20 dark:text-white/20 ${hoverIconColor} transition-colors`}>
+                <div className={`transition-colors ${activeExpertise === i ? hoverIconColor.replace('group-hover:', '') : `text-black/30 dark:text-white/30 ${hoverIconColor}`}`}>
                   {item.icon}
                 </div>
-                <span className={`text-[10px] font-semibold text-center ${isDarkMode ? 'text-white/40' : 'text-black/40'}`}>{item.label}</span>
-              </motion.div>
+                <span className={`text-[10px] font-semibold text-center ${activeExpertise === i ? (isDarkMode ? 'text-white/80' : 'text-black/80') : (isDarkMode ? 'text-white/40' : 'text-black/40')}`}>{item.label}</span>
+              </motion.button>
             );
           })}
         </div>
 
-        <div className="flex flex-wrap gap-4 mt-4">
+        <AnimatePresence>
+          {activeExpertise !== null && (
+            <motion.div
+              initial={{ opacity: 0, height: 0, marginTop: 0 }}
+              animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+              exit={{ opacity: 0, height: 0, marginTop: 0 }}
+              className="overflow-hidden mb-8"
+            >
+              {(() => {
+                const colors = {
+                  emerald: {
+                    darkBg: 'bg-emerald-900/10 border-emerald-500/20 text-white/80',
+                    lightBg: 'bg-emerald-50 border-emerald-500/20 text-black/80',
+                    darkIcon: 'bg-emerald-900/30 text-emerald-400',
+                    lightIcon: 'bg-emerald-100 text-emerald-600'
+                  },
+                  blue: {
+                    darkBg: 'bg-blue-900/10 border-blue-500/20 text-white/80',
+                    lightBg: 'bg-blue-50 border-blue-500/20 text-black/80',
+                    darkIcon: 'bg-blue-900/30 text-blue-400',
+                    lightIcon: 'bg-blue-100 text-blue-600'
+                  },
+                  purple: {
+                    darkBg: 'bg-purple-900/10 border-purple-500/20 text-white/80',
+                    lightBg: 'bg-purple-50 border-purple-500/20 text-black/80',
+                    darkIcon: 'bg-purple-900/30 text-purple-400',
+                    lightIcon: 'bg-purple-100 text-purple-600'
+                  },
+                  orange: {
+                    darkBg: 'bg-orange-900/10 border-orange-500/20 text-white/80',
+                    lightBg: 'bg-orange-50 border-orange-500/20 text-black/80',
+                    darkIcon: 'bg-orange-900/30 text-orange-400',
+                    lightIcon: 'bg-orange-100 text-orange-600'
+                  }
+                }[expertises[activeExpertise].color as 'emerald' | 'blue' | 'purple' | 'orange'];
+
+                return (
+                  <div className={`p-5 rounded-2xl border text-sm md:text-base leading-relaxed flex items-start gap-4 ${
+                    isDarkMode ? colors.darkBg : colors.lightBg
+                  }`}>
+                    <div className={`p-2 rounded-lg shrink-0 ${isDarkMode ? colors.darkIcon : colors.lightIcon}`}>
+                       {expertises[activeExpertise].icon}
+                    </div>
+                    <div>
+                      <h4 className={`font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>{expertises[activeExpertise].label}</h4>
+                      <p>{expertises[activeExpertise].desc}</p>
+                    </div>
+                  </div>
+                );
+              })()}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className={`flex flex-wrap gap-4 ${activeExpertise === null ? 'mt-12' : 'mt-4'}`}>
           {/* Ver Pilares */}
           <motion.button
             whileHover={{ x: 5 }}
@@ -214,7 +302,8 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
       </motion.div>
     </div>
   </div>
-);
+  );
+};
 
 const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
   const pillars = [
@@ -2795,7 +2884,7 @@ export default function App() {
               {activeSection === 'tech' && <ITSection isDarkMode={isDarkMode} />}
               {activeSection === 'utfpr' && (
                 <IFrameSection 
-                  url="https://utfpr.lucasleniar.com.br" 
+                  url="https://lucasleniar.com.br/utfpr/" 
                   title="UTFPR" 
                   isMaximized={isMaximized}
                   onToggleMaximize={() => setIsMaximized(!isMaximized)}
@@ -2813,7 +2902,7 @@ export default function App() {
               )}
               {activeSection === 'horarios' && (
                 <IFrameSection 
-                  url="https://horarios.lucasleniar.com.br/" 
+                  url="https://lucasmercer.github.io/horario/" 
                   title="Gerador de Horários" 
                   isMaximized={isMaximized}
                   onToggleMaximize={() => setIsMaximized(!isMaximized)}
@@ -2848,5 +2937,3 @@ export default function App() {
     </div>
   );
 }
-
-                
