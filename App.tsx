@@ -2570,10 +2570,10 @@ const ShellFilesSection = ({
   );
 };
 
-const pathToSectionId = (path: string): SectionId => {
-  const cleanPath = path.replace(/^\//, '').toLowerCase().trim();
+const hashToSectionId = (hash: string): SectionId => {
+  const cleanHash = hash.replace(/^#\/?/, '').toLowerCase().trim();
   
-  switch (cleanPath) {
+  switch (cleanHash) {
     case 'home':
     case 'inicio':
     case 'início':
@@ -2615,34 +2615,34 @@ const pathToSectionId = (path: string): SectionId => {
   }
 };
 
-const sectionIdToPath = (section: SectionId): string => {
+const sectionIdToHash = (section: SectionId): string => {
   switch (section) {
     case 'home':
-      return '/home';
+      return '#/home';
     case 'life':
-      return '/sobre';
+      return '#/sobre';
     case 'computational':
-      return '/computacional';
+      return '#/computacional';
     case 'robotics':
-      return '/robotica';
+      return '#/robotica';
     case 'tech':
-      return '/ti';
+      return '#/ti';
     case 'utfpr':
-      return '/utfpr';
+      return '#/utfpr';
     case 'certificados':
-      return '/certificados';
+      return '#/certificados';
     case 'horarios':
-      return '/horarios';
+      return '#/horarios';
     case 'scripts':
-      return '/scripts';
+      return '#/scripts';
     default:
-      return '/home';
+      return '#/home';
   }
 };
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<SectionId>(() => {
-    return typeof window !== 'undefined' ? pathToSectionId(window.location.pathname) : 'home';
+    return typeof window !== 'undefined' ? hashToSectionId(window.location.hash) : 'home';
   });
   const [isMaximized, setIsMaximized] = useState(false);
   const [hoveredSection, setHoveredSection] = useState<SectionId | null>(null);
@@ -2668,32 +2668,29 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const handlePopState = () => {
-      const targetSection = pathToSectionId(window.location.pathname);
+    const handleHashChange = () => {
+      const targetSection = hashToSectionId(window.location.hash);
       setActiveSection(targetSection);
       setIsMaximized(false);
     };
 
-    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', handleHashChange);
     
-    // Se a rota for vazia, garante que está na home
-    if (window.location.pathname === '/' || window.location.pathname === '') {
-      window.history.replaceState(null, '', sectionIdToPath(activeSection));
+    // Ensure that if the hash is empty, we update it to reflect the active section,
+    // or if a hash is already present, we sync it.
+    if (!window.location.hash) {
+      window.location.hash = sectionIdToHash(activeSection);
     } else {
-      handlePopState();
+      handleHashChange();
     }
 
     return () => {
-      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
 
   const handleSectionChange = (section: SectionId) => {
-    const newPath = sectionIdToPath(section);
-    if (window.location.pathname !== newPath) {
-      window.history.pushState(null, '', newPath);
-    }
-    setActiveSection(section);
+    window.location.hash = sectionIdToHash(section);
     setIsMaximized(false);
   };
 
