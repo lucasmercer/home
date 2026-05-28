@@ -44,7 +44,9 @@ import {
   Play,
   Award,
   Menu,
-  X
+  X,
+  ArrowDown,
+  Mouse
 } from 'lucide-react';
 
 type SectionId = 'home' | 'computational' | 'robotics' | 'tech' | 'life' | 'utfpr' | 'certificados' | 'horarios' | 'scripts';
@@ -3194,6 +3196,19 @@ export default function App() {
           >
             <Minimize2 size={16} /> Sair da Tela Cheia
           </button>
+        )}
+
+        {/* Scroll Indicator */}
+        {!isIFrameSection && !isMaximized && (
+          <div className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-40 flex flex-col items-center gap-6 opacity-40 hover:opacity-100 transition-opacity pointer-events-none">
+            <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] transform rotate-90 whitespace-nowrap mb-16 text-emerald-500 font-bold tracking-widest">
+              Role para navegar
+            </span>
+            <div className="flex flex-col items-center gap-2 animate-bounce">
+               <Mouse className="text-emerald-500 hidden md:block" size={18} />
+               <ArrowDown className="text-emerald-500" size={16} />
+            </div>
+          </div>
         )}
 
         <div className="absolute top-4 right-4 w-12 h-12 border-t border-r border-emerald-600/10 pointer-events-none" />
