@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Home, 
@@ -67,22 +67,71 @@ const SECTIONS: Section[] = [
   { id: 'scripts', label: 'Arquivos SH', icon: <FileCode size={20} /> },
 ];
 
-const ProfileImage = () => (
-  <div className="relative group w-full max-w-xs md:max-w-none flex justify-center">
-    <div className="absolute inset-0 bg-emerald-600 rounded-2xl blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
-    <div className="relative w-full aspect-[3/4] md:w-96 md:h-[500px] rounded-2xl bg-black/[0.02] border border-black/5 overflow-hidden shadow-2xl flex items-end">
-      <img
-        src="https://lucasleniar.com.br/home.gif"
-        alt="Computador retro animado representando a paixão do Professor Lucas Leniar por tecnologia e hardware"
-        className="w-full h-full object-contain scale-x-[-1] transform-gpu origin-bottom"
-        referrerPolicy="no-referrer"
-      />
-      <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/40 to-transparent">
-        <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Professor Lucas Leniar</p>
-      </div>
+const ProfileImage = ({ isDarkMode }: { isDarkMode?: boolean }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!cardRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      const rx = -(y / (rect.height / 2)) * 15;
+      const ry = (x / (rect.width / 2)) * 15;
+      setRotateX(rx);
+      setRotateY(ry);
+    };
+    const handleMouseLeave = () => {
+      setRotateX(0); setRotateY(0);
+    };
+    const handleDeviceOrientation = (e: DeviceOrientationEvent) => {
+      if (e.beta === null || e.gamma === null) return;
+      const rx = Math.max(-15, Math.min(15, (e.beta - 45) / 3));
+      const ry = Math.max(-15, Math.min(15, e.gamma / 3));
+      setRotateX(rx); setRotateY(ry);
+    };
+
+    const card = cardRef.current;
+    if (card) {
+      card.addEventListener('mousemove', handleMouseMove);
+      card.addEventListener('mouseleave', handleMouseLeave);
+      window.addEventListener('deviceorientation', handleDeviceOrientation);
+    }
+    return () => {
+      if (card) {
+        card.removeEventListener('mousemove', handleMouseMove);
+        card.removeEventListener('mouseleave', handleMouseLeave);
+      }
+      window.removeEventListener('deviceorientation', handleDeviceOrientation);
+    };
+  }, []);
+
+  return (
+    <div className="relative group w-full max-w-xs md:max-w-none flex justify-center" style={{ perspective: '1000px' }}>
+      <div className="absolute inset-0 bg-emerald-600 rounded-2xl blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
+      <motion.div
+        ref={cardRef}
+        animate={{ rotateX, rotateY }}
+        transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.5 }}
+        style={{ transformStyle: 'preserve-3d' }}
+        className={`relative w-full aspect-[3/4] md:w-96 md:h-[500px] rounded-2xl ${isDarkMode !== false ? 'bg-black/[0.02] border border-black/5' : 'bg-white/[0.02] border border-white/5'} overflow-hidden shadow-2xl flex items-end cursor-pointer`}
+      >
+        <img
+          src="https://lucasleniar.com.br/home.gif"
+          alt="Computador retro animado representando a paixão do Professor Lucas Leniar por tecnologia e hardware"
+          className="w-full h-full object-contain scale-x-[-1] transform-gpu origin-bottom z-0"
+          style={{ transform: 'translateZ(20px) scaleX(-1)' }}
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/60 to-transparent z-10" style={{ transform: 'translateZ(30px)' }}>
+          <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Professor Lucas Leniar</p>
+        </div>
+      </motion.div>
     </div>
-  </div>
-);
+  );
+};
 
 const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) => void; isDarkMode: boolean }) => {
   const [activeExpertise, setActiveExpertise] = useState<number | null>(null);
@@ -134,7 +183,7 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
 
         {/* Mobile Profile Image */}
         <div className="md:hidden mb-10 flex justify-center w-full">
-          <ProfileImage />
+          <ProfileImage isDarkMode={isDarkMode} />
         </div>
 
         <div className={`text-[17.5px] md:text-[19.5px] max-w-2xl leading-normal mb-10 ${isDarkMode ? 'text-white/60' : 'text-black/50'}`}>
@@ -298,7 +347,7 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="flex-1 order-2 md:order-2 hidden md:flex justify-center w-full"
       >
-        <ProfileImage />
+        <ProfileImage isDarkMode={isDarkMode} />
       </motion.div>
     </div>
   </div>
@@ -2201,6 +2250,12 @@ const ShellFilesSection = ({
   const SH_FILES = [
     { name: 'civico.sh', url: 'https://lucasleniar.com.br/mint/civico.sh', description: 'Script para configuração do Civico no Mint' },
     { name: 'wallpaper.sh', url: 'https://lucasleniar.com.br/mint/wallpaper.sh', description: 'Script para gerenciar wallpapers customizados' },
+    { name: 'update.sh', url: 'https://lucasleniar.com.br/mint/update.sh', description: 'Script para atualização completa do sistema' },
+    { name: 'install.sh', url: 'https://lucasleniar.com.br/mint/install.sh', description: 'Script de instalação de pacotes essenciais' },
+    { name: 'cleanup.sh', url: 'https://lucasleniar.com.br/mint/cleanup.sh', description: 'Script para limpeza de cache e arquivos temporários' },
+    { name: 'backup.sh', url: 'https://lucasleniar.com.br/mint/backup.sh', description: 'Rotina de backup automatizada' },
+    { name: 'setup.sh', url: 'https://lucasleniar.com.br/mint/setup.sh', description: 'Configuração inicial do ambiente de desenvolvimento' },
+    { name: 'docker.sh', url: 'https://lucasleniar.com.br/mint/docker.sh', description: 'Configuração e instalação do Docker e ferramentas' },
   ];
 
   const handleCopy = (text: string, id: string) => {
@@ -2331,49 +2386,56 @@ const ShellFilesSection = ({
 
   if (!isAuthorized) {
     return (
-      <div className="h-full flex items-center justify-center">
+      <div className="h-full flex items-center justify-center p-4">
         <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className={`max-w-md w-full p-8 rounded-3xl border shadow-2xl relative overflow-hidden ${
-            isDarkMode ? 'bg-[#11161b] border-white/5' : 'bg-white border-black/5'
-          }`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-2xl w-full rounded-xl border border-[#2d3748] bg-[#0a0e11] shadow-2xl overflow-hidden font-mono"
         >
-          <div className="absolute top-0 left-0 w-full h-1 bg-emerald-600" />
-          <div className="flex flex-col items-center text-center space-y-6">
-            <div className="p-4 bg-emerald-500/10 rounded-2xl text-emerald-600">
-              <ShieldCheck size={48} />
+          {/* Terminal Window Header */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-[#11161b]">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500/80" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
             </div>
-            <div className="space-y-2">
-              <h2 className={`text-2xl font-bold tracking-tight ${isDarkMode ? 'text-white' : 'text-black'}`}>Repositório Protegido</h2>
-              <p className={`text-sm font-sans normal-case tracking-normal ${isDarkMode ? 'text-white/40' : 'text-black/40'}`}>Insira a senha de acesso para visualizar os scripts .sh</p>
+            <div className="text-[11px] text-white/40 tracking-widest flex items-center gap-2 max-w-[200px] truncate">
+              <ShieldCheck size={12} className="text-emerald-500" />
+              <span>root@lucasleniar:~</span>
             </div>
-            <form onSubmit={handleLogin} className="w-full space-y-4">
-              <input 
-                type="password" 
-                autoFocus
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Senha de acesso"
-                className={`w-full px-5 py-4 rounded-2xl border focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all font-mono text-center text-lg tracking-widest ${
-                  isDarkMode ? 'bg-black/40 border-white/10 text-white' : 'bg-black/[0.01] border-black/10 text-black'
-                }`}
-              />
+          </div>
+          
+          <div className="p-6 md:p-10 space-y-6">
+            <div className="space-y-1.5 text-sm md:text-base text-emerald-400">
+              <p>LL-SH (Lucas Leniar Secure Shell) v2.5.1</p>
+              <p>Warning: Restricted Authorization Area.</p>
+              <p className="text-white/60 pt-4 pb-2">Please authenticate to decrypt repository.</p>
+            </div>
+            
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="text-emerald-500 font-bold">Password:</span>
+                <input 
+                  type="password" 
+                  autoFocus
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="flex-1 bg-transparent border-none focus:outline-none focus:ring-0 text-emerald-300 font-mono text-lg placeholder-emerald-900/50"
+                  placeholder="type password..."
+                />
+              </div>
+              
               {error && (
                 <motion.p 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-xs text-red-500 font-bold uppercase tracking-wider"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-red-400 font-mono text-sm"
                 >
-                  {error}
+                  Action denied: {error}
                 </motion.p>
               )}
-              <button 
-                type="submit"
-                className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-500 transition-all active:scale-[0.98] shadow-lg shadow-emerald-600/20 cursor-pointer"
-              >
-                Acessar Repositório
-              </button>
+              {/* Invisible submit to allow enter to work */}
+              <button type="submit" className="hidden" />
             </form>
           </div>
         </motion.div>
@@ -2424,37 +2486,37 @@ const ShellFilesSection = ({
          </div>
 
          {/* SH SCRIPT CARDS ROW */}
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
             {SH_FILES.map((file, i) => (
               <motion.div
                 key={file.name}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.1 }}
-                className={`p-6 md:p-8 rounded-3xl border shadow-sm hover:shadow-xl transition-all group relative overflow-hidden ${
+                transition={{ delay: i * 0.05 }}
+                className={`p-4 md:p-5 rounded-2xl border shadow-sm hover:shadow-xl transition-all group relative overflow-hidden flex flex-col ${
                   isDarkMode ? 'bg-[#11161b] border-white/5 shadow-black/40' : 'bg-white border-black/[0.05]'
                 }`}
               >
-                <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-                   <Terminal size={64} />
+                <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
+                   <Terminal size={48} />
                 </div>
                 
-                <div className="relative z-10">
-                  <div className="mb-6 flex items-center justify-between">
-                     <div className="p-3 bg-emerald-500/10 rounded-2xl text-emerald-600">
-                        <FileCode size={24} />
+                <div className="relative z-10 flex-1 flex flex-col">
+                  <div className="mb-4 flex items-center justify-between">
+                     <div className="p-2.5 bg-emerald-500/10 rounded-xl text-emerald-600">
+                        <FileCode size={20} />
                      </div>
-                     <span className={`text-[10px] font-mono font-bold transition-colors ${isDarkMode ? 'text-white/20 group-hover:text-emerald-400/40' : 'text-black/20 group-hover:text-emerald-600/40'}`}>.sh extension</span>
+                     <span className={`text-[9px] font-mono font-bold uppercase transition-colors ${isDarkMode ? 'text-white/20' : 'text-black/20'}`}>.sh</span>
                   </div>
                   
-                  <h3 className={`text-xl font-bold mb-3 tracking-tight ${isDarkMode ? 'text-white' : 'text-black'}`}>{file.name}</h3>
-                  <p className={`text-sm mb-6 font-sans normal-case leading-relaxed ${isDarkMode ? 'text-white/40' : 'text-black/40'}`}>{file.description}</p>
+                  <h3 className={`text-base font-bold mb-1 tracking-tight ${isDarkMode ? 'text-white' : 'text-black'}`}>{file.name}</h3>
+                  <p className={`text-[11px] mb-4 font-sans normal-case leading-relaxed flex-1 ${isDarkMode ? 'text-white/40' : 'text-black/40'}`}>{file.description}</p>
                   
-                  <div className="space-y-4 mb-8">
-                    <div className="space-y-2">
-                      <label className={`text-[9px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-emerald-400/60' : 'text-black/30'}`}>Comando de download</label>
+                  <div className="space-y-3 mb-4">
+                    <div className="space-y-1.5">
+                      <label className={`text-[8.5px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-emerald-400/60' : 'text-black/30'}`}>Download</label>
                       <div className="relative group/copy">
-                        <code className={`block w-full p-4 border rounded-xl text-[11px] font-mono break-all pr-12 ${
+                        <code className={`block w-full p-2.5 border rounded-lg text-[9px] font-mono break-all pr-10 ${
                           isDarkMode ? 'bg-black/50 border-white/5 text-emerald-400' : 'bg-black/[0.03] border-black/5 text-emerald-700'
                         }`}>
                           wget {file.url.replace('https://', '')}
@@ -2470,15 +2532,14 @@ const ShellFilesSection = ({
                       </div>
                     </div>
 
-                    <div className={`p-4 rounded-2xl border ${
+                    <div className={`p-3 rounded-xl border ${
                       isDarkMode ? 'bg-emerald-950/20 border-emerald-900/45 text-emerald-300' : 'bg-emerald-50 border-emerald-100 text-emerald-800'
                     }`}>
-                      <p className="text-[10px] leading-relaxed mb-2 normal-case font-sans tracking-normal">
-                        <span className="font-bold block mb-1 uppercase text-[9px] font-mono tracking-widest">Como Executar:</span>
-                        Para rodar o comando precisa estar no usuário <span className="font-bold underline">Administrador</span> da máquina e executar:
+                      <p className="text-[9px] leading-relaxed mb-1.5 normal-case font-sans tracking-normal">
+                        Use o usuário <span className="font-bold underline">root</span>:
                       </p>
                       <div className="relative group/exec">
-                        <code className={`block font-mono font-bold p-3 rounded-xl pr-10 text-[11px] ${
+                        <code className={`block font-mono font-bold p-2.5 rounded-lg pr-8 text-[10px] ${
                           isDarkMode ? 'bg-emerald-900/30 text-emerald-300' : 'bg-emerald-900/10 text-emerald-900'
                         }`}>
                           sudo bash {file.name}
@@ -2494,13 +2555,12 @@ const ShellFilesSection = ({
                       </div>
                     </div>
 
-                    <div className="space-y-2 pt-2 border-t border-dashed border-emerald-500/10">
+                    <div className="space-y-1.5 pt-2 border-t border-dashed border-emerald-500/10">
                       <div className="flex items-center justify-between">
-                        <label className={`text-[9px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-emerald-400/80' : 'text-emerald-700/80'}`}>💡 Execução Direta Expressa (Sem Salvar Arquivo)</label>
-                        <span className="text-[8px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-mono">Mais Prático</span>
+                        <label className={`text-[8.5px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-emerald-400/80' : 'text-emerald-700/80'}`}>💡 Execução Direta</label>
                       </div>
                       <div className="relative group/direct">
-                        <code className={`block w-full p-4 border rounded-xl text-[11px] font-mono break-all pr-12 ${
+                        <code className={`block w-full p-2.5 border rounded-lg text-[9px] font-mono break-all pr-10 ${
                           isDarkMode ? 'bg-black/60 border-emerald-500/15 text-emerald-300' : 'bg-emerald-50/40 border-emerald-500/10 text-emerald-850'
                         }`}>
                           wget -qO- {file.url.replace('https://', '')} | sudo bash
@@ -2517,15 +2577,15 @@ const ShellFilesSection = ({
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 mt-auto">
                     <a 
                       href={file.url}
                       download={file.name}
-                      className={`flex-1 text-center py-3 text-[10px] font-bold rounded-xl hover:bg-emerald-600 transition-all uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer ${
+                      className={`flex-1 text-center py-2.5 text-[9px] font-bold rounded-lg hover:bg-emerald-600 transition-all uppercase tracking-widest flex items-center justify-center gap-1.5 cursor-pointer ${
                         isDarkMode ? 'bg-emerald-600/20 hover:bg-emerald-600 text-white' : 'bg-black text-white'
                       }`}
                     >
-                       Baixar Script <ArrowRight size={14} />
+                       Baixar Script <ArrowRight size={12} />
                     </a>
                   </div>
                 </div>
@@ -2534,35 +2594,48 @@ const ShellFilesSection = ({
          </div>
 
          {/* REPOSITIONED TERMINAL EMULATOR BLOCK - UNDERneath & compacted */}
-         <div className="mb-12 rounded-3xl border border-[#2d3748] bg-[#0c1015] shadow-xl p-5 relative group overflow-hidden">
-            <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-3">
+         <div className="mb-12 rounded-xl border border-[#2d3748] bg-[#0c1015] shadow-2xl p-5 md:p-6 relative group overflow-hidden">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
               <div className="flex items-center gap-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
-                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
-                <span className="text-[10.5px] font-mono text-white/30 ml-2">lucas@portfolio-sh:~ (Simulador de Bash)</span>
+                <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                <span className="text-[11px] tracking-widest font-mono text-white/40 ml-4 hidden md:block">lucas@portfolio-sh:~ (Simulador)</span>
               </div>
-              <Terminal size={12} className="text-white/20" />
+              <Terminal size={14} className="text-emerald-500/50" />
             </div>
 
-            {/* Compacted height - changed from h-64 to h-36 */}
-            <div className="h-36 overflow-y-auto font-mono text-xs text-slate-300 space-y-1 mb-3 pr-1 selection:bg-emerald-500/30">
+            <div 
+              className="h-64 md:h-80 overflow-y-auto font-mono text-sm text-emerald-100/90 space-y-1 mb-4 pr-2 selection:bg-emerald-500/30 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent custom-scroll"
+              ref={(el) => { if (el) el.scrollTop = el.scrollHeight; }}
+            >
               {terminalHistory.map((line, idx) => (
-                <div key={idx} className="whitespace-pre-wrap leading-relaxed hover:bg-white/[0.02] px-1 py-0.5 rounded transition-colors">
-                  {line}
+                <div key={idx} className="whitespace-pre-wrap leading-relaxed hover:bg-white/[0.04] px-1 py-0.5 rounded transition-colors break-all">
+                  {line.startsWith('lucas@portfolio-sh:~$') ? (
+                    <span><span className="text-emerald-400 font-bold">lucas@portfolio-sh:~$</span> {line.replace('lucas@portfolio-sh:~$ ', '')}</span>
+                  ) : line.startsWith('Erro:') ? (
+                    <span className="text-red-400">{line}</span>
+                  ) : line.startsWith('[SUCCESS]') ? (
+                    <span className="text-emerald-300 font-bold">{line}</span>
+                  ) : (
+                    line
+                  )}
                 </div>
               ))}
             </div>
 
-            <form onSubmit={handleTerminalSubmit} className="flex items-center gap-2 border-t border-white/5 pt-3">
-              <span className="text-xs font-mono text-emerald-400 font-bold select-none shrink-0">lucas@portfolio-sh:~$</span>
+            <form onSubmit={handleTerminalSubmit} className="flex items-center gap-2 border-t border-white/10 pt-4 mt-2">
+              <span className="text-sm font-mono text-emerald-400 font-bold select-none shrink-0">lucas@portfolio-sh:~$</span>
               <input
                 type="text"
+                autoComplete="off"
+                spellCheck="false"
                 value={terminalInput}
                 onChange={(e) => setTerminalInput(e.target.value)}
-                placeholder="Ex: help, whoami, neofetch, run civico.sh..."
-                className="flex-1 bg-transparent border-0 font-mono text-xs text-white focus:outline-none focus:ring-0 p-0 placeholder-white/20"
+                placeholder="Ex: help, whoami, run civico.sh..."
+                className="flex-1 bg-transparent border-0 font-mono text-sm text-emerald-100 focus:outline-none focus:ring-0 p-0 placeholder-emerald-100/20 caret-emerald-400"
               />
+              <span className="animate-pulse w-2 h-4 bg-emerald-400 inline-block shrink-0" />
             </form>
          </div>
       </motion.div>
@@ -2693,6 +2766,104 @@ export default function App() {
     window.location.hash = sectionIdToHash(section);
     setIsMaximized(false);
   };
+
+  const mainRef = useRef<HTMLElement>(null);
+  
+  useEffect(() => {
+    const mainEl = mainRef.current;
+    if (!mainEl) return;
+
+    let touchStartY = 0;
+    let touchEndY = 0;
+    let isAtBottom = false;
+    let isAtTop = false;
+    let navTimeout: number | undefined;
+    let wheelAccumulator = 0;
+
+    const checkScrollLimits = () => {
+      isAtTop = mainEl.scrollTop <= 1;
+      isAtBottom = Math.ceil(mainEl.scrollTop + mainEl.clientHeight) >= mainEl.scrollHeight - 5;
+    };
+
+    const goToNextSection = () => {
+      if (navTimeout) return;
+      navTimeout = window.setTimeout(() => { navTimeout = undefined; }, 1200);
+      const currentIndex = SECTIONS.findIndex(s => s.id === activeSection);
+      if (currentIndex < SECTIONS.length - 1) {
+        handleSectionChange(SECTIONS[currentIndex + 1].id);
+      }
+    };
+
+    const goToPrevSection = () => {
+      if (navTimeout) return;
+      navTimeout = window.setTimeout(() => { navTimeout = undefined; }, 1200);
+      const currentIndex = SECTIONS.findIndex(s => s.id === activeSection);
+      if (currentIndex > 0) {
+        handleSectionChange(SECTIONS[currentIndex - 1].id);
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+      checkScrollLimits();
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      touchEndY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = () => {
+      if (!touchStartY || !touchEndY) return;
+      const deltaY = touchStartY - touchEndY; 
+      const threshold = 250; // High threshold for deliberate swipe pull
+
+      if (deltaY > threshold && isAtBottom) {
+        goToNextSection();
+      } else if (deltaY < -threshold && isAtTop) {
+        goToPrevSection();
+      }
+      
+      touchStartY = 0;
+      touchEndY = 0;
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      checkScrollLimits();
+      
+      if (!isAtTop && !isAtBottom) {
+        wheelAccumulator = 0;
+        return;
+      }
+
+      if (isAtBottom && e.deltaY > 0) {
+        wheelAccumulator += e.deltaY;
+        if (wheelAccumulator > 600) { // Require very significant overscroll after hitting the bottom
+          goToNextSection();
+          wheelAccumulator = 0;
+        }
+      } else if (isAtTop && e.deltaY < 0) {
+        wheelAccumulator += e.deltaY;
+        if (wheelAccumulator < -600) { // Require very significant overscroll after hitting the top
+          goToPrevSection();
+          wheelAccumulator = 0;
+        }
+      } else {
+        wheelAccumulator = 0;
+      }
+    };
+
+    mainEl.addEventListener('touchstart', handleTouchStart, { passive: true });
+    mainEl.addEventListener('touchmove', handleTouchMove, { passive: true });
+    mainEl.addEventListener('touchend', handleTouchEnd);
+    mainEl.addEventListener('wheel', handleWheel, { passive: true });
+
+    return () => {
+      mainEl.removeEventListener('touchstart', handleTouchStart);
+      mainEl.removeEventListener('touchmove', handleTouchMove);
+      mainEl.removeEventListener('touchend', handleTouchEnd);
+      mainEl.removeEventListener('wheel', handleWheel);
+    };
+  }, [activeSection]);
 
   return (
     <div className={`flex flex-col md:flex-row h-screen w-full font-sans overflow-hidden transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-600 ${
@@ -2940,7 +3111,7 @@ export default function App() {
       )}
 
       {/* Main Content Area */}
-      <main className={`flex-1 relative flex flex-col min-h-0 ${
+      <main ref={mainRef} className={`flex-1 relative flex flex-col min-h-0 ${
         isMaximized 
           ? 'overflow-hidden h-screen' 
           : isIFrameSection 
@@ -2987,7 +3158,7 @@ export default function App() {
               )}
               {activeSection === 'certificados' && (
                 <IFrameSection 
-                  url="https://certificado.lucasleniar.com.br/" 
+                  url="https://cert.lucasleniar.com.br" 
                   title="Gerador de Certificados" 
                   isMaximized={isMaximized}
                   onToggleMaximize={() => setIsMaximized(!isMaximized)}
