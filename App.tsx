@@ -2978,7 +2978,7 @@ export default function App() {
               {activeSection === 'tech' && <ITSection isDarkMode={isDarkMode} />}
               {activeSection === 'utfpr' && (
                 <IFrameSection 
-                  url="https://lucasleniar.com.br/utfpr/" 
+                  url="https://utfpr.lucasleniar.com.br/" 
                   title="UTFPR" 
                   isMaximized={isMaximized}
                   onToggleMaximize={() => setIsMaximized(!isMaximized)}
@@ -2987,7 +2987,7 @@ export default function App() {
               )}
               {activeSection === 'certificados' && (
                 <IFrameSection 
-                  url="https://lucasmercer.github.io/certificado/" 
+                  url="https://certificado.lucasleniar.com.br/" 
                   title="Gerador de Certificados" 
                   isMaximized={isMaximized}
                   onToggleMaximize={() => setIsMaximized(!isMaximized)}
@@ -2996,7 +2996,7 @@ export default function App() {
               )}
               {activeSection === 'horarios' && (
                 <IFrameSection 
-                  url="https://lucasmercer.github.io/horario/" 
+                  url="https://horarios.lucasleniar.com.br/" 
                   title="Gerador de Horários" 
                   isMaximized={isMaximized}
                   onToggleMaximize={() => setIsMaximized(!isMaximized)}
