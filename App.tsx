@@ -2570,8 +2570,80 @@ const ShellFilesSection = ({
   );
 };
 
+const hashToSectionId = (hash: string): SectionId => {
+  const cleanHash = hash.replace(/^#\/?/, '').toLowerCase().trim();
+  
+  switch (cleanHash) {
+    case 'home':
+    case 'inicio':
+    case 'início':
+    case '':
+      return 'home';
+    case 'life':
+    case 'sobre':
+    case 'sobre-lucas':
+    case 'lucas':
+      return 'life';
+    case 'computational':
+    case 'computacional':
+    case 'pensamento':
+    case 'pensamento-computacional':
+      return 'computational';
+    case 'robotica':
+    case 'robotics':
+    case 'bot':
+      return 'robotics';
+    case 'tech':
+    case 'ti':
+    case 'tecnico':
+    case 'técnico':
+      return 'tech';
+    case 'utfpr':
+      return 'utfpr';
+    case 'certificados':
+    case 'certificado':
+      return 'certificados';
+    case 'horarios':
+    case 'horario':
+      return 'horarios';
+    case 'scripts':
+    case 'arquivos':
+    case 'arquivos-sh':
+      return 'scripts';
+    default:
+      return 'home';
+  }
+};
+
+const sectionIdToHash = (section: SectionId): string => {
+  switch (section) {
+    case 'home':
+      return '#/home';
+    case 'life':
+      return '#/sobre';
+    case 'computational':
+      return '#/computacional';
+    case 'robotics':
+      return '#/robotica';
+    case 'tech':
+      return '#/ti';
+    case 'utfpr':
+      return '#/utfpr';
+    case 'certificados':
+      return '#/certificados';
+    case 'horarios':
+      return '#/horarios';
+    case 'scripts':
+      return '#/scripts';
+    default:
+      return '#/home';
+  }
+};
+
 export default function App() {
-  const [activeSection, setActiveSection] = useState<SectionId>('home');
+  const [activeSection, setActiveSection] = useState<SectionId>(() => {
+    return typeof window !== 'undefined' ? hashToSectionId(window.location.hash) : 'home';
+  });
   const [isMaximized, setIsMaximized] = useState(false);
   const [hoveredSection, setHoveredSection] = useState<SectionId | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -2595,8 +2667,30 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleHashChange = () => {
+      const targetSection = hashToSectionId(window.location.hash);
+      setActiveSection(targetSection);
+      setIsMaximized(false);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    
+    // Ensure that if the hash is empty, we update it to reflect the active section,
+    // or if a hash is already present, we sync it.
+    if (!window.location.hash) {
+      window.location.hash = sectionIdToHash(activeSection);
+    } else {
+      handleHashChange();
+    }
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
+
   const handleSectionChange = (section: SectionId) => {
-    setActiveSection(section);
+    window.location.hash = sectionIdToHash(section);
     setIsMaximized(false);
   };
 
