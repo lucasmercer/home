@@ -1,20 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
   <url>
     <loc>https://lucasleniar.com.br/</loc>
-    <lastmod>2026-05-04</lastmod>
-    <changefreq>daily</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-
-  <!--
   <url>
-    <loc>https://lucasleniar.com.br/</loc>
-    <lastmod>2026-05-04</lastmod>
-    <changefreq>daily</changefreq>
+    <loc>https://lucasleniar.com.br/home</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  -->
-
+  <url>
+    <loc>https://lucasleniar.com.br/sobre</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://lucasleniar.com.br/computacional</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lucasleniar.com.br/robotica</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lucasleniar.com.br/ti</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lucasleniar.com.br/utfpr</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lucasleniar.com.br/certificados</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lucasleniar.com.br/horarios</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lucasleniar.com.br/scripts</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
