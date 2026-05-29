@@ -198,7 +198,7 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           {expertises.map((item, i) => {
             const hoverBorderColor = {
               emerald: 'hover:border-emerald-500/30',
@@ -226,8 +226,15 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
               <motion.button
                 key={i}
                 initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + (i * 0.1) }}
+                whileInView={{ opacity: 1, y: 0, transition: { delay: 0.1 + (i * 0.1) } }}
+                viewport={{ once: false, margin: "-10%" }}
+                onViewportEnter={() => {
+                  if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                    setActiveExpertise(i);
+                  }
+                }}
+                whileHover={{ scale: 1.05, y: -5, transition: { duration: 0.2 } }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveExpertise(activeExpertise === i ? null : i)}
                 className={`p-3 rounded-xl border flex flex-col items-center gap-2 transition-all duration-300 group cursor-pointer ${
                   isDarkMode 
@@ -235,9 +242,17 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
                     : 'border-black/[0.05] bg-black/[0.01] hover:bg-black/[0.03]'
                 } ${hoverBorderColor} ${activeStyles}`}
               >
-                <div className={`transition-colors ${activeExpertise === i ? hoverIconColor.replace('group-hover:', '') : `text-black/30 dark:text-white/30 ${hoverIconColor}`}`}>
+                <motion.div 
+                  initial={false}
+                  animate={{ 
+                    rotate: activeExpertise === i ? 360 : 0, 
+                    scale: activeExpertise === i ? 1.1 : 1 
+                  }}
+                  transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                  className={`transition-colors ${activeExpertise === i ? hoverIconColor.replace('group-hover:', '') : `text-black/30 dark:text-white/30 ${hoverIconColor}`}`}
+                >
                   {item.icon}
-                </div>
+                </motion.div>
                 <span className={`text-[10px] font-semibold text-center ${activeExpertise === i ? (isDarkMode ? 'text-white/80' : 'text-black/80') : (isDarkMode ? 'text-white/40' : 'text-black/40')}`}>{item.label}</span>
               </motion.button>
             );
@@ -3201,8 +3216,11 @@ export default function App() {
         {/* Scroll Indicator */}
         {!isIFrameSection && !isMaximized && (
           <div className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-40 flex flex-col items-center gap-6 opacity-40 hover:opacity-100 transition-opacity pointer-events-none">
-            <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] transform rotate-90 whitespace-nowrap mb-16 text-emerald-500 font-bold tracking-widest">
+            <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] transform rotate-90 whitespace-nowrap mb-16 text-emerald-500 font-bold tracking-widest hidden md:block">
               Role para navegar
+            </span>
+            <span className="text-[9px] font-mono uppercase tracking-[0.2em] transform rotate-90 whitespace-nowrap mb-16 text-emerald-500 font-bold tracking-widest block md:hidden">
+              Deslize para navegar
             </span>
             <div className="flex flex-col items-center gap-2 animate-bounce">
                <Mouse className="text-emerald-500 hidden md:block" size={18} />
