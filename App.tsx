@@ -44,7 +44,9 @@ import {
   Play,
   Award,
   Menu,
-  X
+  X,
+  Network,
+  Trash2
 } from 'lucide-react';
 
 type SectionId = 'home' | 'computational' | 'robotics' | 'tech' | 'life' | 'utfpr' | 'certificados' | 'horarios' | 'scripts';
@@ -134,7 +136,12 @@ const ProfileImage = ({ isDarkMode }: { isDarkMode?: boolean }) => {
 };
 
 const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) => void; isDarkMode: boolean }) => {
-  const [activeExpertise, setActiveExpertise] = useState<number | null>(null);
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Bom dia';
+    if (hour < 18) return 'Boa tarde';
+    return 'Boa noite';
+  };
 
   const expertises = [
     { 
@@ -164,39 +171,46 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
   ];
 
   return (
-  <div className="min-h-full flex flex-col justify-center py-12 md:py-0 max-w-6xl">
-    <div className="flex flex-col md:flex-row items-center gap-12">
+  <div className="min-h-full flex flex-col justify-center py-6 md:py-0 max-w-6xl w-full">
+    <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="flex-1 order-1 md:order-1"
+        className="flex-1 order-1 md:order-1 relative z-10"
       >
-        <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase mb-6 border ${
-          isDarkMode ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
-        }`}>
-          Olá, Mundo.
-        </span>
-        <h1 className={`text-[32px] md:text-[54px] font-bold tracking-tighter leading-tight mb-6 ${isDarkMode ? 'text-white' : 'text-black'}`}>
-          Eu sou o <span className={isDarkMode ? 'text-emerald-400 font-extrabold' : 'text-emerald-600'}>Professor Lucas Mercer Leniar</span>.
+        <div className="flex items-center gap-3 mb-6">
+          <span className={`inline-block px-3 py-1.5 rounded-full text-[10px] font-mono font-bold tracking-widest uppercase border ${
+            isDarkMode ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+          }`}>
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
+            {getGreeting()}, Mundo.
+          </span>
+          <span className={`hidden sm:inline-block px-3 py-1.5 rounded-full text-[10px] font-mono tracking-widest uppercase border border-slate-500/20 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+            ROOT_USER_ACTIVE
+          </span>
+        </div>
+        
+        <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter leading-[1.1] mb-6 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+          Eu sou o <br className="hidden md:block"/>
+          <span className={isDarkMode ? 'text-emerald-400 font-serif italic' : 'text-emerald-600 font-serif italic'}>Prof. Lucas Leniar</span>.
         </h1>
 
         {/* Mobile Profile Image */}
-        <div className="md:hidden mb-10 flex justify-center w-full">
+        <div className="md:hidden mb-8 flex justify-center w-full scale-90">
           <ProfileImage isDarkMode={isDarkMode} />
         </div>
 
-        <div className={`text-[17.5px] md:text-[19.5px] max-w-2xl leading-normal mb-10 ${isDarkMode ? 'text-white/60' : 'text-black/50'}`}>
-          <p className="mb-2">
-            Explorando as fronteiras entre a educação e a tecnologia.
+        <div className={`text-base md:text-lg max-w-2xl leading-relaxed mb-10 border-l-2 pl-4 md:pl-6 ${isDarkMode ? 'border-emerald-500/30 text-white/70' : 'border-emerald-500/30 text-slate-600'}`}>
+          <p className="mb-3">
+            Explorando as fronteiras entre a educação técnica e a engenharia de infraestrutura.
           </p>
           <p>
-            Especialista em <span className={`font-semibold ${isDarkMode ? 'text-emerald-400' : 'text-black'}`}>pensamento computacional</span> e <span className={`font-semibold ${isDarkMode ? 'text-emerald-400' : 'text-black'}`}>infraestrutura de TI</span>, 
-            atuo na formação de estudantes por meio dos quatro pilares essenciais: decompor problemas, identificar padrões, abstrair informações e construir algoritmos.
+            Especialista em <strong className={isDarkMode ? 'text-emerald-400 font-semibold' : 'text-emerald-600 font-semibold'}>pensamento computacional</strong> e <strong className={isDarkMode ? 'text-emerald-400 font-semibold' : 'text-emerald-600 font-semibold'}>tecnologia da informação</strong>, construindo sistemas confiáveis e formando mentes críticas.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
           {expertises.map((item, i) => {
             const hoverBorderColor = {
               emerald: 'hover:border-emerald-500/30',
@@ -205,138 +219,100 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
               orange: 'hover:border-orange-500/30',
             }[item.color as 'emerald' | 'blue' | 'purple' | 'orange'];
 
-            const hoverIconColor = {
-              emerald: 'group-hover:text-emerald-500',
-              blue: 'group-hover:text-blue-400',
-              purple: 'group-hover:text-purple-400',
-              orange: 'group-hover:text-orange-400',
+            const IconColor = {
+              emerald: isDarkMode ? 'text-emerald-400' : 'text-emerald-600',
+              blue: isDarkMode ? 'text-blue-400' : 'text-blue-600',
+              purple: isDarkMode ? 'text-purple-400' : 'text-purple-600',
+              orange: isDarkMode ? 'text-orange-400' : 'text-orange-600',
             }[item.color as 'emerald' | 'blue' | 'purple' | 'orange'];
 
-            const activeStylesMap = {
-              emerald: isDarkMode ? 'bg-white/[0.08] border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.15)]' : 'bg-black/[0.06] border-emerald-500/50 shadow-md',
-              blue: isDarkMode ? 'bg-white/[0.08] border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.15)]' : 'bg-black/[0.06] border-blue-500/50 shadow-md',
-              purple: isDarkMode ? 'bg-white/[0.08] border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.15)]' : 'bg-black/[0.06] border-purple-500/50 shadow-md',
-              orange: isDarkMode ? 'bg-white/[0.08] border-orange-500/50 shadow-[0_0_15px_rgba(249,115,22,0.15)]' : 'bg-black/[0.06] border-orange-500/50 shadow-md',
-            };
-            const activeStyles = activeExpertise === i ? activeStylesMap[item.color as 'emerald' | 'blue' | 'purple' | 'orange'] : '';
-
             return (
-              <motion.button
+              <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + (i * 0.1) }}
-                onClick={() => setActiveExpertise(activeExpertise === i ? null : i)}
-                className={`p-3 rounded-xl border flex flex-col items-center gap-2 transition-all duration-300 group cursor-pointer ${
+                className={`p-5 md:p-6 rounded-2xl border flex flex-col items-start gap-4 transition-all duration-300 group h-full ${
                   isDarkMode 
-                    ? 'border-white/5 bg-white/[0.02] hover:bg-white/[0.06]' 
-                    : 'border-black/[0.05] bg-black/[0.01] hover:bg-black/[0.03]'
-                } ${hoverBorderColor} ${activeStyles}`}
+                    ? 'border-white/5 bg-white/[0.02] hover:bg-white/[0.04]' 
+                    : 'border-slate-200 bg-white hover:bg-slate-50 shadow-sm hover:shadow-md'
+                } ${hoverBorderColor}`}
               >
-                <div className={`transition-colors ${activeExpertise === i ? hoverIconColor.replace('group-hover:', '') : `text-black/30 dark:text-white/30 ${hoverIconColor}`}`}>
+                <div className={`p-2.5 rounded-xl border transition-colors ${
+                  isDarkMode ? 'bg-[#151c24] border-white/5' : 'bg-slate-100 border-slate-200'
+                } ${IconColor}`}>
                   {item.icon}
                 </div>
-                <span className={`text-[10px] font-semibold text-center ${activeExpertise === i ? (isDarkMode ? 'text-white/80' : 'text-black/80') : (isDarkMode ? 'text-white/40' : 'text-black/40')}`}>{item.label}</span>
-              </motion.button>
+                <div className="w-full text-left flex-1 flex flex-col">
+                  <span className={`block font-bold text-sm tracking-tight mb-2 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{item.label}</span>
+                  <p className={`text-[11px] md:text-xs leading-relaxed font-sans normal-case tracking-normal flex-1 ${isDarkMode ? 'text-white/60' : 'text-slate-500'}`}>
+                    {item.desc}
+                  </p>
+                </div>
+              </motion.div>
             );
           })}
         </div>
 
-        <AnimatePresence>
-          {activeExpertise !== null && (
-            <motion.div
-              initial={{ opacity: 0, height: 0, marginTop: 0 }}
-              animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
-              exit={{ opacity: 0, height: 0, marginTop: 0 }}
-              className="overflow-hidden mb-8"
-            >
-              {(() => {
-                const colors = {
-                  emerald: {
-                    darkBg: 'bg-emerald-900/10 border-emerald-500/20 text-white/80',
-                    lightBg: 'bg-emerald-50 border-emerald-500/20 text-black/80',
-                    darkIcon: 'bg-emerald-900/30 text-emerald-400',
-                    lightIcon: 'bg-emerald-100 text-emerald-600'
-                  },
-                  blue: {
-                    darkBg: 'bg-blue-900/10 border-blue-500/20 text-white/80',
-                    lightBg: 'bg-blue-50 border-blue-500/20 text-black/80',
-                    darkIcon: 'bg-blue-900/30 text-blue-400',
-                    lightIcon: 'bg-blue-100 text-blue-600'
-                  },
-                  purple: {
-                    darkBg: 'bg-purple-900/10 border-purple-500/20 text-white/80',
-                    lightBg: 'bg-purple-50 border-purple-500/20 text-black/80',
-                    darkIcon: 'bg-purple-900/30 text-purple-400',
-                    lightIcon: 'bg-purple-100 text-purple-600'
-                  },
-                  orange: {
-                    darkBg: 'bg-orange-900/10 border-orange-500/20 text-white/80',
-                    lightBg: 'bg-orange-50 border-orange-500/20 text-black/80',
-                    darkIcon: 'bg-orange-900/30 text-orange-400',
-                    lightIcon: 'bg-orange-100 text-orange-600'
-                  }
-                }[expertises[activeExpertise].color as 'emerald' | 'blue' | 'purple' | 'orange'];
-
-                return (
-                  <div className={`p-5 rounded-2xl border text-sm md:text-base leading-relaxed flex items-start gap-4 ${
-                    isDarkMode ? colors.darkBg : colors.lightBg
-                  }`}>
-                    <div className={`p-2 rounded-lg shrink-0 ${isDarkMode ? colors.darkIcon : colors.lightIcon}`}>
-                       {expertises[activeExpertise].icon}
-                    </div>
-                    <div>
-                      <h4 className={`font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>{expertises[activeExpertise].label}</h4>
-                      <p>{expertises[activeExpertise].desc}</p>
-                    </div>
-                  </div>
-                );
-              })()}
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className={`flex flex-wrap gap-4 ${activeExpertise === null ? 'mt-12' : 'mt-4'}`}>
-          {/* Ver Pilares */}
+        <div className="flex flex-wrap gap-3">
+          {/* Lógica */}
           <motion.button
-            whileHover={{ x: 5 }}
-            className="flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 bg-emerald-600 text-white font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-emerald-500 transition-colors shadow-[0_10px_30px_rgba(16,185,129,0.2)] cursor-pointer"
+            whileHover={{ y: -2 }}
             onClick={() => onNavigate('computational')}
+            className={`flex-1 min-w-[120px] flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border transition-all duration-300 shadow-sm
+              ${isDarkMode ? 'bg-emerald-500/10 border-emerald-500/30 hover:border-emerald-400 hover:bg-emerald-500/20 text-emerald-300' : 'bg-emerald-50 border-emerald-200 hover:border-emerald-500 hover:bg-emerald-100 text-emerald-800'}
+            `}
           >
-            Ver Pilares <ArrowRight size={18} />
+            <Brain size={20} className="mb-2" />
+            <span className="font-bold text-[10px] md:text-[11px] uppercase tracking-wider text-center">Laboratório<br/>Lógico</span>
+          </motion.button>
+
+          {/* NOC */}
+          <motion.button
+            whileHover={{ y: -2 }}
+            onClick={() => onNavigate('tech')}
+            className={`flex-1 min-w-[120px] flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border transition-all duration-300 shadow-sm
+              ${isDarkMode ? 'bg-[#1a212b] border-white/10 hover:border-blue-500/50 hover:bg-blue-500/10 text-slate-300' : 'bg-white border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700'}
+            `}
+          >
+            <Terminal size={20} className={isDarkMode ? 'text-blue-400 mb-2' : 'text-blue-600 mb-2'} />
+            <span className="font-bold text-[10px] md:text-[11px] uppercase tracking-wider text-center">NOC<br/>T.I</span>
           </motion.button>
 
           {/* UTFPR */}
           <motion.button
-            whileHover={{ x: 5 }}
+            whileHover={{ y: -2 }}
             onClick={() => onNavigate('utfpr')}
-            className={`flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-yellow-400 hover:border-yellow-500 hover:text-black hover:shadow-lg transition-all duration-300 cursor-pointer ${
-              isDarkMode ? 'border-white/10 text-white/80' : 'border-black/10 text-black/70'
-            }`}
+             className={`flex-1 min-w-[80px] flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border transition-all duration-300 shadow-sm
+              ${isDarkMode ? 'bg-[#1a212b] border-white/10 hover:border-yellow-500/50 hover:bg-yellow-500/10 text-slate-300' : 'bg-white border-slate-200 hover:border-yellow-500 hover:bg-yellow-50 text-slate-700'}
+            `}
           >
-            UTFPR <ArrowRight size={18} />
+            <GraduationCap size={20} className={isDarkMode ? 'text-yellow-400 mb-2' : 'text-yellow-600 mb-2'} />
+            <span className="font-bold text-[10px] md:text-[11px] uppercase tracking-wider text-center">UTFPR</span>
           </motion.button>
 
           {/* Certificados */}
           <motion.button
-            whileHover={{ x: 5 }}
+            whileHover={{ y: -2 }}
             onClick={() => onNavigate('certificados')}
-            className={`flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-[#003366] hover:border-[#004a8f] hover:text-white transition-all duration-300 cursor-pointer ${
-              isDarkMode ? 'border-white/10 text-white/80' : 'border-black/10 text-black/70'
-            }`}
+             className={`flex-1 min-w-[80px] flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border transition-all duration-300 shadow-sm
+              ${isDarkMode ? 'bg-[#1a212b] border-white/10 hover:border-purple-500/50 hover:bg-purple-500/10 text-slate-300' : 'bg-white border-slate-200 hover:border-purple-500 hover:bg-purple-50 text-slate-700'}
+            `}
           >
-            Gerador Certificados <ArrowRight size={18} />
+            <Award size={20} className={isDarkMode ? 'text-purple-400 mb-2' : 'text-purple-600 mb-2'} />
+            <span className="font-bold text-[10px] md:text-[11px] uppercase tracking-wider text-center">Certificados</span>
           </motion.button>
 
-          {/* HORARIO */}
+          {/* Horários */}
           <motion.button
-            whileHover={{ x: 5 }}
+            whileHover={{ y: -2 }}
             onClick={() => onNavigate('horarios')}
-            className={`flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 border font-bold rounded-full text-xs md:text-sm uppercase tracking-widest hover:bg-[#657c36] hover:border-[#2d3818] hover:text-white hover:shadow-lg transition-all duration-300 cursor-pointer ${
-              isDarkMode ? 'border-white/10 text-white/80' : 'border-black/10 text-black/70'
-            }`}
+             className={`flex-1 min-w-[80px] flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border transition-all duration-300 shadow-sm
+              ${isDarkMode ? 'bg-[#1a212b] border-white/10 hover:border-[#657c36]/50 hover:bg-[#657c36]/20 text-slate-300' : 'bg-white border-slate-200 hover:border-[#657c36] hover:bg-[#657c36]/10 text-slate-700'}
+            `}
           >
-            Gerador Horários <ArrowRight size={18} />
+            <Network size={20} className={isDarkMode ? 'text-[#a3c757] mb-2' : 'text-[#657c36] mb-2'} />
+            <span className="font-bold text-[10px] md:text-[11px] uppercase tracking-wider text-center">Horários</span>
           </motion.button>
         </div>
       </motion.div>
@@ -362,96 +338,163 @@ const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
     { title: "Algoritmos", desc: "Desenvolver instruções passo a passo.", icon: <GitBranch className="text-orange-500" size={32} /> }
   ];
 
-  // Game sandbox state
-  const [gameState, setGameState] = useState<'intro' | 'playing' | 'completed'>('intro');
-  const [currentStep, setCurrentStep] = useState(0);
-  const [score, setScore] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [feedback, setFeedback] = useState<'correct' | 'incorrect' | null>(null);
-  const [studentName, setStudentName] = useState('');
+  type Direction = 'N' | 'E' | 'S' | 'W';
+  type Command = 'FORWARD' | 'LEFT' | 'RIGHT';
 
-  const questions = [
-    {
-      pillar: "Decomposição",
-      question: "Problema: Você foi encarregado de organizar uma Feira de Robótica. Qual é a melhor forma de decompor este problema complexo?",
-      options: [
-        "Iniciar imediatamente a montagem sem estruturar equipes ou prazos.",
-        "Dividir em sub-tarefas: 1. Infraestrutura/Espaço, 2. Inscrições de alunos, 3. Cronograma de apresentações, 4. Divulgação.",
-        "Focar apenas na compra de medalhas e delegar todo o resto aos alunos de última hora."
-      ],
-      correctIndex: 1,
-      tip: "Decompor consiste em isolar cada grande área operacional para resolvê-las individualmente."
-    },
-    {
-      pillar: "Reconhecimento de Padrões",
-      question: "Observe a sequência lógica relacionada a automações de robôs: [2, 4, 8, 16, 32]. Sabendo que a sequência dobra a cada iteração de clock, qual o próximo valor de energia?",
-      options: [
-        "40 - Valor linear incremental do circuito.",
-        "64 - Padrão de progressão de 2^x (Multiplicação cumulativa).",
-        "48 - Sequência alternada de múltiplos básicos."
-      ],
-      correctIndex: 1,
-      tip: "Identificar o fator constante de progressão permite prever comportamentos digitais de forma exata."
-    },
-    {
-      pillar: "Abstração",
-      question: "Aplicação de Cadastro da UTFPR: Quais fatores são IMPORTANTES abstrair para criar o perfil acadêmico de um aluno de Engenharia?",
-      options: [
-        "Registro Acadêmico (RA), Grade Curricular Atual, Histórico de Notas e Disciplinas em Curso.",
-        "Modelo de celular que utiliza, marca de tênis favorita, hobby predileto e cor dos olhos.",
-        "Endereço de todas as escolas que frequentou desde o primário e sua banda de rock preferida."
-      ],
-      correctIndex: 0,
-      tip: "Abstrair é ocultar detalhes dispensáveis para focar estritamente nas regras de negócio essenciais."
-    },
-    {
-      pillar: "Algoritmos",
-      question: "Um circuito Arduino precisa ligar o cooler de emergência APENAS se a temperatura do sensor ultrapassar 45°C. Qual fluxo lógico estruturado descreve este algoritmo corretamento?",
-      options: [
-        "1. Ligar o cooler -> 2. Terminar -> 3. Medir Temperatura.",
-        "1. Medir Temperatura -> 2. Se for maior que 45°C, ligar cooler -> 3. Caso contrário, desligar cooler -> 4. Repetir.",
-        "1. Desligar cooler infinitamente sem ler o sensor analógico de entrada."
-      ],
-      correctIndex: 1,
-      tip: "Algoritmos exigem uma ordem precisa, sequencial e condicional de instruções claras."
-    }
+  const GRID_SIZE = 5;
+  const START_POS = { x: 0, y: 4 };
+  const TARGET_POS = { x: 4, y: 0 };
+  const OBSTACLES = [
+    { x: 1, y: 3 }, { x: 2, y: 1 }, { x: 3, y: 2 }, { x: 2, y: 4 }
   ];
 
-  const handleAnswerSelect = (index: number) => {
-    if (feedback !== null) return;
-    setSelectedAnswer(index);
-    if (index === questions[currentStep].correctIndex) {
-      setFeedback('correct');
-      setScore(prev => prev + 25);
-    } else {
-      setFeedback('incorrect');
-    }
-  };
+  const [gameState, setGameState] = useState<'intro' | 'playing' | 'executing' | 'success' | 'failed'>('intro');
+  const [robotPos, setRobotPos] = useState(START_POS);
+  const [robotDir, setRobotDir] = useState<Direction>('E');
+  const [commands, setCommands] = useState<Command[]>([]);
+  const [currentCmdIdx, setCurrentCmdIdx] = useState(-1);
+  const [logs, setLogs] = useState<string[]>(["SISTEMA: Aguardando comandos lógicos."]);
+  const [score, setScore] = useState(0);
+  const [studentName, setStudentName] = useState('');
 
-  const handleNext = () => {
-    setSelectedAnswer(null);
-    setFeedback(null);
-    if (currentStep < questions.length - 1) {
-      setCurrentStep(prev => prev + 1);
-    } else {
-      setGameState('completed');
-    }
+  const addLog = (msg: string) => {
+    setLogs(prev => [msg, ...prev].slice(0, 5));
   };
 
   const resetGame = () => {
     setGameState('intro');
-    setCurrentStep(0);
+    setRobotPos(START_POS);
+    setRobotDir('E');
+    setCommands([]);
+    setCurrentCmdIdx(-1);
+    setLogs(["SISTEMA: Reiniciado. Aguardando comandos."]);
     setScore(0);
-    setSelectedAnswer(null);
-    setFeedback(null);
     setStudentName('');
   };
 
+  const clearCommands = () => {
+    if (gameState === 'executing') return;
+    setCommands([]);
+    setRobotPos(START_POS);
+    setRobotDir('E');
+    setGameState('playing');
+    setLogs(["SISTEMA: Fila de comandos limpa."]);
+  };
+
+  const removeCommand = (idx: number) => {
+    if (gameState === 'executing') return;
+    setCommands(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const addCommand = (cmd: Command) => {
+    if (gameState !== 'playing' && gameState !== 'failed') return;
+    if (commands.length >= 15) {
+      addLog("AVISO: Memória cheia (Máx 15 comandos).");
+      return;
+    }
+    setCommands(prev => [...prev, cmd]);
+    if (gameState === 'failed') {
+      setGameState('playing');
+      setRobotPos(START_POS);
+      setRobotDir('E');
+    }
+  };
+
+  const isObstacle = (x: number, y: number) => {
+    return OBSTACLES.some(obs => obs.x === x && obs.y === y);
+  };
+
+  const executeQueue = () => {
+    if (commands.length === 0) {
+      addLog("ERRO: Algoritmo vazio. Adicione blocos instrucionais.");
+      return;
+    }
+    
+    setGameState('executing');
+    setRobotPos(START_POS);
+    setRobotDir('E');
+    setCurrentCmdIdx(-1);
+    addLog("SISTEMA: Compilando e executando comandos...");
+    
+    let currentX = START_POS.x;
+    let currentY = START_POS.y;
+    let currentDir = 'E' as Direction;
+    let idx = 0;
+
+    const interval = setInterval(() => {
+      if (idx >= commands.length) {
+        clearInterval(interval);
+        setCurrentCmdIdx(-1);
+        if (currentX === TARGET_POS.x && currentY === TARGET_POS.y) {
+          setGameState('success');
+          setScore(100);
+          addLog("SUCESSO: Algoritmo atingiu o estado esperado.");
+        } else {
+          setGameState('failed');
+          addLog("FALHA: O robô não alcançou o objetivo final.");
+        }
+        return;
+      }
+
+      const cmd = commands[idx];
+      setCurrentCmdIdx(idx);
+
+      if (cmd === 'LEFT') {
+        const dirs: Direction[] = ['N', 'W', 'S', 'E'];
+        currentDir = dirs[(dirs.indexOf(currentDir) + 1) % 4];
+        setRobotDir(currentDir);
+        addLog(`Executando [${idx}]: Girar Esquerda`);
+      } else if (cmd === 'RIGHT') {
+        const dirs: Direction[] = ['N', 'E', 'S', 'W'];
+        currentDir = dirs[(dirs.indexOf(currentDir) + 1) % 4];
+        setRobotDir(currentDir);
+        addLog(`Executando [${idx}]: Girar Direita`);
+      } else if (cmd === 'FORWARD') {
+        let nX = currentX;
+        let nY = currentY;
+        if (currentDir === 'N') nY -= 1;
+        if (currentDir === 'E') nX += 1;
+        if (currentDir === 'S') nY += 1;
+        if (currentDir === 'W') nX -= 1;
+
+        if (nX < 0 || nX >= GRID_SIZE || nY < 0 || nY >= GRID_SIZE) {
+          clearInterval(interval);
+          setGameState('failed');
+          setCurrentCmdIdx(-1);
+          addLog(`ERRO NO RUNTIME: Limite do ambiente atingido na instrução [${idx}].`);
+          return;
+        } else if (isObstacle(nX, nY)) {
+          clearInterval(interval);
+          setGameState('failed');
+          setCurrentCmdIdx(-1);
+          addLog(`ERRO NO RUNTIME: Colisão detectada na instrução [${idx}].`);
+          return;
+        } else {
+          currentX = nX;
+          currentY = nY;
+          setRobotPos({ x: currentX, y: currentY });
+          addLog(`Executando [${idx}]: Mover Frente`);
+        }
+      }
+      
+      idx++;
+    }, 600);
+  };
+
+  const getRobotIcon = () => {
+    switch (robotDir) {
+      case 'N': return '↑';
+      case 'E': return '→';
+      case 'S': return '↓';
+      case 'W': return '←';
+    }
+  };
+
   return (
-    <div className="flex flex-col pt-4 md:pt-12 uppercase tracking-tighter overflow-visible">
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-5xl w-full">
-        <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif px-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>Pensamento Computacional</h2>
-        <p className={`max-w-2xl mb-8 md:mb-12 uppercase text-[10px] tracking-[0.2em] font-mono font-bold px-1 ${isDarkMode ? 'text-emerald-400' : 'text-black/30'}`}>Os 4 pilares para resolver qualquer problema tecnológico e educacional.</p>
+    <div className="flex flex-col pt-4 md:pt-12 uppercase tracking-tighter overflow-visible w-full">
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-6xl w-full mx-auto px-2">
+        <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Pensamento Computacional</h2>
+        <p className={`max-w-2xl mb-8 md:mb-12 uppercase text-[10px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-emerald-400' : 'text-black/30'}`}>Os 4 pilares para resolver qualquer problema tecnológico e educacional.</p>
         
         <div className="flex flex-col lg:flex-row gap-8 md:gap-11 items-start mb-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 flex-1">
@@ -507,21 +550,23 @@ const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className={`rounded-3xl border p-6 md:p-10 shadow-2xl relative overflow-hidden max-w-4xl ${
+          className={`rounded-3xl border p-6 md:p-10 shadow-2xl relative overflow-hidden w-full ${
             isDarkMode 
-            ? 'bg-[#11161b] border-white/5 shadow-black/40' 
-            : 'bg-gradient-to-tr from-emerald-50/20 to-white border-black/5'
+            ? 'bg-[#0f141a] border-white/5 shadow-black/40' 
+            : 'bg-white border-slate-200'
           }`}
         >
           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-bl-[120px] pointer-events-none" />
           
-          <div className="flex items-center gap-3 mb-6">
-            <div className={`p-2 rounded-xl text-emerald-600 ${isDarkMode ? 'bg-emerald-500/15' : 'bg-emerald-500/10'}`}>
-              <Brain size={24} />
-            </div>
-            <div>
-              <span className="text-[9px] uppercase tracking-[0.2em] font-mono text-emerald-600 font-bold">Laboratório Prático</span>
-              <h3 className={`text-xl md:text-2xl font-bold tracking-tight ${isDarkMode ? 'text-white' : 'text-black'}`}>Simulador de Pensamento Computacional</h3>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+            <div className="flex items-center gap-3">
+              <div className={`p-2.5 rounded-xl text-emerald-600 ${isDarkMode ? 'bg-emerald-500/15' : 'bg-emerald-500/10'}`}>
+                <Terminal size={24} />
+              </div>
+              <div>
+                <span className={`text-[10px] uppercase tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-emerald-400' : 'text-emerald-700'}`}>Laboratório de Lógica</span>
+                <h3 className={`text-xl md:text-2xl font-bold tracking-tight font-serif italic ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Desafio de Algoritmos</h3>
+              </div>
             </div>
           </div>
 
@@ -534,185 +579,241 @@ const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 exit={{ opacity: 0, y: -10 }}
                 className="space-y-6"
               >
-                <p className={`text-sm md:text-base leading-relaxed font-sans normal-case tracking-normal ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>
-                  Participe deste laboratório prático projetado pelo Professor Lucas Leniar para fixar conceitos! 
-                  Você passará por 4 desafios interativos avaliando como você decompõe, encontra padrões, abstrai e cria algoritmos. Complete o score perfeito para gerar seu crachá oficial de honra.
+                <p className={`text-sm md:text-base leading-relaxed font-sans normal-case tracking-normal max-w-3xl ${isDarkMode ? 'text-white/70' : 'text-slate-600'}`}>
+                  Participe deste laboratório prático. O objetivo é programar o robô para chegar ao bloco de destino utilizando os princípios de <strong>Algoritmos</strong> e <strong>Decomposição</strong>. 
+                  Você precisará abstrair os movimentos visuais e dividi-los em comandos de passo simples e sequenciais.
                 </p>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => setGameState('playing')}
-                    className="flex items-center gap-2 px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-emerald-500 shadow-lg shadow-emerald-500/20 transition-all cursor-pointer hover:translate-x-1"
-                  >
-                    Iniciar Simulação <Play size={14} />
-                  </button>
-                </div>
+                <button
+                  onClick={() => setGameState('playing')}
+                  className="flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 text-white font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-emerald-500 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"
+                >
+                  Iniciar Laboratório Prático <Play size={14} />
+                </button>
               </motion.div>
             )}
 
-            {gameState === 'playing' && (
+            {(gameState === 'playing' || gameState === 'executing' || gameState === 'failed') && (
               <motion.div 
-                key="playing"
-                initial={{ opacity: 0, f: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="space-y-6"
-              >
-                {/* Step indicator */}
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-600 font-bold bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/10">
-                    Etapa {currentStep + 1} de 4: {questions[currentStep].pillar}
-                  </span>
-                  <span className={`text-[10px] font-mono tracking-widest uppercase font-bold ${isDarkMode ? 'text-white/40' : 'text-black/40'}`}>
-                    Score: {score}%
-                  </span>
-                </div>
-
-                {/* Progress bar */}
-                <div className={`h-1.5 w-full rounded-full overflow-hidden ${isDarkMode ? 'bg-white/5' : 'bg-black/[0.05]'}`}>
-                  <div 
-                    className="h-full bg-emerald-600 transition-all duration-300"
-                    style={{ width: `${((currentStep + 1) / questions.length) * 100}%` }}
-                  />
-                </div>
-
-                {/* Question */}
-                <h4 className={`text-lg md:text-xl font-bold font-sans normal-case tracking-normal ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
-                  {questions[currentStep].question}
-                </h4>
-
-                {/* Options */}
-                <div className="space-y-3">
-                  {questions[currentStep].options.map((option, idx) => {
-                    let optionStyle = isDarkMode 
-                      ? "border-white/5 bg-white/[0.01] hover:bg-white/[0.03] text-white/70" 
-                      : "border-black/5 bg-black/[0.01] hover:bg-black/[0.03] text-black/70";
-                    
-                    if (selectedAnswer !== null) {
-                      if (idx === questions[currentStep].correctIndex) {
-                        optionStyle = "border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold";
-                      } else if (idx === selectedAnswer) {
-                        optionStyle = "border-red-500 bg-red-500/10 text-red-600";
-                      } else {
-                        optionStyle = "opacity-40 border-transparent bg-transparent pointer-events-none";
-                      }
-                    }
-
-                    return (
-                      <button
-                        key={idx}
-                        disabled={selectedAnswer !== null}
-                        onClick={() => handleAnswerSelect(idx)}
-                        className={`w-full text-left p-4 rounded-xl border text-sm transition-all flex items-start gap-3 justify-between font-sans normal-case tracking-normal cursor-pointer ${optionStyle}`}
-                      >
-                        <span className="flex-1">{option}</span>
-                        {selectedAnswer !== null && idx === questions[currentStep].correctIndex && (
-                          <span className="text-emerald-600 font-bold text-xs uppercase tracking-widest font-mono">Correto</span>
-                        )}
-                        {selectedAnswer !== null && idx === selectedAnswer && idx !== questions[currentStep].correctIndex && (
-                          <span className="text-red-500 font-bold text-xs uppercase tracking-widest font-mono">Incorreto</span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Feedback with Tip */}
-                {feedback && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }} 
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`p-4 rounded-xl text-xs font-sans normal-case tracking-normal ${
-                      feedback === 'correct' 
-                        ? 'bg-emerald-500/5 border border-emerald-500/10 text-emerald-700 dark:text-emerald-400' 
-                        : 'bg-red-500/5 border border-red-500/10 text-red-600'
-                    }`}
-                  >
-                    <p className="font-bold mb-1 uppercase tracking-widest text-[9px] font-mono">Dica do Prof. Lucas:</p>
-                    <p className="text-sm">{questions[currentStep].tip}</p>
-                  </motion.div>
-                )}
-
-                {/* Action button */}
-                {selectedAnswer !== null && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-end">
-                    <button
-                      onClick={handleNext}
-                      className="px-6 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-500 transition-all cursor-pointer text-xs uppercase tracking-widest"
-                    >
-                      {currentStep < questions.length - 1 ? "Próxima Questão" : "Ver Meu Crachá"}
-                    </button>
-                  </motion.div>
-                )}
-              </motion.div>
-            )}
-
-            {gameState === 'completed' && (
-              <motion.div 
-                key="completed"
+                key="workspace"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="space-y-6 flex flex-col md:flex-row gap-8 items-center"
+                className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8"
               >
-                <div className="flex-1 space-y-4">
-                  <div className="flex items-center gap-2 text-emerald-600">
-                    <Award size={32} />
-                    <h4 className={`text-xl md:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-black'}`}>Simulação Concluída!</h4>
-                  </div>
-                  <p className={`text-sm font-sans normal-case tracking-normal ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>
-                    Você obteve uma pontuação de <span className="font-bold text-emerald-500">{score}%</span> no pensamento computacional. 
-                    Digite seu nome abaixo para emitir a insígnia digital demonstrando seu domínio sobre os 4 pilares:
-                  </p>
-                  
-                  <div className="space-y-3">
-                    <input 
-                      type="text" 
-                      placeholder="Seu Nome Completo"
-                      value={studentName}
-                      onChange={(e) => setStudentName(e.target.value)}
-                      maxLength={32}
-                      className={`w-full max-w-sm px-4 py-3 rounded-xl border text-sm font-sans font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all ${
-                        isDarkMode 
-                        ? 'bg-black/40 border-white/10 text-white' 
-                        : 'bg-black/[0.01] border-black/10 text-black'
-                      }`}
-                    />
+                {/* Compiler / Blocks panel */}
+                <div className="lg:col-span-5 flex flex-col gap-4">
+                  <div className={`p-5 rounded-2xl border ${isDarkMode ? 'bg-[#151c24] border-white/5' : 'bg-slate-50 border-slate-200'}`}>
+                    <span className={`text-[10px] font-mono font-bold tracking-[0.2em] uppercase block mb-3 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-700'}`}>COMANDOS DISPONÍVEIS</span>
+                    <div className="grid grid-cols-2 gap-2">
+                       <button 
+                        onClick={() => addCommand('FORWARD')} 
+                        disabled={gameState === 'executing'}
+                        className={`py-3 rounded-lg font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider border transition-all shadow-sm ${isDarkMode ? 'bg-[#1c242e] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-white disabled:opacity-50' : 'bg-white border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 disabled:opacity-50'}`}
+                       >
+                         ↑ AVANÇAR
+                       </button>
+                       <div className="col-span-2 grid grid-cols-2 gap-2 mt-1">
+                        <button 
+                          onClick={() => addCommand('LEFT')} 
+                          disabled={gameState === 'executing'}
+                          className={`py-3 rounded-lg font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider border transition-all shadow-sm ${isDarkMode ? 'bg-[#1c242e] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-white disabled:opacity-50' : 'bg-white border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 disabled:opacity-50'}`}
+                        >
+                          ↰ ESQUERDA
+                        </button>
+                        <button 
+                          onClick={() => addCommand('RIGHT')} 
+                          disabled={gameState === 'executing'}
+                          className={`py-3 rounded-lg font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider border transition-all shadow-sm ${isDarkMode ? 'bg-[#1c242e] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-white disabled:opacity-50' : 'bg-white border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 disabled:opacity-50'}`}
+                        >
+                          DIREITA ↱
+                        </button>
+                       </div>
+                    </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-3">
-                    <button
-                      onClick={resetGame}
-                      className={`px-5 py-3 border rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer ${
-                        isDarkMode 
-                          ? 'border-white/10 hover:bg-white/5 text-white/60 hover:text-white' 
-                          : 'border-black/10 hover:bg-black/5 text-black/60 hover:text-black'
-                      }`}
-                    >
-                      Reiniciar Teste
-                    </button>
+                  <div className={`flex-[1] flex flex-col p-4 rounded-2xl border min-h-[220px] ${isDarkMode ? 'bg-[#11171d] border-white/5' : 'bg-white border-slate-200'}`}>
+                    <div className="flex justify-between items-center mb-3">
+                      <span className={`text-[10px] font-mono font-bold tracking-[0.2em] uppercase ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>FILA DE INSTRUÇÕES</span>
+                      <span className={`text-[9px] font-mono font-bold ${commands.length === 15 ? 'text-red-500' : isDarkMode ? 'text-emerald-500/50' : 'text-emerald-600/60'}`}>{commands.length}/15</span>
+                    </div>
+                    
+                    <div className="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                      {commands.length === 0 ? (
+                        <div className={`h-full flex items-center justify-center text-[10px] font-mono font-bold uppercase tracking-widest text-center italic ${isDarkMode ? 'text-white/20' : 'text-slate-400'}`}>
+                          Algoritmo Vazio
+                        </div>
+                      ) : (
+                        commands.map((cmd, idx) => (
+                          <div 
+                            key={idx} 
+                            onClick={() => removeCommand(idx)}
+                            className={`px-3 py-2.5 rounded-lg border flex items-center justify-between font-mono text-[10px] font-bold tracking-wider cursor-pointer group transition-all ${
+                              currentCmdIdx === idx 
+                                ? (isDarkMode ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]' : 'bg-emerald-100 border-emerald-500 text-emerald-700')
+                                : (isDarkMode ? 'bg-[#161c24] border-white/10 text-slate-300 hover:border-red-500/50' : 'bg-slate-50 border-slate-200 text-slate-700 hover:border-red-300')
+                            }`}
+                          >
+                            <div className="flex items-center gap-2 opacity-80">
+                              <span className="opacity-50">{String((idx + 1)).padStart(2, '0')}.</span>
+                              <span>{cmd === 'FORWARD' ? 'AVANÇAR_FRENTE()' : cmd === 'LEFT' ? 'GIRAR_ESQUERDA()' : 'GIRAR_DIREITA()'}</span>
+                            </div>
+                            {gameState !== 'executing' && (
+                              <X size={12} className="opacity-0 group-hover:opacity-100 text-red-500 transition-opacity" />
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                    <div className="mt-4 pt-4 border-t border-dashed border-slate-500/20 flex gap-2">
+                       <button
+                         onClick={clearCommands}
+                         disabled={gameState === 'executing'}
+                         className={`p-3 rounded-xl border flex items-center justify-center transition-all ${isDarkMode ? 'bg-[#1a212b] border-white/5 text-slate-400 hover:bg-red-500/10 hover:text-red-400 disabled:opacity-50' : 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-red-50 hover:text-red-600 disabled:opacity-50'}`}
+                         title="Limpar Comandos"
+                       >
+                         <Trash2 size={16} />
+                       </button>
+                       <button
+                         onClick={executeQueue}
+                         disabled={gameState === 'executing' || commands.length === 0}
+                         className={`flex-1 py-3 px-4 flex items-center justify-center gap-2 rounded-xl text-[10px] font-mono font-bold uppercase tracking-widest border transition-all ${
+                           gameState === 'executing' 
+                             ? 'bg-emerald-600/50 text-white cursor-not-allowed border-transparent' 
+                             : 'bg-emerald-600 hover:bg-emerald-500 text-white border-emerald-500 cursor-pointer shadow-lg hover:shadow-emerald-500/20'
+                         }`}
+                       >
+                         {gameState === 'executing' ? 'COMPILANDO...' : 'EXECUTAR ALGORITMO'} <Play size={14} />
+                       </button>
+                    </div>
                   </div>
                 </div>
 
-                {/* Digital badge display */}
-                <div className="w-full max-w-[280px] shrink-0 p-1 rounded-2xl bg-gradient-to-tr from-emerald-500 to-emerald-300 shadow-xl relative group">
-                  <div className="absolute inset-0 bg-emerald-400 rounded-2xl blur-xl opacity-30 group-hover:opacity-40 transition-opacity" />
-                  <div className={`relative rounded-xl p-6 flex flex-col items-center text-center space-y-4 ${isDarkMode ? 'bg-[#151a1e]' : 'bg-white'}`}>
-                    <div className="p-3 bg-emerald-500/10 rounded-full text-emerald-600">
-                      <Brain size={36} className="animate-pulse" />
-                    </div>
-                    <span className="text-[8px] font-mono font-bold uppercase tracking-[0.25em] text-emerald-600">UTFPR / PROFESSOR LUCAS</span>
-                    <h5 className={`text-base font-bold uppercase tracking-tight ${isDarkMode ? 'text-white' : 'text-black'}`}>
-                      {studentName || "PENSADOR DEDICADO"}
-                    </h5>
-                    <div className="h-[2px] w-12 bg-emerald-500/20" />
-                    <p className={`text-[10px] font-sans normal-case tracking-normal max-w-[200px] leading-relaxed ${isDarkMode ? 'text-white/40' : 'text-black/40'}`}>
-                      Demonstrou domínio prático em Decomposição, Abstração, Algoritmos e Reconhecimento de Padrões através do Simulador.
-                    </p>
-                    <div className="flex items-center gap-1.5 py-1 px-3 rounded-full bg-emerald-500/5 border border-emerald-500/10">
-                      <Award size={12} className="text-emerald-500" />
-                      <span className="text-[8px] font-mono font-bold uppercase text-emerald-600">Perfect Score {score}%</span>
+                {/* Grid Visualizer */}
+                <div className="lg:col-span-7 flex flex-col gap-4">
+                  <div className={`relative p-2 md:p-6 rounded-2xl flex items-center justify-center flex-col shrink-0 border ${isDarkMode ? 'bg-[#0b0e13] border-white/5' : 'bg-slate-100 border-slate-200'}`}>
+                    
+                    {gameState === 'failed' && (
+                      <div className="absolute top-4 left-0 right-0 z-20 flex justify-center">
+                        <span className="px-4 py-1.5 bg-red-500/90 text-white text-[10px] font-mono font-bold uppercase tracking-widest rounded-full shadow-lg border border-red-400 animate-pulse">
+                          FALHA NO PROCEDIMENTO ESTRUTURAL
+                        </span>
+                      </div>
+                    )}
+
+                    <div 
+                      className={`grid gap-1 md:gap-2 p-3 md:p-4 rounded-xl border shadow-inner ${isDarkMode ? 'bg-[#161c24] border-white/5' : 'bg-slate-200 border-slate-300'}`}
+                      style={{ gridTemplateColumns: `repeat(${GRID_SIZE}, minmax(0, 1fr))` }}
+                    >
+                      {Array.from({ length: GRID_SIZE * GRID_SIZE }).map((_, index) => {
+                        const x = index % GRID_SIZE;
+                        const y = Math.floor(index / GRID_SIZE);
+                        
+                        const isRobot = robotPos.x === x && robotPos.y === y;
+                        const isTarget = TARGET_POS.x === x && TARGET_POS.y === y;
+                        const isObs = isObstacle(x, y);
+
+                        let cellClass = isDarkMode ? "bg-[#1c242e] border-white/5" : "bg-white border-slate-200 shadow-sm";
+                        if (isTarget) {
+                          cellClass = isDarkMode ? "bg-emerald-500/20 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]" : "bg-emerald-100 border-emerald-400";
+                        } else if (isObs) {
+                          cellClass = isDarkMode ? "bg-slate-800 border-slate-700" : "bg-slate-300 border-slate-400";
+                        }
+
+                        return (
+                          <div 
+                            key={index}
+                            className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-md md:rounded-lg border flex items-center justify-center transition-all duration-300 relative ${cellClass}`}
+                          >
+                            {isTarget && !isRobot && (
+                              <Award size={20} className={isDarkMode ? 'text-emerald-400 opacity-80' : 'text-emerald-600 opacity-80'} />
+                            )}
+                            {isObs && (
+                              <div className="w-full h-full p-2 opacity-50">
+                                <div className={`w-full h-full rounded ${isDarkMode ? 'bg-slate-700' : 'bg-slate-400'}`} />
+                              </div>
+                            )}
+                            {isRobot && (
+                              <motion.div 
+                                layoutId="robot"
+                                transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
+                                className={`w-3/4 h-3/4 rounded-full flex items-center justify-center text-sm md:text-base font-bold shadow-lg z-10 ${gameState === 'failed' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'}`}
+                              >
+                                {gameState === 'failed' ? <X size={16} /> : getRobotIcon()}
+                              </motion.div>
+                            )}
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
+
+                  {/* Terminal Logs */}
+                  <div className={`p-4 rounded-xl border font-mono text-[9px] md:text-[10px] uppercase leading-relaxed shadow-inner h-32 overflow-y-auto ${isDarkMode ? 'bg-[#05080c] border-white/5 text-blue-400/80' : 'bg-slate-900 border-slate-900 text-emerald-400'}`}>
+                    {logs.map((log, i) => (
+                      <div key={i} className={`${i === 0 ? (log.includes('ERRO') || log.includes('FALHA') ? 'text-red-400 font-bold' : log.includes('SUCESSO') ? 'text-emerald-400 font-bold' : isDarkMode ? 'text-white' : 'text-emerald-300') : 'opacity-60'}`}>
+                        {log}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {gameState === 'success' && (
+              <motion.div 
+                key="success"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-8 flex flex-col items-center justify-center py-6 text-center"
+              >
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.3)]">
+                    <Award size={40} className="animate-pulse" />
+                  </div>
+                  <h4 className={`text-2xl md:text-3xl font-bold font-serif italic tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Lógica Estruturada com Sucesso!</h4>
+                  <p className={`text-sm max-w-lg font-sans normal-case tracking-normal ${isDarkMode ? 'text-white/60' : 'text-slate-600'}`}>
+                    Parabéns! Você aplicou os pilares computacionais (Decomposição e Algoritmos) corretamente ordenando passos finitos. Insira seu nome para emitir o crachá:
+                  </p>
+                </div>
+                
+                <div className="w-full max-w-sm space-y-4">
+                  <input 
+                    type="text" 
+                    placeholder="Seu Nome Completo"
+                    value={studentName}
+                    onChange={(e) => setStudentName(e.target.value)}
+                    maxLength={32}
+                    className={`w-full px-5 py-4 rounded-xl border text-sm font-sans font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-emerald-500/40 transition-all text-center placeholder:text-center ${
+                      isDarkMode 
+                      ? 'bg-[#151c24] border-white/10 text-white placeholder:text-white/30' 
+                      : 'bg-white border-slate-300 text-slate-800 placeholder:text-slate-400'
+                    }`}
+                  />
+                  
+                  {studentName.length > 2 && (
+                    <div className={`p-6 rounded-2xl border text-left mt-6 flex flex-col items-center space-y-4 shadow-xl ${isDarkMode ? 'bg-gradient-to-br from-[#101915] to-[#151c24] border-emerald-500/30' : 'bg-gradient-to-br from-emerald-50 to-white border-emerald-200'}`}>
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-600 bg-emerald-500/10 px-3 py-1 rounded-full">CERTIFICADO DIGITAL LÓGICO</span>
+                      <h5 className={`text-lg font-bold font-sans uppercase tracking-tight text-center ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+                        {studentName}
+                      </h5>
+                      <p className={`text-[10px] font-sans normal-case text-center px-4 leading-relaxed ${isDarkMode ? 'text-white/50' : 'text-slate-500'}`}>
+                        Validou competências de abstração e formulação algorítmica no laboratório de robótica educacional.
+                      </p>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={resetGame}
+                    className={`mt-4 w-full px-5 py-3 border rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-all cursor-pointer ${
+                      isDarkMode 
+                        ? 'border-white/10 hover:bg-white/5 text-white/60 hover:text-white' 
+                        : 'border-slate-300 hover:bg-slate-50 text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Recalibrar e Jogar Novamente
+                  </button>
                 </div>
               </motion.div>
             )}
@@ -1369,12 +1470,13 @@ void loop() {
 };
 
 const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
-  type ProblemId = 'dhcp' | 'dns' | 'ram';
+  type ProblemId = 'dhcp' | 'dns' | 'ram' | 'firewall';
   const [activeProb, setActiveProb] = useState<ProblemId>('dhcp');
-  const [probFixed, setProbFixed] = useState<{ dhcp: boolean; dns: boolean; ram: boolean }>({
+  const [probFixed, setProbFixed] = useState<{ dhcp: boolean; dns: boolean; ram: boolean; firewall: boolean }>({
     dhcp: false,
     dns: false,
-    ram: false
+    ram: false,
+    firewall: false
   });
   const [isFixing, setIsFixing] = useState(false);
   const [sysRamUsage, setSysRamUsage] = useState(98);
@@ -1383,45 +1485,87 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
     "Monitoramento de infraestrutura online.",
     "Status: ALERTA - Uma ou mais falhas críticas detectadas na rede local."
   ]);
+  const [score, setScore] = useState(0);
 
   const addLog = (msg: string) => {
     const time = new Date().toLocaleTimeString('pt-BR', { hour12: false });
-    setDiagnosticLogs(prev => [`[${time}] ${msg}`, ...prev].slice(0, 5));
+    setDiagnosticLogs(prev => [`[${time}] ${msg}`, ...prev].slice(0, 7));
   };
 
-  const solveProblem = () => {
+  const getOptions = (prob: ProblemId) => {
+    switch (prob) {
+      case 'dhcp': return [
+        { cmd: 'ip r add default via 192.168.1.1', correct: false },
+        { cmd: 'sudo dhclient -r && sudo dhclient eth0', correct: true },
+        { cmd: 'sudo apt-get install dhcpcd', correct: false }
+      ];
+      case 'dns': return [
+        { cmd: "sudo echo 'nameserver 8.8.8.8' > /etc/resolv.conf", correct: true },
+        { cmd: 'ping 8.8.8.8', correct: false },
+        { cmd: 'ipconfig /flushdns', correct: false }
+      ];
+      case 'firewall': return [
+        { cmd: 'sudo ufw disable', correct: false },
+        { cmd: 'iptables -A FORWARD -p tcp --dport 80 -j REJECT', correct: false },
+        { cmd: 'iptables -D FORWARD -p tcp --dport 443 -j REJECT && iptables -A FORWARD -p tcp --dport 443 -j ACCEPT', correct: true }
+      ];
+      case 'ram': return [
+        { cmd: 'sudo rm -rf /var/log/*', correct: false },
+        { cmd: 'sudo reboot now', correct: false },
+        { cmd: 'sudo kill -9 $(pgrep sysops_backup) && sudo sysctl -w vm.drop_caches=3', correct: true }
+      ];
+    }
+  };
+
+  const solveProblem = (cmd: string, correct: boolean) => {
     setIsFixing(true);
+    addLog(`> ${cmd}`);
+    
+    if (!correct) {
+      setTimeout(() => {
+        addLog("ERRO: Comando inválido ou ineficiente para a mitigação do problema.");
+        setIsFixing(false);
+      }, 800);
+      return;
+    }
+
     addLog(`Iniciando rotina corretiva para o caso: ${
-      activeProb === 'dhcp' ? 'Renovação DHCP' : activeProb === 'dns' ? 'Ajuste de Servidores DNS' : 'Estouro de RAM'
+      activeProb === 'dhcp' ? 'Renovação DHCP' : 
+      activeProb === 'dns' ? 'Ajuste de Servidores DNS' : 
+      activeProb === 'ram' ? 'Estouro de RAM' : 'Regras de Firewall'
     }...`);
 
     setTimeout(() => {
       if (activeProb === 'dhcp') {
         setProbFixed(prev => ({ ...prev, dhcp: true }));
         addLog("Requisitando lease de endereço IP via broadcast ethernet...");
-        addLog("Sucesso! IP 192.168.100.125 atribuído pela VLAN-Estudantes.");
-        addLog("Ping para Gateway (192.168.100.1): RESPOSTA EM 1.2ms [ESTÁVEL]");
+        addLog("Sucesso! IP 192.168.100.125 atribuído.");
+        setScore(s => s + 100);
       } else if (activeProb === 'dns') {
         setProbFixed(prev => ({ ...prev, dns: true }));
-        addLog("Verificando arquivo /etc/resolv.conf...");
-        addLog("Substituindo nameserver obsoleto 127.0.0.1 por 8.8.8.8 (Google Primary)...");
-        addLog("Executando lookup: nslookup utfpr.edu.br -> Resolvido p/ 200.134.1.25");
-        addLog("Navegação externa por domínio normalizada.");
+        addLog("Atualizando resolv.conf com DNS Secundário...");
+        addLog("Lookup: utfpr.edu.br -> Resolvido p/ 200.134.1.25");
+        setScore(s => s + 100);
       } else if (activeProb === 'ram') {
         setProbFixed(prev => ({ ...prev, ram: true }));
-        addLog("Escaneando processos ativos por uso desproporcional de recursos...");
-        addLog("Detectado processo órfão de backup-log zumbi (PID: 12480)");
-        addLog("Executando comando: kill -9 12480 && echo 3 > /proc/sys/vm/drop_caches");
+        addLog("Eliminando processo zumbi e dropando caches...");
         setSysRamUsage(28);
-        addLog("Memória ram reciclada com sucesso. Servidor em temperatura segura.");
+        addLog("Memória ram reciclada. Servidor estável.");
+        setScore(s => s + 100);
+      } else if (activeProb === 'firewall') {
+        setProbFixed(prev => ({ ...prev, firewall: true }));
+        addLog("Adequando regras de firewall (IPTABLES)...");
+        addLog("Acesso liberado (ACCEPT) na porta 443 HTTPS.");
+        setScore(s => s + 100);
       }
       setIsFixing(false);
     }, 1500);
   };
 
   const resetAllProblems = () => {
-    setProbFixed({ dhcp: false, dns: false, ram: false });
+    setProbFixed({ dhcp: false, dns: false, ram: false, firewall: false });
     setSysRamUsage(98);
+    setScore(0);
     setDiagnosticLogs([
       "Painel NOC reiniciado com sucesso.",
       "Falhas sintéticas de rede recolocadas para calibração escolar."
@@ -1429,15 +1573,15 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
   };
 
   return (
-    <div className="flex flex-col pt-6 md:pt-16 pb-12">
+    <div className="flex flex-col pt-6 md:pt-16 pb-12 overflow-y-auto w-full">
       {/* Upper informational grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 max-w-6xl w-full mb-10">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="lg:col-span-8">
-          <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif px-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>Tecnologia da Informação</h2>
-          <p className={`max-w-2xl mb-6 uppercase text-[10px] tracking-[0.2em] font-mono font-bold px-1 ${isDarkMode ? 'text-blue-400' : 'text-black/30'}`}>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 max-w-6xl w-full mb-10 px-1">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="lg:col-span-8 flex flex-col justify-center">
+          <h2 className={`text-4xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Tecnologia da Informação</h2>
+          <p className={`max-w-xl mb-8 uppercase text-[11px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-blue-400' : 'text-slate-500'}`}>
             Infraestrutura, Conectividade e Suporte Avançado
           </p>
-          <div className={`space-y-4 text-xs md:text-sm font-sans normal-case tracking-normal leading-relaxed ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>
+          <div className={`space-y-5 text-sm md:text-base font-sans normal-case tracking-normal leading-relaxed ${isDarkMode ? 'text-white/70' : 'text-slate-600'}`}>
             <p>
               Atuação sólida em Tecnologia da Informação, com foco em infraestrutura, redes, hardware e sistemas operacionais, voltada à formação de profissionais técnicos preparados para os desafios do mundo real.
             </p>
@@ -1445,13 +1589,33 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
               O processo de ensino vai além da execução de tarefas: busca desenvolver pensamento crítico, raciocínio lógico e autonomia na resolução de problemas. A proposta integra teoria e prática de forma estratégica, capacitando os alunos a compreenderem profundamente o funcionamento das tecnologias, diagnosticar falhas e construir soluções eficientes em diferentes contextos profissionais.
             </p>
           </div>
+          
+          {/* Tech stack bento grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8">
+            <div className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-white/[0.05]' : 'bg-black/[0.02] border-black/10 hover:bg-black/[0.05]'}`}>
+              <Server size={22} className={isDarkMode ? 'text-blue-400' : 'text-blue-600'} />
+              <span className={`text-[10px] uppercase font-mono font-bold tracking-wider ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>Infra & SO</span>
+            </div>
+            <div className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-white/[0.05]' : 'bg-black/[0.02] border-black/10 hover:bg-black/[0.05]'}`}>
+              <Network size={22} className={isDarkMode ? 'text-emerald-400' : 'text-emerald-600'} />
+              <span className={`text-[10px] uppercase font-mono font-bold tracking-wider ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>Redes & TCP/IP</span>
+            </div>
+            <div className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-white/[0.05]' : 'bg-black/[0.02] border-black/10 hover:bg-black/[0.05]'}`}>
+              <Cpu size={22} className={isDarkMode ? 'text-yellow-400' : 'text-yellow-600'} />
+              <span className={`text-[10px] uppercase font-mono font-bold tracking-wider ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>Hardware</span>
+            </div>
+            <div className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-white/[0.05]' : 'bg-black/[0.02] border-black/10 hover:bg-black/[0.05]'}`}>
+              <ShieldCheck size={22} className={isDarkMode ? 'text-purple-400' : 'text-purple-600'} />
+              <span className={`text-[10px] uppercase font-mono font-bold tracking-wider ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>Segurança</span>
+            </div>
+          </div>
         </motion.div>
 
         {/* Beautiful diagnostic card image directly inside info block */}
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-4 flex items-center justify-center">
-          <div className="relative group w-full max-w-[280px]">
+          <div className="relative group w-full max-w-[320px]">
             <div className="absolute inset-0 bg-blue-600 rounded-3xl blur-2xl opacity-10 group-hover:opacity-15 transition-opacity" />
-            <div className={`relative rounded-2xl overflow-hidden shadow-xl border ${isDarkMode ? 'border-white/5 bg-white/[0.02]' : 'border-black/5 bg-black/[0.02]'}`}>
+            <div className={`relative rounded-2xl overflow-hidden shadow-2xl border ${isDarkMode ? 'border-white/10 bg-white/[0.02]' : 'border-black/10 bg-black/[0.02]'}`}>
               <img 
                 src="https://lucasleniar.com.br/titecnico.png" 
                 alt="Diagrama e mesa técnica de hardware e redes de computadores para suporte de TI" 
@@ -1459,61 +1623,67 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 referrerPolicy="no-referrer"
                 loading="lazy"
               />
-              <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-                <p className="text-[9px] font-bold text-white uppercase tracking-[0.2em] font-mono leading-none">Mesa de Diagnóstico</p>
+              <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em] font-mono leading-none">Visão de Topologia</p>
+                <p className="text-[11px] text-white/70 mt-1 font-sans">Desenho arquitetural de redes.</p>
               </div>
             </div>
           </div>
         </motion.div>
       </div>
 
-      {/* DETAILED INTERACTIVE NOC / SIMULATION CONTAINER - MOVED UP/INTEGRATED */}
+      {/* DETAILED INTERACTIVE NOC / SIMULATION CONTAINER */}
       <div className="max-w-6xl w-full px-1">
-        <div className="border-t border-blue-500/10 pt-8 mb-6">
+        <div className={`border-t pt-10 mb-8 ${isDarkMode ? 'border-blue-500/10' : 'border-slate-200'}`}>
           <div className="flex items-center gap-3 mb-2">
-            <span className="p-1 px-2.5 bg-blue-500/10 text-blue-500 rounded-lg text-xs font-mono font-bold">NOC DIAGNOSTICS</span>
-            <h3 className={`text-xl md:text-2xl font-bold tracking-tight italic font-serif leading-none ${isDarkMode ? 'text-white' : 'text-black'}`}>Central de Operação e Redes (NOC)</h3>
+            <span className={`p-1 px-3 rounded-lg text-xs font-mono font-bold uppercase tracking-wider ${isDarkMode ? 'bg-blue-500/10 text-blue-500' : 'bg-blue-100 text-blue-700'}`}>
+              NOC Diagnostics Center
+            </span>
+            <h3 className={`text-2xl md:text-3xl font-bold tracking-tight italic font-serif leading-none ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+              Central de Operações (NOC)
+            </h3>
           </div>
-          <p className={`text-xs font-sans normal-case tracking-normal font-medium leading-relaxed ${isDarkMode ? 'text-white/40' : 'text-black/40'}`}>
-            Uma simulação visual de problemas comuns resolvidos no dia a dia por administradores de sistema técnico. Diagnostique a topologia abaixo e execute reparos cirúrgicos para restabelecer a conectividade de cada canal.
+          <p className={`max-w-3xl text-sm font-sans normal-case tracking-normal font-medium leading-relaxed ${isDarkMode ? 'text-white/50' : 'text-slate-600'}`}>
+            Uma simulação interativa de incidentes reais solucionados por administradores de rede. Selecione um ticket de suporte, analise o diagnóstico e aplique a correção via terminal para restabelecer a infraestrutura.
           </p>
         </div>
 
         {/* Dashboard Frame */}
-        <div className="rounded-3xl border shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 bg-[#0e141f] border-slate-800 text-white">
+        <div className={`rounded-3xl border shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 ${isDarkMode ? 'bg-[#0e141f] border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
           {/* NOC Incident Selection sidebar */}
-          <div className="lg:col-span-4 p-6 border-r border-slate-800 flex flex-col justify-between bg-[#080d15]">
+          <div className={`lg:col-span-4 p-6 border-r flex flex-col justify-between ${isDarkMode ? 'border-slate-800 bg-[#080d15]' : 'border-slate-200 bg-slate-50'}`}>
             <div className="space-y-4">
-              <span className="text-[9px] font-mono font-bold tracking-[0.2em] uppercase block mb-1 text-emerald-400">TICKETS DE ERRO ABERTOS</span>
+              <span className={`text-[10px] font-mono font-bold tracking-[0.2em] uppercase block mb-2 ${isDarkMode ? 'text-emerald-400' : 'text-blue-600'}`}>TICKETS DE INCIDENTE</span>
               
               <div className="space-y-2">
                 {[
-                  { id: 'dhcp', name: 'Lease DHCP Ausente', desc: 'Computador da secretaria sem IP configurado.', fixed: probFixed.dhcp },
-                  { id: 'dns', name: 'Falha de Tradução DNS', desc: 'Ping de IP resolve, mas os sites não carregam.', fixed: probFixed.dns },
-                  { id: 'ram', name: 'Estouro Crítico de RAM', desc: 'Servidor instável operando a 98% de carga.', fixed: probFixed.ram }
+                  { id: 'dhcp', name: 'Lease DHCP Ausente', desc: 'Computador da matriz sem IP configurado para LAN.', fixed: probFixed.dhcp },
+                  { id: 'dns', name: 'Falha de Tradução DNS', desc: 'Ping resolve IPs, mas nomes não carregam (NXDOMAIN).', fixed: probFixed.dns },
+                  { id: 'firewall', name: 'Bloqueio de Firewall', desc: 'Tráfego seguro impedido na porta 443 internamente.', fixed: probFixed.firewall },
+                  { id: 'ram', name: 'Estouro Crítico RAM', desc: 'Servidor instável reportando 98% de carga e swap.', fixed: probFixed.ram }
                 ].map((prob) => (
                   <button
                     key={prob.id}
                     onClick={() => setActiveProb(prob.id as ProblemId)}
                     className={`w-full p-4 rounded-xl border text-left transition-all cursor-pointer block ${
                       activeProb === prob.id 
-                        ? 'bg-blue-500/15 border-blue-500/40 text-blue-400 shadow-md' 
-                        : 'border-white/5 bg-[#111724] hover:bg-white/[0.04] text-slate-300'
+                        ? (isDarkMode ? 'bg-blue-500/15 border-blue-500/40 shadow-[0_0_15px_rgba(59,130,246,0.1)]' : 'bg-blue-50 border-blue-300 shadow-sm')
+                        : (isDarkMode ? 'border-white/5 bg-[#111724] hover:bg-white/[0.04]' : 'border-slate-200 bg-white hover:bg-slate-50')
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="font-mono font-bold text-[10px] uppercase tracking-wider block text-white font-black">
+                      <span className={`font-mono font-bold text-[11px] uppercase tracking-wider block ${isDarkMode ? (activeProb === prob.id ? 'text-blue-400' : 'text-slate-200') : (activeProb === prob.id ? 'text-blue-700' : 'text-slate-700')}`}>
                         {prob.name}
                       </span>
-                      <span className={`text-[8px] px-1.5 py-0.5 rounded font-mono font-bold uppercase leading-none ${
+                      <span className={`text-[9px] px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider leading-none ${
                         prob.fixed 
-                          ? 'bg-emerald-500/20 text-emerald-400' 
-                          : prob.id === 'ram' ? 'bg-red-500/20 text-red-400 animate-pulse' : 'bg-yellow-500/20 text-yellow-400 animate-pulse'
+                          ? (isDarkMode ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-100 text-emerald-700')
+                          : ['ram', 'firewall'].includes(prob.id) ? (isDarkMode ? 'bg-red-500/20 text-red-400 animate-pulse' : 'bg-red-100 text-red-600 animate-pulse') : (isDarkMode ? 'bg-yellow-500/20 text-yellow-400 animate-pulse' : 'bg-yellow-100 text-yellow-700 animate-pulse')
                       }`}>
-                        {prob.fixed ? 'Resolvido' : 'Pendente'}
+                        {prob.fixed ? 'Resolvido' : 'Crítico'}
                       </span>
                     </div>
-                    <span className={`text-[11px] font-sans normal-case tracking-normal block leading-tight ${activeProb === prob.id ? 'text-blue-300' : 'text-slate-400'}`}>
+                    <span className={`text-[12px] font-sans normal-case tracking-normal block leading-snug mt-2 ${activeProb === prob.id ? (isDarkMode ? 'text-blue-200' : 'text-blue-800') : (isDarkMode ? 'text-slate-400' : 'text-slate-500')}`}>
                       {prob.desc}
                     </span>
                   </button>
@@ -1522,93 +1692,101 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
             </div>
 
             {/* Maintenance controls */}
-            <div className="pt-6 border-t border-slate-800/80 flex gap-2 mt-6">
+            <div className={`pt-6 border-t flex gap-2 mt-6 ${isDarkMode ? 'border-slate-800/80' : 'border-slate-200'}`}>
               <button
                 onClick={resetAllProblems}
-                className="flex-1 py-2.5 rounded-xl text-[9.5px] font-mono font-bold tracking-widest uppercase border border-white/5 bg-[#161f30] text-slate-300 hover:bg-red-600 hover:text-white transition-all cursor-pointer"
+                className={`flex-1 py-3 rounded-xl text-[10px] font-mono font-bold tracking-widest uppercase border transition-all cursor-pointer ${
+                  isDarkMode 
+                    ? 'border-white/5 bg-[#161f30] text-slate-300 hover:bg-red-600/20 hover:text-red-400 hover:border-red-500/30' 
+                    : 'border-slate-300 bg-white text-slate-600 hover:bg-red-50 hover:text-red-700 hover:border-red-300'
+                }`}
               >
-                Resetar Simulador
+                Resetar Infraestrutura
               </button>
             </div>
           </div>
 
           {/* Topology graphic screen */}
-          <div className="lg:col-span-4 p-6 bg-[#0a0f18] border-r border-slate-800 flex flex-col justify-between items-center text-center">
-            <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-blue-400 uppercase w-full text-left">TOPOLOGIA DE COMUNICAÇÃO</span>
+          <div className={`lg:col-span-4 p-6 border-r flex flex-col justify-between items-center text-center ${isDarkMode ? 'bg-[#0a0f18] border-slate-800' : 'bg-slate-100 border-slate-300'}`}>
+            <span className={`text-[10px] font-mono font-bold tracking-[0.2em] uppercase w-full text-left ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>
+              TOPOLOGIA E ROTAS
+            </span>
             
             {/* Visual network routing diagram based on active problem */}
-            <div className="w-full py-8 flex flex-col items-center justify-center relative">
-              <div className="flex items-center justify-between w-full max-w-[280px] relative">
+            <div className="w-full py-10 flex flex-col items-center justify-center relative">
+              <div className="flex items-center justify-between w-full max-w-[300px] relative">
                 {/* 1. Terminal PC */}
-                <div className="flex flex-col items-center relative z-10">
-                  <div className={`p-3.5 rounded-2xl border transition-all ${
+                <div className="flex flex-col items-center relative z-10 group">
+                  <div className={`p-4 rounded-xl border-2 transition-all duration-300 shadow-lg ${
                     probFixed.dhcp 
-                      ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400' 
-                      : activeProb === 'dhcp' ? 'bg-yellow-500/10 border-yellow-500 text-yellow-400 animate-pulse' : 'bg-slate-800 border-white/5 text-slate-400'
+                      ? (isDarkMode ? 'bg-emerald-900/40 border-emerald-500/50 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-emerald-100 border-emerald-400 text-emerald-600')
+                      : activeProb === 'dhcp' ? (isDarkMode ? 'bg-yellow-900/40 border-yellow-500/50 text-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.2)] animate-pulse' : 'bg-yellow-100 border-yellow-400 text-yellow-600 animate-pulse') 
+                      : (isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-400' : 'bg-white border-slate-300 text-slate-400')
                   }`}>
-                    <Laptop size={24} />
+                    <Laptop size={28} />
                   </div>
-                  <span className="text-[8.5px] font-mono text-white/50 mt-1.5 uppercase font-bold">Estação PC</span>
-                  <span className="text-[7.5px] font-mono text-white/30 lowercase">
+                  <span className={`text-[10px] font-mono mt-3 uppercase font-bold tracking-wider ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Estação PC</span>
+                  <span className={`text-[9px] font-mono lowercase mt-0.5 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
                     {probFixed.dhcp ? "192.168.100.125" : activeProb === 'dhcp' ? "IP Inválido" : "192.168.1.15"}
                   </span>
                 </div>
 
                 {/* Connection cable link 1 */}
-                <div className="flex-1 h-[2px] relative overflow-hidden bg-slate-800 mx-2">
-                  <div className={`absolute inset-y-0 left-0 w-full rounded-full transition-all duration-700 ${
+                <div className={`flex-1 h-[3px] relative overflow-hidden mx-3 rounded-full ${isDarkMode ? 'bg-slate-800' : 'bg-slate-300'}`}>
+                  <div className={`absolute inset-y-0 left-0 w-full rounded-full transition-all duration-1000 ${
                     probFixed.dhcp 
-                      ? 'bg-emerald-500 shadow-[0_0_10px_#10b981]' 
-                      : activeProb === 'dhcp' ? 'bg-yellow-500 shadow-md animate-pulse' : 'bg-emerald-500'
+                      ? 'bg-emerald-500 shadow-[0_0_15px_#10b981]' 
+                      : activeProb === 'dhcp' ? 'bg-yellow-500 shadow-md animate-pulse' : (isDarkMode ? 'bg-emerald-500/30' : 'bg-emerald-400')
                   }`} />
                 </div>
 
                 {/* 2. Switch/Router */}
-                <div className="flex flex-col items-center relative z-10">
-                  <div className={`p-3.5 rounded-2xl border transition-all ${
-                    probFixed.dns 
-                      ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400' 
-                      : activeProb === 'dns' ? 'bg-yellow-500/10 border-yellow-500 text-yellow-400 animate-pulse' : 'bg-slate-800 border-white/5 text-slate-400'
+                <div className="flex flex-col items-center relative z-10 group">
+                  <div className={`p-4 rounded-xl border-2 transition-all duration-300 shadow-lg ${
+                    probFixed.dns || probFixed.firewall || probFixed.ram
+                      ? (isDarkMode ? 'bg-emerald-900/40 border-emerald-500/50 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-emerald-100 border-emerald-400 text-emerald-600')
+                      : ['dns', 'firewall', 'ram'].includes(activeProb) ? (isDarkMode ? 'bg-yellow-900/40 border-yellow-500/50 text-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.2)] animate-pulse' : 'bg-yellow-100 border-yellow-400 text-yellow-600 animate-pulse') 
+                      : (isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-400' : 'bg-white border-slate-300 text-slate-400')
                   }`}>
-                    <Server size={24} />
+                    {activeProb === 'firewall' ? <ShieldCheck size={28} /> : <Server size={28} />}
                   </div>
-                  <span className="text-[8.5px] font-mono text-white/50 mt-1.5 uppercase font-bold">Roteador Gateway</span>
-                  <span className="text-[7.5px] font-mono text-white/30 lowercase">192.168.100.1</span>
+                  <span className={`text-[10px] font-mono mt-3 uppercase font-bold tracking-wider ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Gateway</span>
+                  <span className={`text-[9px] font-mono lowercase mt-0.5 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>192.168.100.1</span>
                 </div>
 
                 {/* Connection cable link 2 */}
-                <div className="flex-1 h-[2px] relative overflow-hidden bg-slate-800 mx-4">
-                  <div className={`absolute inset-y-0 left-0 w-full rounded-full transition-all duration-700 ${
-                    probFixed.dns 
-                      ? 'bg-emerald-500 shadow-[0_0_10px_#10b981]' 
-                      : activeProb === 'dns' ? 'bg-yellow-500 animate-pulse' : 'bg-emerald-500'
+                <div className={`flex-1 h-[3px] relative overflow-hidden mx-3 rounded-full ${isDarkMode ? 'bg-slate-800' : 'bg-slate-300'}`}>
+                  <div className={`absolute inset-y-0 left-0 w-full rounded-full transition-all duration-1000 ${
+                    probFixed.dns && probFixed.firewall
+                      ? 'bg-emerald-500 shadow-[0_0_15px_#10b981]' 
+                      : ['dns', 'firewall'].includes(activeProb) ? 'bg-yellow-500 animate-pulse' : (isDarkMode ? 'bg-emerald-500/30' : 'bg-emerald-400')
                   }`} />
                 </div>
 
                 {/* 3. Internet Cloud gateway */}
-                <div className="flex flex-col items-center relative z-10">
-                  <div className={`p-3.5 rounded-2xl border transition-all ${
-                    (activeProb === 'dns' && !probFixed.dns) || (activeProb === 'dhcp' && !probFixed.dhcp)
-                      ? 'bg-slate-800 border-white/5 text-slate-600' 
-                      : 'bg-emerald-500/10 border-emerald-500 text-emerald-400'
+                <div className="flex flex-col items-center relative z-10 group">
+                  <div className={`p-4 rounded-xl border-2 transition-all duration-300 shadow-lg ${
+                    (['dns', 'firewall'].includes(activeProb) && !probFixed[activeProb as 'dns' | 'firewall']) || (activeProb === 'dhcp' && !probFixed.dhcp)
+                      ? (isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-600' : 'bg-white border-slate-300 text-slate-400')
+                      : (isDarkMode ? 'bg-blue-900/30 border-blue-500/40 text-blue-400' : 'bg-blue-50 border-blue-300 text-blue-600')
                   }`}>
-                    <Globe size={24} />
+                    <Globe size={28} />
                   </div>
-                  <span className="text-[8.5px] font-mono text-white/50 mt-1.5 uppercase font-bold">Internet WAN</span>
-                  <span className="text-[7.5px] font-mono text-white/30">WAN LINK OK</span>
+                  <span className={`text-[10px] font-mono mt-3 uppercase font-bold tracking-wider ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>Internet WAN</span>
+                  <span className={`text-[9px] font-mono mt-0.5 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>WAN LINK OK</span>
                 </div>
               </div>
 
               {/* Extra monitor graphic for RAM Ticket */}
               {activeProb === 'ram' && (
-                <div className="w-full max-w-[240px] mt-6 bg-[#161c24] border border-white/5 rounded-xl p-3 text-left">
-                  <div className="flex justify-between items-center mb-1 text-[8.5px] font-mono font-bold text-white/60">
-                    <span>MÉTRICA DE CARGA DO LINK:</span>
-                    <span className={probFixed.ram ? 'text-emerald-400' : 'text-red-500 animate-pulse'}>
+                <div className={`w-full max-w-[280px] mt-8 border rounded-xl p-4 text-left shadow-md ${isDarkMode ? 'bg-[#161c24] border-white/5' : 'bg-white border-slate-200'}`}>
+                  <div className="flex justify-between items-center mb-2 text-[10px] font-mono font-bold uppercase tracking-wider">
+                    <span className={isDarkMode ? 'text-white/60' : 'text-slate-500'}>MÉTRICA DE CARGA DO LINK:</span>
+                    <span className={probFixed.ram ? 'text-emerald-500' : 'text-red-500 animate-pulse'}>
                       {sysRamUsage}% RAM usado
                     </span>
                   </div>
-                  <div className="w-full bg-[#0d1116] h-2 rounded-full overflow-hidden border border-white/5">
+                  <div className={`w-full h-2.5 rounded-full overflow-hidden border ${isDarkMode ? 'bg-[#0d1116] border-white/5' : 'bg-slate-100 border-slate-200'}`}>
                     <motion.div 
                       initial={{ width: '98%' }} 
                       animate={{ width: `${sysRamUsage}%` }} 
@@ -1620,60 +1798,87 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
               )}
             </div>
 
-            <div className="text-left p-4 rounded-xl text-[10.5px] font-sans normal-case tracking-normal leading-relaxed bg-[#141b25] text-white/70 border border-white/5 shadow-md">
-              <span className="block font-bold text-[9px] font-mono uppercase tracking-widest text-[#636b77] mb-1">Diagnóstico:</span>
+            <div className={`text-left p-5 rounded-xl text-xs font-sans normal-case tracking-normal leading-relaxed border shadow-md w-full ${isDarkMode ? 'bg-[#141b25] text-white/70 border-white/5' : 'bg-white text-slate-700 border-slate-200'}`}>
+              <span className={`block font-bold text-[10px] font-mono uppercase tracking-widest mb-2 ${isDarkMode ? 'text-emerald-400' : 'text-blue-600'}`}>Sintoma Registrado:</span>
               {activeProb === 'dhcp' && (
-                <span>O computador solicita conexão na rede local, mas nenhum lease de IP é fornecido. O cabo ethernet está no ar.</span>
+                <span>O computador de um colaborador perdeu acesso à rede local de arquivos e intranet corporativa, pois o DHCP Server falhou em enviar um Lease IP válido, assumindo um endereço APIPA (169.254.x.x).</span>
               )}
               {activeProb === 'dns' && (
-                <span>A estação local comunica perfeitamente com o roteador gateway, mas falha ao traduzir endereços amigáveis de sites externos por usar um DNS local inconsistente ou quebrado.</span>
+                <span>A estação local comunica perfeitamente com o gateway da empresa (Ping estável), mas o navegador web está retornando erro NXDOMAIN para domínios, devido à tabela cache do roteador corrompida apontando para um provedor offline.</span>
+              )}
+              {activeProb === 'firewall' && (
+                <span>Usuários da VLAN Operacional relatam erro de "Timeout" para sistemas bancários. O log aponta tráfego bloqueado na camada 3, uma regra mal executada de IPTABLES rejeitou pacotes HTTPS (TCP/443).</span>
               )}
               {activeProb === 'ram' && (
-                <span>O servidor remoto está lento devido a um estouro de processos sobressalentes acumulados que consomem toda a capacidade do módulo de swap/cache da memória RAM virtual.</span>
+                <span>O servidor de autenticação LDAP remoto acionou alarme no Nagios/Zabbix por latência severa. Há um estouro crítico de processos-zumbi provenientes de um script mal sucedido engasgando o Kernel e inflando o Swap.</span>
               )}
             </div>
           </div>
 
           {/* NOC Diagnostics Console logs & actions */}
-          <div className="lg:col-span-4 p-6 flex flex-col justify-between bg-[#0b0f15]">
+          <div className={`lg:col-span-4 p-6 flex flex-col justify-between ${isDarkMode ? 'bg-[#0b0f15]' : 'bg-slate-50'}`}>
             <div className="space-y-4">
-              <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-blue-400 uppercase">AÇÃO E SOLUÇÃO DO SUPORTE</span>
-              
-              <div className="space-y-1">
-                <label className="text-[8px] font-mono font-bold uppercase tracking-wider text-slate-500">Comando técnico sugerido:</label>
-                <div className="bg-[#05080c] text-white/80 p-3 rounded-xl font-mono text-[10px] border border-white/5 leading-snug">
-                  {activeProb === 'dhcp' && "sudo dhclient && ip addr show eth0"}
-                  {activeProb === 'dns' && "sudo echo 'nameserver 8.8.8.8' > /etc/resolv.conf"}
-                  {activeProb === 'ram' && "sudo kill -9 $(pgrep backup) && sysctl -w vm.drop_caches=3"}
-                </div>
+              <div className="flex justify-between items-center mb-2">
+                <span className={`text-[10px] font-mono font-bold tracking-[0.2em] uppercase ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>AÇÃO OPERACIONAL</span>
+                <span className={`text-[10px] px-2 py-1 rounded font-mono font-bold uppercase tracking-widest ${isDarkMode ? 'bg-orange-500/20 text-orange-400' : 'bg-orange-100 text-orange-700'}`}>
+                  SCORE: {score}
+                </span>
               </div>
-
+              
               {/* Action Button */}
-              {probFixed[activeProb] ? (
-                <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-center">
-                  <span className="text-emerald-400 font-mono text-[11px] font-bold block uppercase tracking-wider">✔️ PROBLEMA MITIGADO</span>
-                  <span className="text-[9.5px] font-sans normal-case tracking-normal text-slate-400 block mt-0.5">Canal de infraestrutura operando com estabilidade.</span>
-                </div>
-              ) : (
-                <button
-                  onClick={solveProblem}
-                  disabled={isFixing}
-                  className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 text-white font-mono font-bold text-[10px] uppercase tracking-wider rounded-xl transition-all cursor-pointer block flex items-center justify-center"
-                >
-                  {isFixing ? "Aplicando correção técnica..." : "💡 Aplicar Correção de Rede"}
-                </button>
-              )}
+              <div className="mt-4">
+                {probFixed[activeProb] ? (
+                  <div className={`p-4 border rounded-xl text-center shadow-md ${isDarkMode ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-emerald-50 border-emerald-300'}`}>
+                    <span className={`font-mono text-[12px] font-bold block uppercase tracking-wider ${isDarkMode ? 'text-emerald-400' : 'text-emerald-700'}`}>✔️ INCIDENTE TRATADO</span>
+                    <span className={`text-[11px] font-sans normal-case tracking-normal block mt-1 ${isDarkMode ? 'text-emerald-400/60' : 'text-emerald-700/70'}`}>Infraestrutura operando com estabilidade no setor.</span>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <label className={`text-[9px] font-mono font-bold uppercase tracking-wider block ${isDarkMode ? 'text-slate-500' : 'text-slate-600'}`}>Selecione o Comando de Correção:</label>
+                    <div className="flex flex-col gap-2">
+                      {getOptions(activeProb).map((opt, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => solveProblem(opt.cmd, opt.correct)}
+                          disabled={isFixing}
+                          className={`w-full text-left p-3 rounded-xl font-mono text-[10px] sm:text-[11px] border leading-snug transition-all cursor-pointer shadow-sm
+                            ${isDarkMode 
+                              ? 'bg-[#05080c] text-slate-300 border-white/5 hover:border-blue-500/50 hover:bg-blue-500/10' 
+                              : 'bg-white text-slate-700 border-slate-300 hover:border-blue-400 hover:bg-blue-50'}
+                            ${isFixing ? 'opacity-50 cursor-not-allowed' : ''}
+                          `}
+                        >
+                          <span className={`${isDarkMode ? 'text-blue-400' : 'text-blue-600'} mr-2`}>&gt;</span>
+                          {opt.cmd}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Simulated Live SSH Terminal Logs */}
-            <div className="mt-6 border-t border-white/5 pt-4">
-              <span className="text-[8px] font-mono font-bold text-yellow-500 tracking-widest block mb-2 uppercase">TERMINAL DO ADMINISTRADOR: SSH</span>
-              <div className="bg-black/40 rounded-xl p-3 h-28 border border-white/5 overflow-y-auto font-mono text-[9px] text-blue-400 space-y-1 select-text">
+            <div className={`mt-8 border-t pt-5 ${isDarkMode ? 'border-white/10' : 'border-slate-200'}`}>
+              <div className="flex items-center justify-between mb-3">
+                <span className={`text-[9px] font-mono font-bold tracking-widest uppercase flex items-center gap-2 ${isDarkMode ? 'text-yellow-500' : 'text-slate-800'}`}>
+                  <div className={`w-2 h-2 rounded-full animate-pulse ${isDarkMode ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
+                  Terminal SSH / Syslog
+                </span>
+                <span className={`text-[9px] font-mono font-bold ${isDarkMode ? 'text-white/30' : 'text-slate-400'}`}>root@noc-sv01:~#</span>
+              </div>
+              <div className={`rounded-xl p-4 h-48 border overflow-y-auto font-mono text-[10px] space-y-2 select-text shadow-inner ${isDarkMode ? 'bg-black/60 border-white/5 text-blue-300/80 shadow-black' : 'bg-slate-900 border-slate-900 text-emerald-400 shadow-slate-900/50'}`}>
                 {diagnosticLogs.map((log, index) => (
-                  <div key={index} className="whitespace-pre-wrap leading-normal font-medium text-slate-300">
+                  <div key={index} className="whitespace-pre-wrap leading-relaxed font-medium break-words">
                     {log}
                   </div>
                 ))}
+                {isFixing && (
+                  <div className="flex items-center gap-2 opacity-70">
+                    <div className="w-1.5 h-3 bg-current animate-ping" />
+                    <span>Processando execução do playbook...</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
