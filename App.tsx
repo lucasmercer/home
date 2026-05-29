@@ -44,9 +44,7 @@ import {
   Play,
   Award,
   Menu,
-  X,
-  ArrowDown,
-  Mouse
+  X
 } from 'lucide-react';
 
 type SectionId = 'home' | 'computational' | 'robotics' | 'tech' | 'life' | 'utfpr' | 'certificados' | 'horarios' | 'scripts';
@@ -198,7 +196,7 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           {expertises.map((item, i) => {
             const hoverBorderColor = {
               emerald: 'hover:border-emerald-500/30',
@@ -226,15 +224,8 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
               <motion.button
                 key={i}
                 initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0, transition: { delay: 0.1 + (i * 0.1) } }}
-                viewport={{ once: false, margin: "-10%" }}
-                onViewportEnter={() => {
-                  if (typeof window !== 'undefined' && window.innerWidth < 768) {
-                    setActiveExpertise(i);
-                  }
-                }}
-                whileHover={{ scale: 1.05, y: -5, transition: { duration: 0.2 } }}
-                whileTap={{ scale: 0.95 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + (i * 0.1) }}
                 onClick={() => setActiveExpertise(activeExpertise === i ? null : i)}
                 className={`p-3 rounded-xl border flex flex-col items-center gap-2 transition-all duration-300 group cursor-pointer ${
                   isDarkMode 
@@ -242,17 +233,9 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
                     : 'border-black/[0.05] bg-black/[0.01] hover:bg-black/[0.03]'
                 } ${hoverBorderColor} ${activeStyles}`}
               >
-                <motion.div 
-                  initial={false}
-                  animate={{ 
-                    rotate: activeExpertise === i ? 360 : 0, 
-                    scale: activeExpertise === i ? 1.1 : 1 
-                  }}
-                  transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                  className={`transition-colors ${activeExpertise === i ? hoverIconColor.replace('group-hover:', '') : `text-black/30 dark:text-white/30 ${hoverIconColor}`}`}
-                >
+                <div className={`transition-colors ${activeExpertise === i ? hoverIconColor.replace('group-hover:', '') : `text-black/30 dark:text-white/30 ${hoverIconColor}`}`}>
                   {item.icon}
-                </motion.div>
+                </div>
                 <span className={`text-[10px] font-semibold text-center ${activeExpertise === i ? (isDarkMode ? 'text-white/80' : 'text-black/80') : (isDarkMode ? 'text-white/40' : 'text-black/40')}`}>{item.label}</span>
               </motion.button>
             );
@@ -2786,69 +2769,7 @@ export default function App() {
 
   const mainRef = useRef<HTMLElement>(null);
   
-  useEffect(() => {
-    const mainEl = mainRef.current;
-    if (!mainEl) return;
 
-    let isAtBottom = false;
-    let isAtTop = false;
-    let navTimeout: number | undefined;
-    let wheelAccumulator = 0;
-
-    const checkScrollLimits = () => {
-      isAtTop = mainEl.scrollTop <= 1;
-      isAtBottom = Math.ceil(mainEl.scrollTop + mainEl.clientHeight) >= mainEl.scrollHeight - 5;
-    };
-
-    const goToNextSection = () => {
-      if (navTimeout) return;
-      navTimeout = window.setTimeout(() => { navTimeout = undefined; }, 1200);
-      const currentIndex = SECTIONS.findIndex(s => s.id === activeSection);
-      if (currentIndex < SECTIONS.length - 1) {
-        handleSectionChange(SECTIONS[currentIndex + 1].id);
-      }
-    };
-
-    const goToPrevSection = () => {
-      if (navTimeout) return;
-      navTimeout = window.setTimeout(() => { navTimeout = undefined; }, 1200);
-      const currentIndex = SECTIONS.findIndex(s => s.id === activeSection);
-      if (currentIndex > 0) {
-        handleSectionChange(SECTIONS[currentIndex - 1].id);
-      }
-    };
-
-    const handleWheel = (e: WheelEvent) => {
-      checkScrollLimits();
-      
-      if (!isAtTop && !isAtBottom) {
-        wheelAccumulator = 0;
-        return;
-      }
-
-      if (isAtBottom && e.deltaY > 0) {
-        wheelAccumulator += e.deltaY;
-        if (wheelAccumulator > 600) { // Require very significant overscroll after hitting the bottom
-          goToNextSection();
-          wheelAccumulator = 0;
-        }
-      } else if (isAtTop && e.deltaY < 0) {
-        wheelAccumulator += e.deltaY;
-        if (wheelAccumulator < -600) { // Require very significant overscroll after hitting the top
-          goToPrevSection();
-          wheelAccumulator = 0;
-        }
-      } else {
-        wheelAccumulator = 0;
-      }
-    };
-
-    mainEl.addEventListener('wheel', handleWheel, { passive: true });
-
-    return () => {
-      mainEl.removeEventListener('wheel', handleWheel);
-    };
-  }, [activeSection]);
 
   return (
     <div className={`flex flex-col md:flex-row h-screen w-full font-sans overflow-hidden transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-600 ${
@@ -3117,7 +3038,7 @@ export default function App() {
             ? 'p-0 h-screen flex flex-col overflow-hidden' 
             : isIFrameSection 
               ? 'px-2 md:px-4 pt-4 md:pt-5 pb-[3px] h-full flex flex-col overflow-hidden max-w-full' 
-              : 'min-h-full p-6 pb-24 md:p-12 overflow-x-hidden'
+              : 'min-h-full p-6 md:p-12 overflow-x-hidden'
         }`}>
           <AnimatePresence mode="wait">
             <motion.div
@@ -3179,19 +3100,6 @@ export default function App() {
           >
             <Minimize2 size={16} /> Sair da Tela Cheia
           </button>
-        )}
-
-        {/* Scroll Indicator */}
-        {!isIFrameSection && !isMaximized && (
-          <div className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center gap-6 opacity-40 hover:opacity-100 transition-opacity pointer-events-none">
-            <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] transform rotate-90 whitespace-nowrap mb-16 text-emerald-500 font-bold tracking-widest">
-              Role para navegar
-            </span>
-            <div className="flex flex-col items-center gap-2 animate-bounce">
-               <Mouse className="text-emerald-500 hidden md:block" size={18} />
-               <ArrowDown className="text-emerald-500" size={16} />
-            </div>
-          </div>
         )}
 
         <div className="absolute top-4 right-4 w-12 h-12 border-t border-r border-emerald-600/10 pointer-events-none" />
