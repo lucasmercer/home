@@ -243,8 +243,8 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
                 } ${IconColor}`}>
                   {item.icon}
                 </div>
-                <div className="w-full text-left flex-1 flex flex-col">
-                  <span className={`block font-bold text-sm tracking-tight mb-2 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{item.label}</span>
+                <div className="w-full text-left flex-1 flex flex-col min-w-0">
+                  <span className={`block font-bold text-[13px] md:text-sm tracking-tight mb-2 truncate ${isDarkMode ? 'text-white' : 'text-slate-800'}`} title={item.label}>{item.label}</span>
                   <p className={`text-[11px] md:text-xs leading-relaxed font-sans normal-case tracking-normal flex-1 ${isDarkMode ? 'text-white/60' : 'text-slate-500'}`}>
                     {item.desc}
                   </p>
@@ -1890,8 +1890,9 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
 
 const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
   const [copiedLabel, setCopiedLabel] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'timeline' | 'philosophy' | 'stats'>('timeline');
+  const [activeTab, setActiveTab] = useState<'stats' | 'timeline' | 'philosophy'>('stats');
   const [activeYear, setActiveYear] = useState<number>(2006);
+  const [expandedStat, setExpandedStat] = useState<number | null>(null);
 
   const handleCopyValue = (value: string, label: string) => {
     navigator.clipboard.writeText(value);
@@ -1968,25 +1969,37 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
       value: "15+ Anos",
       label: "Jornada na Educação & TI",
       info: "Unindo conhecimento prático de sistemas com didática acadêmica ativa inovadora desde 2006.",
-      color: "from-blue-500/20 to-indigo-500/10 text-blue-500"
+      color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+      activeColor: "border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.2)] bg-blue-500/5",
+      points: ["10.000+ horas de docência", "Certificações Redhat/Cisco", "Evolução contínua"],
+      progress: 95
     },
     {
       value: "+3.000",
       label: "Alunos Formados & Impactados",
       info: "Capacitados em conceitos de infraestrutura de rede de computadores, hardware avançado e desenvolvimento.",
-      color: "from-emerald-500/20 to-teal-500/10 text-emerald-500"
+      color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+      activeColor: "border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)] bg-emerald-500/5",
+      points: ["Engenharia de Software", "Sistemas de Informação", "Egressos no Mercado Top 10"],
+      progress: 88
     },
     {
       value: "+500",
-      label: "Aulas Práticas e Simuladores",
+      label: "Lab. Práticos e Simuladores",
       info: "Desafios metodológicos criados para incentivar a depuração ativa de código e redes por experimentação.",
-      color: "from-orange-500/20 to-amber-500/10 text-orange-500"
+      color: "bg-orange-500/10 text-orange-500 border-orange-500/20",
+      activeColor: "border-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.2)] bg-orange-500/5",
+      points: ["Troubleshooting em tempo real", "Ambientes Docker/K8s", "Robótica Aplicada ESP32"],
+      progress: 92
     },
     {
       value: "100%",
       label: "Comprometimento Empático",
       info: "Prática humanizada que cultiva o pensamento independente, focado no sucesso de cada estudante.",
-      color: "from-purple-500/20 to-pink-500/10 text-purple-500"
+      color: "bg-purple-500/10 text-purple-500 border-purple-500/20",
+      activeColor: "border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.2)] bg-purple-500/5",
+      points: ["Apoio psico-pedagógico", "Mentoria ativa individual", "Desenvolvimento interpessoal"],
+      progress: 100
     }
   ];
 
@@ -2138,13 +2151,13 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
           isDarkMode ? 'bg-[#0f141a] border-white/5' : 'bg-slate-100 border-black/5'
         }`}>
           {[
+            { id: 'stats', label: 'Métricas de Impacto', icon: <Award size={14} /> },
             { id: 'timeline', label: 'Linha do Tempo', icon: <Calendar size={14} /> },
             { id: 'philosophy', label: 'Didática de Ensino', icon: <Brain size={14} /> },
-            { id: 'stats', label: 'Métricas de Impacto', icon: <Award size={14} /> },
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as 'timeline' | 'philosophy' | 'stats')}
+              onClick={() => setActiveTab(tab.id as 'stats' | 'timeline' | 'philosophy')}
               className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl font-mono text-[10.5px] uppercase font-bold tracking-wider transition-all cursor-pointer ${
                 activeTab === tab.id
                   ? isDarkMode 
@@ -2321,41 +2334,80 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
           {/* TAB 3: STATISTICS & INTERACTIVE DATA GRID */}
           {activeTab === 'stats' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-              {statMetrics.map((stat, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.08 }}
-                  className={`rounded-3xl border p-6 flex flex-col justify-between transition-all hover:scale-103 shadow-md ${
-                    isDarkMode 
-                      ? 'bg-[#0f141a]/90 border-white/5 hover:border-emerald-500/10' 
-                      : 'bg-white border-black/10 hover:shadow-lg'
-                  }`}
-                >
-                  <div className="space-y-4">
-                    <span className={`inline-block py-1 px-3 text-[9px] font-mono font-bold rounded-lg uppercase tracking-wider ${stat.color}`}>
-                      MÉTRICA ATIVA
-                    </span>
-                    <span className={`block text-3xl md:text-4xl font-extrabold tracking-tight font-serif italic ${
-                      isDarkMode ? 'text-white' : 'text-slate-900'
-                    }`}>
-                      {stat.value}
-                    </span>
-                    <h5 className={`font-mono text-[10px] uppercase tracking-wider font-extrabold ${
-                      isDarkMode ? 'text-white/40' : 'text-slate-500'
-                    }`}>
-                      {stat.label}
-                    </h5>
-                  </div>
-                  
-                  <p className={`text-[11px] font-sans normal-case tracking-normal leading-relaxed mt-4 pt-3.5 border-t border-black/5 dark:border-white/5 ${
-                    isDarkMode ? 'text-white/50' : 'text-slate-500'
-                  }`}>
-                    {stat.info}
-                  </p>
-                </motion.div>
-              ))}
+              {statMetrics.map((stat, i) => {
+                const isExpanded = expandedStat === i;
+                return (
+                  <motion.div
+                    key={i}
+                    layout
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.08 }}
+                    onClick={() => setExpandedStat(isExpanded ? null : i)}
+                    className={`rounded-3xl border p-6 flex flex-col justify-start transition-all cursor-pointer overflow-hidden ${
+                      isExpanded 
+                        ? (isDarkMode ? stat.activeColor : 'bg-white border-none shadow-xl ring-2 ring-emerald-500/20')
+                        : (isDarkMode ? 'bg-[#0f141a]/90 border-white/5 hover:border-emerald-500/30' : 'bg-white border-black/10 hover:shadow-lg hover:border-emerald-500/30')
+                    }`}
+                  >
+                    <motion.div layout className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className={`inline-block py-1 px-3 text-[9px] font-mono font-bold rounded-lg uppercase tracking-wider ${stat.color}`}>
+                          {isExpanded ? 'DETALHES' : 'MÉTRICA ATIVA'}
+                        </span>
+                        <ChevronRight size={16} className={`transition-transform duration-300 ${isExpanded ? 'rotate-90 text-emerald-500' : 'text-slate-400'}`} />
+                      </div>
+                      <span className={`block text-3xl md:text-4xl font-extrabold tracking-tight font-serif italic ${
+                        isDarkMode ? 'text-white' : 'text-slate-900'
+                      }`}>
+                        {stat.value}
+                      </span>
+                      <h5 className={`font-mono text-[10.5px] uppercase tracking-wider font-extrabold ${
+                        isDarkMode ? 'text-white/40' : 'text-slate-500'
+                      }`}>
+                        {stat.label}
+                      </h5>
+                    </motion.div>
+                    
+                    <motion.div layout>
+                      <p className={`text-[11px] font-sans normal-case tracking-normal leading-relaxed mt-4 pt-4 border-t border-black/5 dark:border-white/5 ${
+                        isDarkMode ? 'text-white/50' : 'text-slate-500'
+                      }`}>
+                        {stat.info}
+                      </p>
+                    </motion.div>
+
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                          animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+                          exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                          className="flex flex-col gap-4 overflow-hidden"
+                        >
+                          <div className="space-y-2 mt-2 pt-4 border-t border-dashed border-black/10 dark:border-white/10">
+                            {stat.points.map((point, idx) => (
+                              <div key={idx} className="flex gap-2 items-center text-[10px] sm:text-[11px]">
+                                <div className={`w-1 h-1 rounded-full ${stat.color.split(' ')[0]}`} />
+                                <span className={isDarkMode ? 'text-slate-300' : 'text-slate-600'}>{point}</span>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          <div className="w-full h-1.5 mt-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${stat.progress}%` }}
+                              transition={{ duration: 1, delay: 0.2 }}
+                              className={`h-full ${stat.color.split(' ')[0]}`}
+                            />
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </motion.div>
