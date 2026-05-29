@@ -2790,8 +2790,6 @@ export default function App() {
     const mainEl = mainRef.current;
     if (!mainEl) return;
 
-    let touchStartY = 0;
-    let touchEndY = 0;
     let isAtBottom = false;
     let isAtTop = false;
     let navTimeout: number | undefined;
@@ -2820,30 +2818,6 @@ export default function App() {
       }
     };
 
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-      checkScrollLimits();
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      touchEndY = e.touches[0].clientY;
-    };
-
-    const handleTouchEnd = () => {
-      if (!touchStartY || !touchEndY) return;
-      const deltaY = touchStartY - touchEndY; 
-      const threshold = 250; // High threshold for deliberate swipe pull
-
-      if (deltaY > threshold && isAtBottom) {
-        goToNextSection();
-      } else if (deltaY < -threshold && isAtTop) {
-        goToPrevSection();
-      }
-      
-      touchStartY = 0;
-      touchEndY = 0;
-    };
-
     const handleWheel = (e: WheelEvent) => {
       checkScrollLimits();
       
@@ -2869,15 +2843,9 @@ export default function App() {
       }
     };
 
-    mainEl.addEventListener('touchstart', handleTouchStart, { passive: true });
-    mainEl.addEventListener('touchmove', handleTouchMove, { passive: true });
-    mainEl.addEventListener('touchend', handleTouchEnd);
     mainEl.addEventListener('wheel', handleWheel, { passive: true });
 
     return () => {
-      mainEl.removeEventListener('touchstart', handleTouchStart);
-      mainEl.removeEventListener('touchmove', handleTouchMove);
-      mainEl.removeEventListener('touchend', handleTouchEnd);
       mainEl.removeEventListener('wheel', handleWheel);
     };
   }, [activeSection]);
@@ -3149,7 +3117,7 @@ export default function App() {
             ? 'p-0 h-screen flex flex-col overflow-hidden' 
             : isIFrameSection 
               ? 'px-2 md:px-4 pt-4 md:pt-5 pb-[3px] h-full flex flex-col overflow-hidden max-w-full' 
-              : 'min-h-full p-6 md:p-12 overflow-x-hidden'
+              : 'min-h-full p-6 pb-24 md:p-12 overflow-x-hidden'
         }`}>
           <AnimatePresence mode="wait">
             <motion.div
@@ -3215,12 +3183,9 @@ export default function App() {
 
         {/* Scroll Indicator */}
         {!isIFrameSection && !isMaximized && (
-          <div className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-40 flex flex-col items-center gap-6 opacity-40 hover:opacity-100 transition-opacity pointer-events-none">
-            <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] transform rotate-90 whitespace-nowrap mb-16 text-emerald-500 font-bold tracking-widest hidden md:block">
+          <div className="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center gap-6 opacity-40 hover:opacity-100 transition-opacity pointer-events-none">
+            <span className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.2em] transform rotate-90 whitespace-nowrap mb-16 text-emerald-500 font-bold tracking-widest">
               Role para navegar
-            </span>
-            <span className="text-[9px] font-mono uppercase tracking-[0.2em] transform rotate-90 whitespace-nowrap mb-16 text-emerald-500 font-bold tracking-widest block md:hidden">
-              Deslize para navegar
             </span>
             <div className="flex flex-col items-center gap-2 animate-bounce">
                <Mouse className="text-emerald-500 hidden md:block" size={18} />
