@@ -48,6 +48,7 @@ import {
   Network,
   Trash2
 } from 'lucide-react';
+import { NetworkBackground } from './NetworkBackground';
 
 type SectionId = 'home' | 'computational' | 'robotics' | 'tech' | 'life' | 'utfpr' | 'certificados' | 'horarios' | 'scripts';
 
@@ -112,23 +113,28 @@ const ProfileImage = ({ isDarkMode }: { isDarkMode?: boolean }) => {
 
   return (
     <div className="relative group w-full max-w-xs md:max-w-none flex justify-center" style={{ perspective: '1000px' }}>
-      <div className="absolute inset-0 bg-emerald-600 rounded-2xl blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
+      <div className="absolute inset-4 bg-emerald-500 rounded-full blur-[60px] md:blur-[80px] opacity-20 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none" />
       <motion.div
         ref={cardRef}
         animate={{ rotateX, rotateY }}
         transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.5 }}
         style={{ transformStyle: 'preserve-3d' }}
-        className={`relative w-full aspect-[3/4] md:w-96 md:h-[500px] rounded-2xl ${isDarkMode !== false ? 'bg-black/[0.02] border border-black/5' : 'bg-white/[0.02] border border-white/5'} overflow-hidden shadow-2xl flex items-end cursor-pointer`}
+        className={`relative w-full max-w-[320px] md:max-w-none md:w-[400px] rounded-3xl ${isDarkMode !== false ? 'bg-[#0f141a]/40 border border-white/5' : 'bg-white/40 border border-black/5'} overflow-hidden shadow-2xl flex flex-col justify-end cursor-pointer backdrop-blur-sm`}
       >
+        <div className={`absolute inset-0 bg-gradient-to-tr ${isDarkMode ? 'from-emerald-500/10 to-transparent' : 'from-emerald-500/5 to-transparent'} z-0`} />
+        
         <img
           src="https://lucasleniar.com.br/home.gif"
-          alt="Computador retro animado representando a paixão do Professor Lucas Leniar por tecnologia e hardware"
-          className="w-full h-full object-contain scale-x-[-1] transform-gpu origin-bottom z-0"
-          style={{ transform: 'translateZ(20px) scaleX(-1)' }}
+          alt="Foto do Professor Lucas Leniar"
+          className="w-full h-auto block transform-gpu z-0"
+          style={{ transform: 'translateZ(40px)' }}
           referrerPolicy="no-referrer"
         />
-        <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/60 to-transparent z-10" style={{ transform: 'translateZ(30px)' }}>
-          <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Professor Lucas Leniar</p>
+        <div className="absolute inset-x-0 bottom-0 p-8 h-32 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10 flex items-end" style={{ transform: 'translateZ(50px)' }}>
+          <p className="text-[11px] font-bold text-white uppercase tracking-[0.2em] font-mono leading-tight">
+            Professor<br/>
+            <span className="text-emerald-400">Lucas Leniar</span>
+          </p>
         </div>
       </motion.div>
     </div>
@@ -136,6 +142,31 @@ const ProfileImage = ({ isDarkMode }: { isDarkMode?: boolean }) => {
 };
 
 const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) => void; isDarkMode: boolean }) => {
+  const [typed1, setTyped1] = useState("");
+  const [typed2, setTyped2] = useState("");
+
+  const text1 = "Eu sou o ";
+  const text2 = "Prof. Lucas Leniar";
+
+  useEffect(() => {
+    let current1 = 0;
+    let current2 = 0;
+
+    const typeInterval = setInterval(() => {
+      if (current1 < text1.length) {
+        setTyped1(text1.slice(0, current1 + 1));
+        current1++;
+      } else if (current2 < text2.length) {
+        setTyped2(text2.slice(0, current2 + 1));
+        current2++;
+      } else {
+        clearInterval(typeInterval);
+      }
+    }, 60);
+
+    return () => clearInterval(typeInterval);
+  }, []);
+
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Bom dia';
@@ -145,25 +176,25 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
 
   const expertises = [
     { 
-      icon: <Code2 size={24} />, 
+      icon: <Code2 size={20} />, 
       label: "Desenvolvimento", 
       color: "emerald",
       desc: "Experiência robusta em automação com scripts Bash, desenvolvimento web moderno com React/Node.js, e criação de soluções escaláveis em Python." 
     },
     { 
-      icon: <Cpu size={24} />, 
+      icon: <Cpu size={20} />, 
       label: "Hardware", 
       color: "blue",
       desc: "Especialista em manutenção e diagnóstico avançado. Projetos de eletrônica com Arduino e ESP32, unindo o mundo físico ao software." 
     },
     { 
-      icon: <GraduationCap size={24} />, 
+      icon: <GraduationCap size={20} />, 
       label: "Educação", 
       color: "purple",
       desc: "Foco no desenvolvimento do pensamento computacional e ensino de robótica educacional. Formando os pensadores e engenheiros do amanhã." 
     },
     { 
-      icon: <Laptop size={24} />, 
+      icon: <Laptop size={20} />, 
       label: "Sistemas", 
       color: "orange",
       desc: "Arquitetura e administração de redes, gestão de servidores Linux e infraestrutura com foco em desempenho, segurança e open-source." 
@@ -171,15 +202,15 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
   ];
 
   return (
-  <div className="min-h-full flex flex-col justify-center py-6 md:py-0 max-w-6xl w-full">
-    <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
+  <div className="min-h-full flex flex-col justify-center py-4 md:py-0 max-w-6xl w-full">
+    <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="flex-1 order-1 md:order-1 relative z-10"
       >
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-4">
           <span className={`inline-block px-3 py-1.5 rounded-full text-[10px] font-mono font-bold tracking-widest uppercase border ${
             isDarkMode ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
           }`}>
@@ -191,17 +222,22 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
           </span>
         </div>
         
-        <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter leading-[1.1] mb-6 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
-          Eu sou o <br className="hidden md:block"/>
-          <span className={isDarkMode ? 'text-emerald-400 font-serif italic' : 'text-emerald-600 font-serif italic'}>Prof. Lucas Leniar</span>.
+        <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter leading-[1.1] mb-4 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+          {typed1 || "\u00A0"}
+          {typed1 === text1 && <br className="hidden md:block"/>}
+          <span className={isDarkMode ? 'text-emerald-400 font-serif italic' : 'text-emerald-600 font-serif italic'}>
+            {typed2}
+          </span>
+          {typed2 === text2 && '.'}
+          <span className="font-mono text-emerald-500 animate-[pulse_1s_infinite] ml-1 opacity-80 font-light">|</span>
         </h1>
 
         {/* Mobile Profile Image */}
-        <div className="md:hidden mb-8 flex justify-center w-full scale-90">
+        <div className="md:hidden mb-6 flex justify-center w-full scale-[0.85]">
           <ProfileImage isDarkMode={isDarkMode} />
         </div>
 
-        <div className={`text-base md:text-lg max-w-2xl leading-relaxed mb-10 border-l-2 pl-4 md:pl-6 ${isDarkMode ? 'border-emerald-500/30 text-white/70' : 'border-emerald-500/30 text-slate-600'}`}>
+        <div className={`text-base md:text-lg max-w-2xl leading-relaxed mb-4 border-l-2 pl-4 md:pl-6 ${isDarkMode ? 'border-emerald-500/30 text-white/70' : 'border-emerald-500/30 text-slate-600'}`}>
           <p className="mb-3">
             Explorando as fronteiras entre a educação técnica e a engenharia de infraestrutura.
           </p>
@@ -210,7 +246,7 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 mb-4">
           {expertises.map((item, i) => {
             const hoverBorderColor = {
               emerald: 'hover:border-emerald-500/30',
@@ -229,23 +265,25 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
             return (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + (i * 0.1) }}
-                className={`p-5 md:p-6 rounded-2xl border flex flex-col items-start gap-4 transition-all duration-300 group h-full ${
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                whileHover={{ y: -4, scale: 1.01 }}
+                transition={{ delay: 0.1 + (i * 0.1), duration: 0.4 }}
+                className={`p-2.5 rounded-xl border flex flex-row items-center gap-3 transition-all duration-300 group h-full ${
                   isDarkMode 
                     ? 'border-white/5 bg-white/[0.02] hover:bg-white/[0.04]' 
                     : 'border-slate-200 bg-white hover:bg-slate-50 shadow-sm hover:shadow-md'
                 } ${hoverBorderColor}`}
               >
-                <div className={`p-2.5 rounded-xl border transition-colors ${
+                <div className={`p-1.5 rounded-lg border flex-shrink-0 transition-colors ${
                   isDarkMode ? 'bg-[#151c24] border-white/5' : 'bg-slate-100 border-slate-200'
                 } ${IconColor}`}>
                   {item.icon}
                 </div>
-                <div className="w-full text-left flex-1 flex flex-col min-w-0">
-                  <span className={`block font-bold text-[13px] md:text-sm tracking-tight mb-2 truncate ${isDarkMode ? 'text-white' : 'text-slate-800'}`} title={item.label}>{item.label}</span>
-                  <p className={`text-[11px] md:text-xs leading-relaxed font-sans normal-case tracking-normal flex-1 ${isDarkMode ? 'text-white/60' : 'text-slate-500'}`}>
+                <div className="w-full text-left flex-1 flex flex-col min-w-0 py-0.5">
+                  <span className={`block font-bold text-[12px] tracking-tight truncate ${isDarkMode ? 'text-white' : 'text-slate-800'}`} title={item.label}>{item.label}</span>
+                  <p className={`text-[10px] leading-tight font-sans normal-case tracking-normal flex-1 ${isDarkMode ? 'text-white/60' : 'text-slate-500'}`}>
                     {item.desc}
                   </p>
                 </div>
@@ -254,7 +292,13 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
           })}
         </div>
 
-        <div className="flex flex-wrap gap-3">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-20px" }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-wrap gap-3"
+        >
           {/* Lógica */}
           <motion.button
             whileHover={{ y: -2 }}
@@ -314,7 +358,19 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
             <Network size={20} className={isDarkMode ? 'text-[#a3c757] mb-2' : 'text-[#657c36] mb-2'} />
             <span className="font-bold text-[10px] md:text-[11px] uppercase tracking-wider text-center">Horários</span>
           </motion.button>
-        </div>
+
+          {/* Scripts SH */}
+          <motion.button
+            whileHover={{ y: -2 }}
+            onClick={() => onNavigate('scripts')}
+             className={`flex-1 min-w-[80px] flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border transition-all duration-300 shadow-sm
+              ${isDarkMode ? 'bg-[#1a212b] border-white/10 hover:border-orange-500/50 hover:bg-orange-500/10 text-slate-300' : 'bg-white border-slate-200 hover:border-orange-500 hover:bg-orange-50 text-slate-700'}
+            `}
+          >
+            <FileCode size={20} className={isDarkMode ? 'text-orange-400 mb-2' : 'text-orange-600 mb-2'} />
+            <span className="font-bold text-[10px] md:text-[11px] uppercase tracking-wider text-center">Arquivos SH</span>
+          </motion.button>
+        </motion.div>
       </motion.div>
 
       <motion.div
@@ -501,9 +557,11 @@ const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
             {pillars.map((pillar, i) => (
               <motion.div
                 key={pillar.title}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                whileHover={{ y: -4, scale: 1.02 }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
                 className={`p-6 rounded-2xl border transition-all group relative overflow-hidden ${
                   isDarkMode 
                   ? 'bg-black/30 border-white/5 hover:bg-[#12181d] hover:border-emerald-500/20 hover:shadow-2xl hover:shadow-emerald-500/5' 
@@ -522,14 +580,19 @@ const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
           </div>
 
           <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4 }}
+            initial={{ opacity: 0, scale: 0.95, y: 30 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ delay: 0.2, duration: 0.6 }}
             className="w-full lg:w-72 shrink-0 lg:sticky lg:top-8"
           >
             <div className="relative group">
-              <div className="absolute inset-0 bg-emerald-600 rounded-3xl blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
-              <div className={`relative rounded-3xl border overflow-hidden shadow-2xl transition-colors ${isDarkMode ? 'bg-black/40 border-white/5' : 'bg-black/[0.02] border-black/5'}`}>
+              <div className="absolute inset-4 bg-emerald-500 rounded-full blur-[80px] opacity-15 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none animate-pulse" />
+              <motion.div 
+                animate={{ y: [0, -6, 0] }} 
+                transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}
+                className={`relative rounded-3xl border overflow-hidden shadow-2xl transition-colors ${isDarkMode ? 'bg-black/40 border-white/5' : 'bg-black/[0.02] border-black/5'}`}
+              >
                 <img 
                   src="https://lucasleniar.com.br/certificado.gif" 
                   alt="Animação representativa de Certificação Acadêmica de TI e Redes do Professor Lucas Leniar" 
@@ -537,19 +600,21 @@ const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
                   referrerPolicy="no-referrer"
                   loading="lazy"
                 />
-                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/50 to-transparent">
-                  <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Professor Lucas Leniar</p>
+                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
+                  <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em] font-mono leading-none">Certificações</p>
+                  <p className="text-[11px] text-white/70 mt-1 font-sans">Acadêmica e de TI</p>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         </div>
 
         {/* INTERACTIVE COMP_THINKING CHALLENGE CODENAMED "SANDBOX" */}
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7 }}
           className={`rounded-3xl border p-6 md:p-10 shadow-2xl relative overflow-hidden w-full ${
             isDarkMode 
             ? 'bg-[#0f141a] border-white/5 shadow-black/40' 
@@ -583,12 +648,14 @@ const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
                   Participe deste laboratório prático. O objetivo é programar o robô para chegar ao bloco de destino utilizando os princípios de <strong>Algoritmos</strong> e <strong>Decomposição</strong>. 
                   Você precisará abstrair os movimentos visuais e dividi-los em comandos de passo simples e sequenciais.
                 </p>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setGameState('playing')}
-                  className="flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 text-white font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-emerald-500 shadow-lg shadow-emerald-500/25 transition-all cursor-pointer"
+                  className="flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 text-white font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all cursor-pointer"
                 >
                   Iniciar Laboratório Prático <Play size={14} />
-                </button>
+                </motion.button>
               </motion.div>
             )}
 
@@ -1012,9 +1079,10 @@ void loop() {
             {features.map((feature, i) => (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
                 className={`p-6 md:p-8 rounded-2xl border transition-all group relative overflow-hidden ${
                   isDarkMode 
                     ? 'bg-white/[0.02] border-white/5 hover:bg-white/[0.04]' 
@@ -1034,9 +1102,10 @@ void loop() {
 
           {/* Sticky Robotics GIF */}
           <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ delay: 0.2, duration: 0.6 }}
             className="w-full lg:w-72 shrink-0 lg:sticky lg:top-8"
           >
             <div className="relative group">
@@ -1576,7 +1645,7 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
     <div className="flex flex-col pt-6 md:pt-16 pb-12 overflow-y-auto w-full">
       {/* Upper informational grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 max-w-6xl w-full mb-10 px-1">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="lg:col-span-8 flex flex-col justify-center">
+        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ duration: 0.6 }} className="lg:col-span-8 flex flex-col justify-center">
           <h2 className={`text-4xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Tecnologia da Informação</h2>
           <p className={`max-w-xl mb-8 uppercase text-[11px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-blue-400' : 'text-slate-500'}`}>
             Infraestrutura, Conectividade e Suporte Avançado
@@ -1592,30 +1661,34 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
           
           {/* Tech stack bento grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8">
-            <div className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-white/[0.05]' : 'bg-black/[0.02] border-black/10 hover:bg-black/[0.05]'}`}>
+            <motion.div whileHover={{ y: -4, scale: 1.02 }} className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all cursor-default ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-blue-500/10 hover:border-blue-500/30' : 'bg-black/[0.02] border-black/10 hover:bg-blue-50 hover:border-blue-200'}`}>
               <Server size={22} className={isDarkMode ? 'text-blue-400' : 'text-blue-600'} />
               <span className={`text-[10px] uppercase font-mono font-bold tracking-wider ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>Infra & SO</span>
-            </div>
-            <div className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-white/[0.05]' : 'bg-black/[0.02] border-black/10 hover:bg-black/[0.05]'}`}>
+            </motion.div>
+            <motion.div whileHover={{ y: -4, scale: 1.02 }} className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all cursor-default ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-emerald-500/10 hover:border-emerald-500/30' : 'bg-black/[0.02] border-black/10 hover:bg-emerald-50 hover:border-emerald-200'}`}>
               <Network size={22} className={isDarkMode ? 'text-emerald-400' : 'text-emerald-600'} />
               <span className={`text-[10px] uppercase font-mono font-bold tracking-wider ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>Redes & TCP/IP</span>
-            </div>
-            <div className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-white/[0.05]' : 'bg-black/[0.02] border-black/10 hover:bg-black/[0.05]'}`}>
+            </motion.div>
+            <motion.div whileHover={{ y: -4, scale: 1.02 }} className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all cursor-default ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-yellow-500/10 hover:border-yellow-500/30' : 'bg-black/[0.02] border-black/10 hover:bg-yellow-50 hover:border-yellow-200'}`}>
               <Cpu size={22} className={isDarkMode ? 'text-yellow-400' : 'text-yellow-600'} />
               <span className={`text-[10px] uppercase font-mono font-bold tracking-wider ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>Hardware</span>
-            </div>
-            <div className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-white/[0.05]' : 'bg-black/[0.02] border-black/10 hover:bg-black/[0.05]'}`}>
+            </motion.div>
+            <motion.div whileHover={{ y: -4, scale: 1.02 }} className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all cursor-default ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-purple-500/10 hover:border-purple-500/30' : 'bg-black/[0.02] border-black/10 hover:bg-purple-50 hover:border-purple-200'}`}>
               <ShieldCheck size={22} className={isDarkMode ? 'text-purple-400' : 'text-purple-600'} />
               <span className={`text-[10px] uppercase font-mono font-bold tracking-wider ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>Segurança</span>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
 
         {/* Beautiful diagnostic card image directly inside info block */}
-        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="lg:col-span-4 flex items-center justify-center">
+        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ delay: 0.2, duration: 0.6 }} className="lg:col-span-4 flex items-center justify-center">
           <div className="relative group w-full max-w-[320px]">
-            <div className="absolute inset-0 bg-blue-600 rounded-3xl blur-2xl opacity-10 group-hover:opacity-15 transition-opacity" />
-            <div className={`relative rounded-2xl overflow-hidden shadow-2xl border ${isDarkMode ? 'border-white/10 bg-white/[0.02]' : 'border-black/10 bg-black/[0.02]'}`}>
+            <div className="absolute inset-2 bg-blue-600 rounded-full blur-[80px] opacity-15 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none animate-pulse" />
+            <motion.div 
+              animate={{ y: [0, -6, 0] }} 
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              className={`relative rounded-3xl overflow-hidden shadow-2xl border ${isDarkMode ? 'border-white/10 bg-white/[0.02]' : 'border-black/10 bg-black/[0.02]'}`}
+            >
               <img 
                 src="https://lucasleniar.com.br/titecnico.png" 
                 alt="Diagrama e mesa técnica de hardware e redes de computadores para suporte de TI" 
@@ -1627,7 +1700,7 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em] font-mono leading-none">Visão de Topologia</p>
                 <p className="text-[11px] text-white/70 mt-1 font-sans">Desenho arquitetural de redes.</p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
       </div>
@@ -2008,7 +2081,12 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
   return (
     <div className="flex flex-col pt-6 md:pt-16 pb-12 max-w-6xl w-full mx-auto">
       {/* Introduction Card with Photo & Quick Actions */}
-      <div className={`rounded-3xl border p-6 md:p-8 mb-10 shadow-xl relative overflow-hidden transition-all ${
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.6 }}
+        className={`rounded-3xl border p-6 md:p-8 mb-10 shadow-xl relative overflow-hidden transition-all ${
         isDarkMode ? 'bg-[#0f141a]/90 border-white/5' : 'bg-white border-black/10'
       }`}>
         <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
@@ -2143,7 +2221,7 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Interactive Tabs Menu */}
       <div className="flex justify-center mb-8">
@@ -2285,7 +2363,8 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                   key={i}
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.08 }}
+                  whileHover={{ y: -4, scale: 1.02 }}
+                  transition={{ delay: i * 0.08, duration: 0.3 }}
                   className={`rounded-3xl border p-6 flex flex-col justify-between transition-all group hover:shadow-xl ${
                     isDarkMode 
                       ? 'bg-[#0f141a]/90 border-white/5 hover:border-emerald-500/20 hover:bg-[#121922]' 
@@ -2647,7 +2726,7 @@ const ShellFilesSection = ({
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-2xl w-full rounded-xl border border-[#2d3748] bg-[#0a0e11] shadow-2xl overflow-hidden font-mono"
+          className="max-w-2xl w-full rounded-xl border border-[#2d3748] bg-[#0a0e11] shadow-[0_0_40px_rgba(16,185,129,0.1)] overflow-hidden font-mono"
         >
           {/* Terminal Window Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-[#11161b]">
@@ -2747,10 +2826,12 @@ const ShellFilesSection = ({
             {SH_FILES.map((file, i) => (
               <motion.div
                 key={file.name}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.05 }}
-                className={`p-4 md:p-5 rounded-2xl border shadow-sm hover:shadow-xl transition-all group relative overflow-hidden flex flex-col ${
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, margin: "-20px" }}
+                whileHover={{ y: -4, scale: 1.02 }}
+                transition={{ delay: i * 0.05, duration: 0.4 }}
+                className={`p-4 md:p-5 rounded-2xl border shadow-sm hover:shadow-[0_10px_30px_rgba(16,185,129,0.1)] transition-all group relative overflow-hidden flex flex-col ${
                   isDarkMode ? 'bg-[#11161b] border-white/5 shadow-black/40' : 'bg-white border-black/[0.05]'
                 }`}
               >
@@ -3029,9 +3110,16 @@ export default function App() {
 
 
   return (
-    <div className={`flex flex-col md:flex-row h-screen w-full font-sans overflow-hidden transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-600 ${
-      isDarkMode ? 'bg-[#0a0f12] text-slate-100' : 'bg-white text-[#1a1a1a]'
+    <div className={`flex flex-col md:flex-row h-screen w-full font-sans overflow-hidden transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-600 relative ${
+      isDarkMode ? 'bg-[#080c0f] text-slate-100' : 'bg-[#fafcfc] text-[#1a1a1a]'
     }`}>
+      {/* Background Decorators */}
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden mix-blend-screen transition-opacity duration-1000">
+        <NetworkBackground isDarkMode={isDarkMode} />
+        <div className={`absolute w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] rounded-full blur-[120px] top-[-10%] left-[-10%] opacity-30 md:opacity-40 transition-colors duration-1000 ${isDarkMode ? 'bg-emerald-500/15' : 'bg-emerald-400/20'}`} />
+        <div className={`absolute w-[30vw] h-[30vw] max-w-[500px] max-h-[500px] rounded-full blur-[100px] bottom-[-5%] right-[-5%] opacity-20 md:opacity-30 transition-colors duration-1000 ${isDarkMode ? 'bg-blue-500/10' : 'bg-blue-400/20'}`} />
+      </div>
+
       {/* Mobile Header Bar */}
       {!isMaximized && (
         <div className={`md:hidden flex items-center justify-between px-5 py-4 border-b shrink-0 z-30 transition-colors duration-300 ${
@@ -3281,11 +3369,20 @@ export default function App() {
             ? 'h-full overflow-hidden' 
             : 'overflow-y-auto'
       }`}>
-        <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
+        <motion.div 
+          className="absolute inset-0 z-0 opacity-[0.04] dark:opacity-[0.06] pointer-events-none" 
+          animate={{
+            backgroundPosition: ['0px 0px', '40px 40px']
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 8,
+            ease: "linear"
+          }}
           style={{ 
             backgroundImage: isDarkMode 
-              ? 'linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)' 
-              : 'linear-gradient(rgba(0,0,0,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,1) 1px, transparent 1px)', 
+              ? 'linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)' 
+              : 'linear-gradient(rgba(0,0,0,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.8) 1px, transparent 1px)', 
             backgroundSize: '40px 40px' 
           }} 
         />
@@ -3359,8 +3456,12 @@ export default function App() {
           </button>
         )}
 
-        <div className="absolute top-4 right-4 w-12 h-12 border-t border-r border-emerald-600/10 pointer-events-none" />
-        <div className="absolute bottom-4 left-4 w-12 h-12 border-b border-l border-emerald-600/10 pointer-events-none" />
+        <div className="absolute top-4 right-4 w-16 h-16 border-t flex justify-end items-start border-r border-emerald-500/30 pointer-events-none transition-colors duration-300">
+          <div className="w-1.5 h-1.5 bg-emerald-500/50 -mt-[1px] -mr-[1px]" />
+        </div>
+        <div className="absolute bottom-4 left-4 w-16 h-16 border-b flex justify-start items-end border-l border-emerald-500/30 pointer-events-none transition-colors duration-300">
+          <div className="w-1.5 h-1.5 bg-emerald-500/50 -mb-[1px] -ml-[1px]" />
+        </div>
       </main>
     </div>
   );
