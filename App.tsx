@@ -3457,7 +3457,10 @@ export default function App() {
   const [hoveredSection, setHoveredSection] = useState<SectionId | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isIFrameSection = ['utfpr', 'certificados', 'horarios'].includes(activeSection);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('lucas-leniar-theme');
+    return saved ? saved === 'true' : true;
+  });
 
   const [achievements, setAchievements] = useState<{ explorer: boolean; nightOwl: boolean; sysadmin: boolean; inquisitive: boolean }>(() => {
     try {
@@ -3687,6 +3690,26 @@ export default function App() {
                 ))}
               </div>
 
+              {/* Theme switcher */}
+              <div className={`px-4 py-3 border-t mx-3 mb-4 rounded-xl transition-all duration-300 ${isDarkMode ? 'border-white/5 bg-white/[0.01]' : 'border-black/5 bg-black/[0.01]'}`}>
+                <button
+                  onClick={() => setIsDarkMode(!isDarkMode)}
+                  className={`w-full flex items-center justify-start gap-3 p-2 rounded-lg transition-all duration-300 group cursor-pointer ${
+                    isDarkMode 
+                      ? 'text-emerald-400 hover:bg-white/5' 
+                      : 'text-black/60 hover:bg-black/5'
+                  }`}
+                  title={isDarkMode ? "Mudar para Modo Claro" : "Mudar para Modo Escuro"}
+                >
+                  <div className="flex-shrink-0 group-hover:scale-110 transition-transform">
+                    {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+                  </div>
+                  <div className="font-semibold text-xs tracking-tight text-left leading-tight">
+                    {isDarkMode ? 'Modo Claro' : 'Modo Escuro'}
+                  </div>
+                </button>
+              </div>
+
               {/* Social icons */}
               <div className={`px-6 space-y-4 pt-6 mt-2 border-t text-center ${isDarkMode ? 'border-white/5 text-white/20' : 'border-black/5 text-black/30'}`}>
                  <div className="flex gap-4 justify-center">
@@ -3761,6 +3784,26 @@ export default function App() {
                 )}
               </button>
             ))}
+          </div>
+
+          {/* Theme switcher */}
+          <div className={`px-4 py-3 border-t mx-3 mb-4 rounded-xl transition-all duration-300 ${isDarkMode ? 'border-white/5 bg-white/[0.01]' : 'border-black/5 bg-black/[0.01]'}`}>
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`w-full flex items-center justify-start gap-3 p-2 rounded-lg transition-all duration-300 group cursor-pointer ${
+                isDarkMode 
+                  ? 'text-emerald-400 hover:bg-white/5' 
+                  : 'text-black/60 hover:bg-black/5'
+              }`}
+              title={isDarkMode ? "Mudar para Modo Claro" : "Mudar para Modo Escuro"}
+            >
+              <div className="flex-shrink-0 group-hover:scale-110 transition-transform">
+                {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+              </div>
+              <div className="hidden md:block font-semibold text-xs tracking-tight text-left leading-tight">
+                {isDarkMode ? 'Modo Claro' : 'Modo Escuro'}
+              </div>
+            </button>
           </div>
 
           <div className={`px-6 space-y-4 pt-6 mt-2 border-t md:block hidden text-center ${isDarkMode ? 'border-white/5 text-white/20' : 'border-black/5 text-black/30'}`}>
