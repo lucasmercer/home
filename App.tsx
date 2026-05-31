@@ -224,8 +224,8 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
         
         <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter leading-[1.1] mb-4 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
           {typed1 || "\u00A0"}
-          {typed1 === text1 && <br className="hidden md:block"/>}
-          <span className={isDarkMode ? 'text-emerald-400 font-serif italic' : 'text-emerald-600 font-serif italic'}>
+          {typed1 === text1 && <br />}
+          <span className={`whitespace-nowrap ${isDarkMode ? 'text-emerald-400 font-serif italic' : 'text-emerald-600 font-serif italic'}`}>
             {typed2}
           </span>
           {typed2 === text2 && '.'}
