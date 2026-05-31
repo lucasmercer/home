@@ -46,11 +46,13 @@ import {
   Menu,
   X,
   Network,
-  Trash2
+  Trash2,
+  Medal,
+  Unlock
 } from 'lucide-react';
 import { NetworkBackground } from './NetworkBackground';
 
-type SectionId = 'home' | 'computational' | 'robotics' | 'tech' | 'life' | 'utfpr' | 'certificados' | 'horarios' | 'scripts';
+type SectionId = 'home' | 'computational' | 'robotics' | 'gamification' | 'tech' | 'life' | 'utfpr' | 'certificados' | 'horarios' | 'scripts';
 
 interface Section {
   id: SectionId;
@@ -61,6 +63,7 @@ interface Section {
 const SECTIONS: Section[] = [
   { id: 'home', label: 'Início', icon: <Home size={20} /> },
   { id: 'life', label: 'Sobre Lucas', icon: <User size={20} /> },
+  { id: 'gamification', label: 'Conquistas', icon: <Medal size={20} /> },
   { id: 'computational', label: 'Pensamento Computacional', icon: <Brain size={20} /> },
   { id: 'robotics', label: 'Robótica Educacional', icon: <Bot size={20} /> },
   { id: 'tech', label: 'TI & Técnico', icon: <Terminal size={20} /> },
@@ -134,6 +137,43 @@ const ProfileImage = ({ isDarkMode }: { isDarkMode?: boolean }) => {
           <p className="text-[11px] font-bold text-white uppercase tracking-[0.2em] font-mono leading-tight">
             Professor<br/>
             <span className="text-emerald-400">Lucas Leniar</span>
+          </p>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
+const Flashcard = ({ question, answer, isDarkMode, className = "mx-auto my-8" }: { question: string; answer: string; isDarkMode: boolean; className?: string }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  return (
+    <div className={`w-48 h-48 sm:w-56 sm:h-56 [perspective:1000px] hover:-translate-y-1 transition-transform z-20 shrink-0 ${className}`} onClick={() => setIsFlipped(!isFlipped)}>
+      <motion.div
+        className="relative w-full h-full cursor-pointer [transform-style:preserve-3d]"
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20 }}
+      >
+        {/* Front */}
+        <div className={`absolute inset-0 [backface-visibility:hidden] p-4 flex flex-col items-center justify-center shadow-[2px_4px_12px_rgba(0,0,0,0.15)] rounded-sm rotate-[-2deg] ${isDarkMode ? 'bg-yellow-600/30 border border-yellow-500/30 text-yellow-200' : 'bg-[#fff7d1] border border-yellow-300 text-slate-800'}`}>
+          <div className="absolute top-2 left-2 text-[9px] font-mono tracking-widest uppercase opacity-70 flex items-center gap-1 font-bold">
+             📌 Pílula
+          </div>
+          <p className="text-center font-bold font-serif text-sm sm:text-base leading-tight mt-3">
+            {question}
+          </p>
+          <div className="absolute bottom-2 text-[8px] font-mono opacity-60 uppercase tracking-widest">
+            Clique para virar ↺
+          </div>
+        </div>
+
+        {/* Back */}
+        <div 
+          className={`absolute inset-0 [backface-visibility:hidden] p-4 flex items-center justify-center shadow-[2px_4px_12px_rgba(0,0,0,0.15)] rounded-sm rotate-[1deg] ${isDarkMode ? 'bg-emerald-900/60 border border-emerald-500/30 text-emerald-100' : 'bg-emerald-100 border border-emerald-300 text-emerald-900'}`}
+          style={{ transform: "rotateY(180deg)" }}
+        >
+           <p className="text-center font-medium text-xs sm:text-sm leading-relaxed text-balance">
+            {answer}
           </p>
         </div>
       </motion.div>
@@ -602,16 +642,22 @@ const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 />
                 <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
                   <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em] font-mono leading-none">Certificações</p>
-                  <p className="text-[11px] text-white/70 mt-1 font-sans">Acadêmica e de TI</p>
+                  <p className="text-[11px] text-white/70 mt-1 font-sans">Qualidade</p>
                 </div>
               </motion.div>
+              <div className="mt-8 flex justify-center">
+                <Flashcard 
+                  question="Como pensar como um programador?" 
+                  answer="O foco não é a linguagem ou a sintaxe. É a capacidade de dividir um grande problema em partes pequenas e criar um passo a passo claro para resolvê-las (algoritmo)." 
+                  isDarkMode={isDarkMode} 
+                  className="!m-0"
+                />
+              </div>
             </div>
           </motion.div>
         </div>
 
-        {/* INTERACTIVE COMP_THINKING CHALLENGE CODENAMED "SANDBOX" */}
-        <motion.div 
-          initial={{ opacity: 0, y: 50 }}
+        <motion.div initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7 }}
@@ -900,7 +946,7 @@ const RoboticsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
     { title: "Educação Tecnológica", desc: "Metodologias ativas aplicadas à robótica.", icon: <GraduationCap className="text-purple-500" size={32} /> }
   ];
 
-  type ProgramId = 'blink' | 'traffic' | 'sensor';
+  type ProgramId = 'blink' | 'traffic' | 'sensor' | 'police' | 'sos';
   const [activeProg, setActiveProg] = useState<ProgramId>('blink');
   const [codeMode, setCodeMode] = useState<'cpp' | 'mblock' | 'tutorial'>('cpp');
   const [isRunning, setIsRunning] = useState(false);
@@ -976,6 +1022,95 @@ void loop() {
     digitalWrite(13, LOW);  // Seguro
   }
 }`
+    },
+    police: {
+      title: "Sirene Giroflex (Polícia)",
+      desc: "Alterna os LEDs D13 (Vermelho) e D11 (Verde/Azul) rapidamente simulando uma viatura.",
+      code: `// Projeto: Efeito Splash/Giroflex
+void setup() {
+  pinMode(13, OUTPUT); // LED Vermelho
+  pinMode(11, OUTPUT); // LED Verde/Azul
+}
+
+void loop() {
+  // Pisca o Vermelho 3 vezes
+  for(int i = 0; i < 3; i++) {
+    digitalWrite(13, HIGH);
+    delay(100);
+    digitalWrite(13, LOW);
+    delay(100);
+  }
+  
+  // Pisca o Verde 3 vezes
+  for(int i = 0; i < 3; i++) {
+    digitalWrite(11, HIGH);
+    delay(100);
+    digitalWrite(11, LOW);
+    delay(100);
+  }
+}`
+    },
+    sos: {
+      title: "Sinal Morse S.O.S",
+      desc: "Transmite o pedido de socorro universal (SOS) através do LED D12 (Amarelo) usando código Morse.",
+      code: `// Projeto: Transmissor Morse SOS (... --- ...)
+void setup() {
+  pinMode(12, OUTPUT); // LED Amarelo
+}
+
+void loop() {
+  // Três pontos (S)
+  for (int x = 0; x < 3; x++) {
+    digitalWrite(12, HIGH);
+    delay(150);
+    digitalWrite(12, LOW);
+    delay(150);
+  }
+  delay(100); // Pausa entre letras
+  
+  // Três traços (O)
+  for (int x = 0; x < 3; x++) {
+    digitalWrite(12, HIGH);
+    delay(450);
+    digitalWrite(12, LOW);
+    delay(150);
+  }
+  delay(100); // Pausa entre letras
+  
+  // Três pontos (S)
+  for (int x = 0; x < 3; x++) {
+    digitalWrite(12, HIGH);
+    delay(150);
+    digitalWrite(12, LOW);
+    delay(150);
+  }
+  
+  delay(2000); // Pausa antes de repetir
+}`
+    }
+  };
+
+  const playClickSound = (pitch = 500, duration = 0.05) => {
+    try {
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+      const audioCtx = new AudioContext();
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      oscillator.type = 'square';
+      oscillator.frequency.setValueAtTime(pitch, audioCtx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(pitch / 2, audioCtx.currentTime + duration);
+      
+      gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      oscillator.start();
+      oscillator.stop(audioCtx.currentTime + duration);
+    } catch(e) {
+      // Ignore
     }
   };
 
@@ -985,6 +1120,7 @@ void loop() {
   };
 
   const startUpload = () => {
+    playClickSound(300, 0.1);
     setIsUploading(true);
     setIsRunning(false);
     setUploadProgress(0);
@@ -997,6 +1133,7 @@ void loop() {
           clearInterval(interval);
           setIsUploading(false);
           setIsRunning(true);
+          playClickSound(800, 0.1);
           addLog("Gravação USB concluída! Binário carregado com sucesso (4.2 KB).");
           addLog("Simulador executando loop() principal.");
           return 100;
@@ -1007,6 +1144,7 @@ void loop() {
   };
 
   const stopSimulation = () => {
+    playClickSound(100, 0.1);
     setIsRunning(false);
     setLeds({ red: false, yellow: false, green: false });
     setSensorTriggered(false);
@@ -1024,22 +1162,26 @@ void loop() {
       if (activeProg === 'blink') {
         setLeds(prev => {
           const nextVal = !prev.red;
+          if (nextVal) playClickSound(600, 0.05);
           addLog(`Pino D13 -> ${nextVal ? 'HIGH (V_CC)' : 'LOW (GND)'}`);
           return { red: nextVal, yellow: false, green: false };
         });
         timer = setTimeout(runLoop, 1000);
       } else if (activeProg === 'traffic') {
         if (step === 0) {
+          playClickSound(600, 0.05);
           setLeds({ red: true, yellow: false, green: false });
           addLog("D13 (Vermelho) -> HIGH [Aguarde 3s]");
           step = 1;
           timer = setTimeout(runLoop, 3000);
         } else if (step === 1) {
+          playClickSound(600, 0.05);
           setLeds({ red: false, yellow: true, green: false });
           addLog("D12 (Amarelo) -> HIGH [Atenção 1.2s]");
           step = 2;
           timer = setTimeout(runLoop, 1200);
         } else {
+          playClickSound(600, 0.05);
           setLeds({ red: false, yellow: false, green: true });
           addLog("D11 (Verde) -> HIGH [Siga 3s]");
           step = 0;
@@ -1049,6 +1191,7 @@ void loop() {
         if (sensorTriggered) {
           setLeds(prev => {
             const nextVal = !prev.red;
+            playClickSound(nextVal ? 800 : 600, 0.05);
             addLog(`🚨 ALERTA: Sensor D2 ativo! Pino D13 piscando!`);
             return { red: nextVal, yellow: false, green: false };
           });
@@ -1056,6 +1199,67 @@ void loop() {
         } else {
           setLeds({ red: false, yellow: false, green: false });
           addLog("Sensor D2 está estável (Aguardando movimento...)");
+          timer = setTimeout(runLoop, 2000);
+        }
+      } else if (activeProg === 'police') {
+        // police logic: 6 steps (3 red blinks, 3 green blinks)
+        if (step < 6) {
+          const isHigh = step % 2 === 0;
+          if (isHigh) playClickSound(800, 0.05);
+          setLeds({ red: isHigh, yellow: false, green: false });
+          if (isHigh) addLog("D13 (Vermelho) -> HIGH");
+          step++;
+          timer = setTimeout(runLoop, 100);
+        } else if (step < 12) {
+          const isHigh = step % 2 === 0;
+          if (isHigh) playClickSound(900, 0.05);
+          setLeds({ red: false, yellow: false, green: isHigh });
+          if (isHigh) addLog("D11 (Verde/Azul) -> HIGH");
+          step++;
+          timer = setTimeout(runLoop, 100);
+        } else {
+          step = 0;
+          timer = setTimeout(runLoop, 10);
+        }
+      } else if (activeProg === 'sos') {
+        // SOS rhythm: S(3 dots = 3x 150ms on/off), gap(100ms), O(3 dashes = 3x 450on/150off), gap(100ms), S, wait 2000ms
+        // We'll simplify the state machine
+        if (step < 6) {
+          // S dot
+          const isHigh = step % 2 === 0;
+          if (isHigh) playClickSound(600, 0.1);
+          setLeds({ red: false, yellow: isHigh, green: false });
+          if (isHigh) addLog("D12 -> S (Ponto)");
+          step++;
+          timer = setTimeout(runLoop, 150);
+        } else if (step === 6) {
+          setLeds({ red: false, yellow: false, green: false });
+          step++;
+          timer = setTimeout(runLoop, 100);
+        } else if (step < 13) {
+           // O dash
+          const isHigh = step % 2 !== 0;
+          if (isHigh) playClickSound(600, 0.3);
+          setLeds({ red: false, yellow: isHigh, green: false });
+          if (isHigh) addLog("D12 -> O (Traço)");
+          step++;
+          timer = setTimeout(runLoop, isHigh ? 450 : 150);
+        } else if (step === 13) {
+          setLeds({ red: false, yellow: false, green: false });
+          step++;
+          timer = setTimeout(runLoop, 100);
+        } else if (step < 20) {
+          // S dot
+          const isHigh = step % 2 === 0;
+          if (isHigh) playClickSound(600, 0.1);
+          setLeds({ red: false, yellow: isHigh, green: false });
+          if (isHigh) addLog("D12 -> S (Ponto)");
+          step++;
+          timer = setTimeout(runLoop, 150);
+        } else {
+          setLeds({ red: false, yellow: false, green: false });
+          addLog("D12 -> Pausa de 2s...");
+          step = 0;
           timer = setTimeout(runLoop, 2000);
         }
       }
@@ -1070,8 +1274,18 @@ void loop() {
     <div className="flex flex-col pt-6 md:pt-16 uppercase tracking-tighter overflow-visible">
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-5xl w-full">
         {/* Header */}
-        <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif px-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>Robótica Educacional</h2>
-        <p className={`max-w-2xl mb-8 md:mb-12 uppercase text-[10px] tracking-[0.2em] font-mono font-bold px-1 ${isDarkMode ? 'text-emerald-400' : 'text-black/30'}`}>Transformando teoria em movimento e inovação.</p>
+        <div className="flex flex-col md:flex-row items-center gap-6 justify-between px-1 mb-8 md:mb-12">
+          <div>
+            <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Robótica Educacional</h2>
+            <p className={`max-w-2xl uppercase text-[10px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-emerald-400' : 'text-black/30'}`}>Transformando teoria em movimento e inovação.</p>
+          </div>
+          <Flashcard 
+            question="O que é um Microcontrolador?" 
+            answer="É um pequeno computador em um único chip (como o Arduino). Ele lê sensores, processa a lógica programada (se/então) e controla atuadores (motores, LEDs)." 
+            isDarkMode={isDarkMode} 
+            className="!m-0"
+          />
+        </div>
         
         {/* Core theory and layout */}
         <div className="flex flex-col lg:flex-row gap-8 md:gap-12 items-start mb-16">
@@ -1149,6 +1363,7 @@ void loop() {
                   <button
                     key={progId}
                     onClick={() => {
+                      playClickSound(400, 0.05);
                       setActiveProg(progId);
                       stopSimulation();
                     }}
@@ -1184,35 +1399,81 @@ void loop() {
             
             {/* Visual Hardware Schematic */}
             <div className="w-full flex flex-col items-center justify-center space-y-8 py-4 relative">
-              {/* Virtual Microprocessor circuit card representation */}
-              <div className="w-64 bg-[#141b25] border-2 border-emerald-500/30 rounded-3xl p-4 shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 left-0 bg-blue-600/20 w-16 h-12 rounded-br-2xl border-b border-r border-[#ffffff0a] flex items-center justify-center font-mono text-[9px] text-white/30">USB</div>
-                <div className="absolute bottom-2 right-4 text-[9px] font-mono font-bold text-white/10 select-none">LL-UNO R3</div>
-                
-                {/* Circuit paths */}
-                <div className="flex flex-col items-end space-y-1 mb-3">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[8px] font-mono text-white/30">D13</span>
-                    <div className={`w-3 h-2 rounded ${leds.red ? 'bg-red-500 animate-ping' : 'bg-slate-700'}`} />
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[8px] font-mono text-white/30">D12</span>
-                    <div className={`w-3 h-2 rounded ${leds.yellow ? 'bg-yellow-500 animate-ping' : 'bg-slate-700'}`} />
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[8px] font-mono text-white/30">D11</span>
-                    <div className={`w-3 h-2 rounded ${leds.green ? 'bg-green-500 animate-ping' : 'bg-slate-700'}`} />
-                  </div>
-                </div>
+                {/* Arduino UNO SVG Representation */}
+                <div className="w-64 relative shadow-2xl transition-transform hover:scale-105 duration-500">
+                  <svg viewBox="0 0 400 280" className="w-full h-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" xmlns="http://www.w3.org/2000/svg">
+                    {/* PCB Base */}
+                    <path d="M 10,20 L 370,20 C 380,20 390,30 390,40 L 390,240 C 390,250 380,260 370,260 L 10,260 C 0,260 0,250 0,240 L 0,40 C 0,30 0,20 10,20 Z" fill="#006468" stroke="#004a4d" strokeWidth="3" />
+                    
+                    {/* USB Port */}
+                    <rect x="-5" y="40" width="50" height="40" fill="#c0c0c0" rx="3" stroke="#888" strokeWidth="2" />
+                    <rect x="0" y="45" width="20" height="30" fill="#fff" opacity="0.3" rx="2" />
 
-                {/* Microprocessor main processor block */}
-                <div className="mx-auto w-32 h-10 bg-slate-900 border border-white/10 rounded-md flex items-center justify-center relative p-2 my-2">
-                  <span className="text-[7.5px] font-mono text-white/40 tracking-wider">ATMEGA328P-PU</span>
-                  <div className="absolute -inset-x-1 top-2 flex justify-between px-1">
-                    <div className="w-1 h-1 bg-white/20 rounded-full" /><div className="w-1 h-1 bg-white/20 rounded-full" />
-                  </div>
+                    {/* Power Jack */}
+                    <rect x="-5" y="190" width="45" height="35" fill="#1a1a1a" rx="2" stroke="#0d0d0d" strokeWidth="2" />
+                    
+                    {/* ATMEGA Microcontroller */}
+                    <rect x="230" y="110" width="120" height="40" fill="#222" rx="3" stroke="#111" strokeWidth="2" />
+                    <circle cx="240" cy="130" r="3" fill="#444" />
+                    <text x="270" y="133" fill="#555" fontSize="10" fontFamily="monospace" fontWeight="bold">ATMEGA328P</text>
+                    {/* IC Pins */}
+                    {Array.from({ length: 14 }).map((_, i) => (
+                      <g key={'ic-pin-' + i}>
+                        <rect x={235 + (i * 8)} y="105" width="3" height="5" fill="#b0b0b0" />
+                        <rect x={235 + (i * 8)} y="150" width="3" height="5" fill="#b0b0b0" />
+                      </g>
+                    ))}
+
+                    {/* Digital Headers (Top) */}
+                    <rect x="150" y="25" width="220" height="15" fill="#111" rx="1" />
+                    <rect x="70" y="25" width="70" height="15" fill="#111" rx="1" />
+                    {Array.from({ length: 14 }).map((_, i) => (
+                      <circle key={'d-pin-' + i} cx={155 + (i * 15.3)} cy="32.5" r="2.5" fill="#333" />
+                    ))}
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <circle key={'d2-pin-' + i} cx={75 + (i * 15.3)} cy="32.5" r="2.5" fill="#333" />
+                    ))}
+
+                    {/* Analog Headers (Bottom) */}
+                    <rect x="120" y="240" width="90" height="15" fill="#111" rx="1" />
+                    <rect x="220" y="240" width="90" height="15" fill="#111" rx="1" />
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <circle key={'a-pin-' + i} cx={125 + (i * 15)} cy="247.5" r="2.5" fill="#333" />
+                    ))}
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <circle key={'pwr-pin-' + i} cx={225 + (i * 15)} cy="247.5" r="2.5" fill="#333" />
+                    ))}
+                    
+                    {/* Arduino Logo & Text */}
+                    <text x="140" y="160" fill="#fff" opacity="0.8" fontSize="24" fontFamily="sans-serif" fontWeight="bold">UNO</text>
+                    
+                    {/* D13, TX, RX, ON LEDs built-in indicator on board */}
+                    {/* L (D13) LED */}
+                    <g transform="translate(160, 80)">
+                      <rect x="0" y="0" width="8" height="14" fill="#a0a0a0" rx="1" />
+                      <circle cx="4" cy="7" r="3" fill={leds.red ? "#ff3333" : "#551111"} className={leds.red ? "animate-pulse" : ""} />
+                      <text x="-15" y="10" fill="#fff" fontSize="10" opacity="0.6">L</text>
+                    </g>
+                    {/* TX LED */}
+                    <g transform="translate(160, 100)">
+                      <rect x="0" y="0" width="8" height="14" fill="#a0a0a0" rx="1" />
+                      <circle cx="4" cy="7" r="3" fill={leds.yellow ? "#ffaa00" : "#553300"} className={leds.yellow ? "animate-pulse" : ""} />
+                      <text x="-22" y="10" fill="#fff" fontSize="10" opacity="0.6">TX</text>
+                    </g>
+                    {/* RX LED */}
+                    <g transform="translate(160, 120)">
+                      <rect x="0" y="0" width="8" height="14" fill="#a0a0a0" rx="1" />
+                      <circle cx="4" cy="7" r="3" fill={leds.green ? "#00ff66" : "#004411"} className={leds.green ? "animate-pulse" : ""} />
+                      <text x="-22" y="10" fill="#fff" fontSize="10" opacity="0.6">RX</text>
+                    </g>
+                    {/* ON LED */}
+                    <g transform="translate(320, 180)">
+                      <rect x="0" y="0" width="8" height="14" fill="#a0a0a0" rx="1" />
+                      <circle cx="4" cy="7" r="3" fill={isRunning ? "#00ff00" : "#004400"} />
+                      <text x="-22" y="10" fill="#fff" fontSize="10" opacity="0.6">ON</text>
+                    </g>
+                  </svg>
                 </div>
-              </div>
 
               {/* Connected Wire Nodes */}
               <div className="flex flex-col gap-3 items-center relative z-20 w-full max-w-[220px]">
@@ -1538,7 +1799,7 @@ void loop() {
   );
 };
 
-const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
+const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUnlockSysAdmin?: () => void }) => {
   type ProblemId = 'dhcp' | 'dns' | 'ram' | 'firewall';
   const [activeProb, setActiveProb] = useState<ProblemId>('dhcp');
   const [probFixed, setProbFixed] = useState<{ dhcp: boolean; dns: boolean; ram: boolean; firewall: boolean }>({
@@ -1547,6 +1808,13 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
     ram: false,
     firewall: false
   });
+  
+  useEffect(() => {
+    if (onUnlockSysAdmin && probFixed.dhcp && probFixed.dns && probFixed.ram && probFixed.firewall) {
+      onUnlockSysAdmin();
+    }
+  }, [probFixed, onUnlockSysAdmin]);
+
   const [isFixing, setIsFixing] = useState(false);
   const [sysRamUsage, setSysRamUsage] = useState(98);
   const [diagnosticLogs, setDiagnosticLogs] = useState<string[]>([
@@ -1680,28 +1948,13 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
           </div>
         </motion.div>
 
-        {/* Beautiful diagnostic card image directly inside info block */}
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ delay: 0.2, duration: 0.6 }} className="lg:col-span-4 flex items-center justify-center">
-          <div className="relative group w-full max-w-[320px]">
-            <div className="absolute inset-2 bg-blue-600 rounded-full blur-[80px] opacity-15 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none animate-pulse" />
-            <motion.div 
-              animate={{ y: [0, -6, 0] }} 
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className={`relative rounded-3xl overflow-hidden shadow-2xl border ${isDarkMode ? 'border-white/10 bg-white/[0.02]' : 'border-black/10 bg-black/[0.02]'}`}
-            >
-              <img 
-                src="https://lucasleniar.com.br/titecnico.png" 
-                alt="Diagrama e mesa técnica de hardware e redes de computadores para suporte de TI" 
-                className="w-full h-auto scale-105 group-hover:scale-110 transition-transform duration-700"
-                referrerPolicy="no-referrer"
-                loading="lazy"
-              />
-              <div className="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                <p className="text-[10px] font-bold text-white uppercase tracking-[0.2em] font-mono leading-none">Visão de Topologia</p>
-                <p className="text-[11px] text-white/70 mt-1 font-sans">Desenho arquitetural de redes.</p>
-              </div>
-            </motion.div>
-          </div>
+          <Flashcard 
+            question="O que é DNS?" 
+            answer="É como a lista de contatos do seu celular. Quando você digita google.com, o DNS descobre qual é o endereço IP 'verdadeiro' do servidor para conectá-lo. (Ex: 142.250.191.46)" 
+            isDarkMode={isDarkMode} 
+            className="!m-0"
+          />
         </motion.div>
       </div>
 
@@ -1961,11 +2214,18 @@ const ITSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
   );
 };
 
-const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
+const LifeSection = ({ isDarkMode, onUnlockExplorer }: { isDarkMode: boolean; onUnlockExplorer?: () => void }) => {
   const [copiedLabel, setCopiedLabel] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'stats' | 'timeline' | 'philosophy'>('stats');
   const [activeYear, setActiveYear] = useState<number>(2006);
   const [expandedStat, setExpandedStat] = useState<number | null>(null);
+  const [viewedYears, setViewedYears] = useState<Set<number>>(new Set([2006]));
+
+  useEffect(() => {
+    if (viewedYears.size === 5 && onUnlockExplorer) {
+      onUnlockExplorer();
+    }
+  }, [viewedYears, onUnlockExplorer]);
 
   const handleCopyValue = (value: string, label: string) => {
     navigator.clipboard.writeText(value);
@@ -2223,7 +2483,7 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
         </div>
       </motion.div>
 
-      {/* Interactive Tabs Menu */}
+      {/* Introduction Card with Photo & Quick Actions */}
       <div className="flex justify-center mb-8">
         <div className={`p-1 rounded-2xl border flex gap-1 ${
           isDarkMode ? 'bg-[#0f141a] border-white/5' : 'bg-slate-100 border-black/5'
@@ -2278,7 +2538,10 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 {timelineData.map((data) => (
                   <button
                     key={data.year}
-                    onClick={() => setActiveYear(data.year)}
+                    onClick={() => {
+                      setActiveYear(data.year);
+                      setViewedYears(prev => new Set(prev).add(data.year));
+                    }}
                     className={`w-full p-3.5 rounded-xl text-left transition-all border shrink-0 flex items-center justify-between cursor-pointer ${
                       activeYear === data.year
                         ? 'bg-blue-500/10 border-blue-500/40 text-blue-400 shadow-sm'
@@ -2412,7 +2675,7 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
 
           {/* TAB 3: STATISTICS & INTERACTIVE DATA GRID */}
           {activeTab === 'stats' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 w-full">
               {statMetrics.map((stat, i) => {
                 const isExpanded = expandedStat === i;
                 return (
@@ -2423,25 +2686,25 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: i * 0.08 }}
                     onClick={() => setExpandedStat(isExpanded ? null : i)}
-                    className={`rounded-3xl border p-6 flex flex-col justify-start transition-all cursor-pointer overflow-hidden ${
+                    className={`rounded-3xl border p-4 lg:p-5 flex flex-col justify-start transition-all cursor-pointer overflow-hidden ${
                       isExpanded 
                         ? (isDarkMode ? stat.activeColor : 'bg-white border-none shadow-xl ring-2 ring-emerald-500/20')
                         : (isDarkMode ? 'bg-[#0f141a]/90 border-white/5 hover:border-emerald-500/30' : 'bg-white border-black/10 hover:shadow-lg hover:border-emerald-500/30')
                     }`}
                   >
-                    <motion.div layout className="space-y-4">
+                    <motion.div layout className="space-y-3">
                       <div className="flex justify-between items-center">
-                        <span className={`inline-block py-1 px-3 text-[9px] font-mono font-bold rounded-lg uppercase tracking-wider ${stat.color}`}>
+                        <span className={`inline-block py-1 px-2 text-[9px] font-mono font-bold rounded-lg uppercase tracking-wider ${stat.color}`}>
                           {isExpanded ? 'DETALHES' : 'MÉTRICA ATIVA'}
                         </span>
-                        <ChevronRight size={16} className={`transition-transform duration-300 ${isExpanded ? 'rotate-90 text-emerald-500' : 'text-slate-400'}`} />
+                        <ChevronRight size={14} className={`transition-transform duration-300 ${isExpanded ? 'rotate-90 text-emerald-500' : 'text-slate-400'}`} />
                       </div>
-                      <span className={`block text-3xl md:text-4xl font-extrabold tracking-tight font-serif italic ${
+                      <span className={`block text-2xl md:text-3xl font-extrabold tracking-tight font-serif italic ${
                         isDarkMode ? 'text-white' : 'text-slate-900'
                       }`}>
                         {stat.value}
                       </span>
-                      <h5 className={`font-mono text-[10.5px] uppercase tracking-wider font-extrabold ${
+                      <h5 className={`font-mono text-[9px] uppercase tracking-wider font-extrabold ${
                         isDarkMode ? 'text-white/40' : 'text-slate-500'
                       }`}>
                         {stat.label}
@@ -2449,7 +2712,7 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                     </motion.div>
                     
                     <motion.div layout>
-                      <p className={`text-[11px] font-sans normal-case tracking-normal leading-relaxed mt-4 pt-4 border-t border-black/5 dark:border-white/5 ${
+                      <p className={`text-[10px] font-sans normal-case tracking-normal leading-relaxed mt-3 pt-3 border-t border-black/5 dark:border-white/5 ${
                         isDarkMode ? 'text-white/50' : 'text-slate-500'
                       }`}>
                         {stat.info}
@@ -2460,20 +2723,20 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                       {isExpanded && (
                         <motion.div
                           initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                          animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+                          animate={{ opacity: 1, height: 'auto', marginTop: 12 }}
                           exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                          className="flex flex-col gap-4 overflow-hidden"
+                          className="flex flex-col gap-3 overflow-hidden"
                         >
-                          <div className="space-y-2 mt-2 pt-4 border-t border-dashed border-black/10 dark:border-white/10">
+                          <div className="space-y-2 mt-2 pt-3 border-t border-dashed border-black/10 dark:border-white/10">
                             {stat.points.map((point, idx) => (
-                              <div key={idx} className="flex gap-2 items-center text-[10px] sm:text-[11px]">
-                                <div className={`w-1 h-1 rounded-full ${stat.color.split(' ')[0]}`} />
+                              <div key={idx} className="flex gap-2 items-center text-[9px] sm:text-[10px]">
+                                <div className={`w-1 h-1 rounded-full shrink-0 ${stat.color.split(' ')[0]}`} />
                                 <span className={isDarkMode ? 'text-slate-300' : 'text-slate-600'}>{point}</span>
                               </div>
                             ))}
                           </div>
                           
-                          <div className="w-full h-1.5 mt-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
+                          <div className="w-full h-1 mt-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
                             <motion.div 
                               initial={{ width: 0 }}
                               animate={{ width: `${stat.progress}%` }}
@@ -2487,6 +2750,14 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                   </motion.div>
                 );
               })}
+              <div className="flex items-center justify-center">
+                <Flashcard 
+                  question="Por que ensinar tecnologia?" 
+                  answer="Porque a tecnologia sem didática afasta as pessoas. Ensinar é democratizar: significa pegar aquilo que parece mágica ou inacessível, e mostrar que é matemática, lógica e paciência." 
+                  isDarkMode={isDarkMode} 
+                  className="!m-0"
+                />
+              </div>
             </div>
           )}
         </motion.div>
@@ -2558,6 +2829,97 @@ const IFrameSection = ({
     )}
   </div>
 );
+
+const GamificationSection = ({
+  isDarkMode,
+  achievements
+}: {
+  isDarkMode: boolean;
+  achievements: { explorer: boolean; nightOwl: boolean; sysadmin: boolean };
+}) => {
+  const badges = [
+    {
+      id: 'explorer',
+      title: 'Explorador',
+      icon: '🕵️‍♂️',
+      desc: 'Recebido ao ler todas as etapas da minha experiência de vida.',
+      unlocked: achievements.explorer
+    },
+    {
+      id: 'nightOwl',
+      title: 'Notívago',
+      icon: '🌙',
+      desc: 'Recebido ao alternar para o Modo Escuro.',
+      unlocked: achievements.nightOwl
+    },
+    {
+      id: 'sysadmin',
+      title: 'SysAdmin',
+      icon: '💻',
+      desc: 'Recebido ao resolver o problema no simulador de roteador na aba TI.',
+      unlocked: achievements.sysadmin
+    }
+  ];
+
+  return (
+    <div className="flex flex-col pt-6 md:pt-16 pb-12 overflow-y-auto w-full max-w-6xl mx-auto px-4 md:px-6">
+      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="mb-10 text-center">
+        <h2 className={`text-4xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Conquistas</h2>
+        <p className={`max-w-xl mx-auto uppercase text-[11px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-white/50' : 'text-black/50'}`}>
+          Metodologias Ativas & Engajamento
+        </p>
+      </motion.div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {badges.map((badge, i) => (
+          <motion.div
+            key={badge.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className={`relative p-6 rounded-3xl border text-center transition-all duration-500 overflow-hidden ${
+              badge.unlocked 
+                ? (isDarkMode ? 'bg-[#0f141a] border-emerald-500/30' : 'bg-emerald-50/50 border-emerald-200')
+                : (isDarkMode ? 'bg-black/20 border-white/5 grayscale opacity-60' : 'bg-black/5 border-black/5 grayscale opacity-60')
+            }`}
+          >
+            {badge.unlocked && (
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 pointer-events-none" />
+            )}
+            
+            <div className={`text-6xl mb-6 relative z-10 transition-transform duration-500 ${badge.unlocked ? 'scale-110 drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]' : ''}`}>
+              {badge.unlocked ? badge.icon : '🔒'}
+            </div>
+            
+            <h3 className={`text-xl font-bold mb-2 font-serif tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+              {badge.title}
+            </h3>
+            
+            <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+              {badge.desc}
+            </p>
+            
+            {badge.unlocked && (
+              <div className="mt-6 inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest">
+                <Unlock size={12} />
+                Desbloqueado
+              </div>
+            )}
+          </motion.div>
+        ))}
+        
+        <div className="flex items-center justify-center">
+          <Flashcard 
+            question="Diferença de RAM e HD?" 
+            answer="A RAM é a sua 'Mesa de Trabalho' (muito rápida, mas pequena e apaga quando desliga). O HD/SSD é o seu 'Arquivo de Aço' (guarda tudo para sempre, mas demora mais para pegar). O processador precisa trazer os dados do Arquivo para a Mesa antes de poder trabalhar neles!" 
+            isDarkMode={isDarkMode} 
+            className="!m-0"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ShellFilesSection = ({ 
   isMaximized, 
@@ -3004,6 +3366,11 @@ const hashToSectionId = (hash: string): SectionId => {
     case 'robotics':
     case 'bot':
       return 'robotics';
+    case 'gamification':
+    case 'gamificacao':
+    case 'conquistas':
+    case 'badges':
+      return 'gamification';
     case 'tech':
     case 'ti':
     case 'tecnico':
@@ -3036,6 +3403,8 @@ const sectionIdToHash = (section: SectionId): string => {
       return '#/computacional';
     case 'robotics':
       return '#/robotica';
+    case 'gamification':
+      return '#/gamificacao';
     case 'tech':
       return '#/ti';
     case 'utfpr':
@@ -3064,8 +3433,40 @@ export default function App() {
     return saved ? saved === 'true' : false;
   });
 
+  const [achievements, setAchievements] = useState<{ explorer: boolean; nightOwl: boolean; sysadmin: boolean }>(() => {
+    try {
+      const saved = localStorage.getItem('ll_achievements');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return { explorer: false, nightOwl: false, sysadmin: false };
+  });
+
+  const [showToast, setShowToast] = useState<{ id: string; title: string; icon: string } | null>(null);
+
+  const unlockAchievement = (id: keyof typeof achievements) => {
+    setAchievements(prev => {
+      if (!prev[id]) {
+        const badgeData = {
+          explorer: { id: 'explorer', title: 'Explorador', icon: '🕵️‍♂️' },
+          nightOwl: { id: 'nightOwl', title: 'Notívago', icon: '🌙' },
+          sysadmin: { id: 'sysadmin', title: 'SysAdmin', icon: '💻' }
+        }[id];
+        setShowToast(badgeData);
+        setTimeout(() => setShowToast(null), 4000);
+        
+        const next = { ...prev, [id]: true };
+        localStorage.setItem('ll_achievements', JSON.stringify(next));
+        return next;
+      }
+      return prev;
+    });
+  };
+
   useEffect(() => {
     localStorage.setItem('lucas-leniar-theme', String(isDarkMode));
+    if (isDarkMode) {
+      unlockAchievement('nightOwl');
+    }
   }, [isDarkMode]);
 
   useEffect(() => {
@@ -3404,9 +3805,11 @@ export default function App() {
               className={isIFrameSection ? "flex-1 flex flex-col min-h-0 overflow-hidden" : "min-h-full flex flex-col"}
             >
               {activeSection === 'home' && <HomeSection onNavigate={handleSectionChange} isDarkMode={isDarkMode} />}
+              {activeSection === 'life' && <LifeSection isDarkMode={isDarkMode} onUnlockExplorer={() => unlockAchievement('explorer')} />}
               {activeSection === 'computational' && <ComputationalThinking isDarkMode={isDarkMode} />}
               {activeSection === 'robotics' && <RoboticsSection isDarkMode={isDarkMode} />}
-              {activeSection === 'tech' && <ITSection isDarkMode={isDarkMode} />}
+              {activeSection === 'gamification' && <GamificationSection isDarkMode={isDarkMode} achievements={achievements} />}
+              {activeSection === 'tech' && <ITSection isDarkMode={isDarkMode} onUnlockSysAdmin={() => unlockAchievement('sysadmin')} />}
               {activeSection === 'utfpr' && (
                 <IFrameSection 
                   url="https://utfpr.lucasleniar.com.br/" 
@@ -3441,7 +3844,6 @@ export default function App() {
                   isDarkMode={isDarkMode}
                 />
               )}
-              {activeSection === 'life' && <LifeSection isDarkMode={isDarkMode} />}
             </motion.div>
           </AnimatePresence>
         </div>
@@ -3463,6 +3865,30 @@ export default function App() {
           <div className="w-1.5 h-1.5 bg-emerald-500/50 -mb-[1px] -ml-[1px]" />
         </div>
       </main>
+
+      {/* Gamification Toast */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 50, scale: 0.9 }}
+            className={`fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[100] flex items-center gap-4 p-4 pr-6 rounded-2xl shadow-2xl border ${
+              isDarkMode ? 'bg-[#11161b] border-emerald-500/30 text-white' : 'bg-white border-emerald-200 text-slate-800'
+            }`}
+          >
+            <div className="text-4xl drop-shadow-md">{showToast.icon}</div>
+            <div>
+              <div className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest mb-1">
+                Conquista Desbloqueada!
+              </div>
+              <div className="font-serif font-bold text-lg">
+                {showToast.title}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
