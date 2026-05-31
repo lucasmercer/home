@@ -1,8 +1,5 @@
-# Robots.txt - Lucas Leniar
-
-# Permite que todos os robôs indexem o site
+# robots.txt otimizado para indexacao
 User-agent: *
 Allow: /
 
-# Sitemap principal
 Sitemap: https://lucasleniar.com.br/sitemap.xml
