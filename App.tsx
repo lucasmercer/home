@@ -144,22 +144,33 @@ const ProfileImage = ({ isDarkMode }: { isDarkMode?: boolean }) => {
   );
 };
 
-const Flashcard = ({ question, answer, isDarkMode, className = "mx-auto my-8" }: { question: string; answer: string; isDarkMode: boolean; className?: string }) => {
+export const FlashcardContext = React.createContext<{onFlip: (id: string) => void}>({ onFlip: () => {} });
+
+const Flashcard = ({ id, question, answer, isDarkMode, className = "mx-auto my-8" }: { id?: string; question: string; answer: string; isDarkMode: boolean; className?: string }) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const { onFlip } = React.useContext(FlashcardContext);
+
+  const handleFlip = () => {
+    const nextFlipped = !isFlipped;
+    setIsFlipped(nextFlipped);
+    if (nextFlipped && id) {
+      onFlip(id);
+    }
+  };
 
   return (
-    <div className={`w-48 h-48 sm:w-56 sm:h-56 [perspective:1000px] hover:-translate-y-1 transition-transform z-20 shrink-0 ${className}`} onClick={() => setIsFlipped(!isFlipped)}>
+    <div className={`w-44 h-44 sm:w-48 sm:h-48 md:w-56 md:h-56 [perspective:1000px] hover:-translate-y-1 transition-transform z-20 shrink-0 ${className}`} onClick={handleFlip}>
       <motion.div
         className="relative w-full h-full cursor-pointer [transform-style:preserve-3d]"
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ type: "spring", stiffness: 260, damping: 20 }}
       >
         {/* Front */}
-        <div className={`absolute inset-0 [backface-visibility:hidden] p-4 flex flex-col items-center justify-center shadow-[2px_4px_12px_rgba(0,0,0,0.15)] rounded-sm rotate-[-2deg] ${isDarkMode ? 'bg-yellow-600/30 border border-yellow-500/30 text-yellow-200' : 'bg-[#fff7d1] border border-yellow-300 text-slate-800'}`}>
-          <div className="absolute top-2 left-2 text-[9px] font-mono tracking-widest uppercase opacity-70 flex items-center gap-1 font-bold">
+        <div className={`absolute inset-0 [backface-visibility:hidden] p-3 sm:p-4 flex flex-col items-center justify-center shadow-[2px_4px_12px_rgba(0,0,0,0.15)] rounded-[0.25rem] rotate-[-1deg] ${isDarkMode ? 'bg-yellow-600/30 border border-yellow-500/30 text-yellow-200' : 'bg-[#fff7d1] border border-yellow-300 text-slate-800'}`}>
+          <div className="absolute top-2 left-2 text-[8px] sm:text-[9px] font-mono tracking-widest uppercase opacity-70 flex items-center gap-1 font-bold">
              📌 Pílula
           </div>
-          <p className="text-center font-bold font-serif text-sm sm:text-base leading-tight mt-3">
+          <p className="text-center font-bold font-serif text-xs sm:text-sm leading-tight mt-2 overflow-y-auto w-full h-full flex items-center justify-center">
             {question}
           </p>
           <div className="absolute bottom-2 text-[8px] font-mono opacity-60 uppercase tracking-widest">
@@ -169,10 +180,10 @@ const Flashcard = ({ question, answer, isDarkMode, className = "mx-auto my-8" }:
 
         {/* Back */}
         <div 
-          className={`absolute inset-0 [backface-visibility:hidden] p-4 flex items-center justify-center shadow-[2px_4px_12px_rgba(0,0,0,0.15)] rounded-sm rotate-[1deg] ${isDarkMode ? 'bg-emerald-900/60 border border-emerald-500/30 text-emerald-100' : 'bg-emerald-100 border border-emerald-300 text-emerald-900'}`}
+          className={`absolute inset-0 [backface-visibility:hidden] p-3 sm:p-4 flex flex-col items-center justify-center overflow-y-auto shadow-[2px_4px_12px_rgba(0,0,0,0.15)] rounded-[0.25rem] rotate-[1deg] ${isDarkMode ? 'bg-emerald-900/60 border border-emerald-500/30 text-emerald-100' : 'bg-emerald-100 border border-emerald-300 text-emerald-900'}`}
           style={{ transform: "rotateY(180deg)" }}
         >
-           <p className="text-center font-medium text-xs sm:text-sm leading-relaxed text-balance">
+           <p className="text-center font-medium text-[9px] sm:text-[10px] leading-snug text-balance m-auto w-full">
             {answer}
           </p>
         </div>
@@ -219,25 +230,25 @@ const HomeSection = ({ onNavigate, isDarkMode }: { onNavigate: (id: SectionId) =
       icon: <Code2 size={20} />, 
       label: "Desenvolvimento", 
       color: "emerald",
-      desc: "Experiência robusta em automação com scripts Bash, desenvolvimento web moderno com React/Node.js, e criação de soluções escaláveis em Python." 
+      desc: "Experiência em automação com scripts Bash e desenvolvimento web com React e Node.js, com foco em organização, escalabilidade e aplicações práticas." 
     },
     { 
       icon: <Cpu size={20} />, 
       label: "Hardware", 
       color: "blue",
-      desc: "Especialista em manutenção e diagnóstico avançado. Projetos de eletrônica com Arduino e ESP32, unindo o mundo físico ao software." 
+      desc: "Atuação em manutenção e diagnóstico de hardware, com desenvolvimento de projetos em Arduino e ESP32, focados na integração entre dispositivos físicos e aplicações de software." 
     },
     { 
       icon: <GraduationCap size={20} />, 
       label: "Educação", 
       color: "purple",
-      desc: "Foco no desenvolvimento do pensamento computacional e ensino de robótica educacional. Formando os pensadores e engenheiros do amanhã." 
+      desc: "Foco no desenvolvimento do pensamento computacional e no ensino de robótica educacional, promovendo aprendizagem ativa, lógica e resolução de problemas." 
     },
     { 
       icon: <Laptop size={20} />, 
       label: "Sistemas", 
       color: "orange",
-      desc: "Arquitetura e administração de redes, gestão de servidores Linux e infraestrutura com foco em desempenho, segurança e open-source." 
+      desc: "Atuação em redes e servidores Linux em contextos educacionais e práticos, com foco em estabilidade e organização, aliada ao desenvolvimento de scripts Bash (.sh) e sistemas para automação de tarefas e gerenciamento de serviços." 
     },
   ];
 
@@ -588,9 +599,21 @@ const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
 
   return (
     <div className="flex flex-col pt-4 md:pt-12 uppercase tracking-tighter overflow-visible w-full">
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-6xl w-full mx-auto px-2">
-        <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Pensamento Computacional</h2>
-        <p className={`max-w-2xl mb-8 md:mb-12 uppercase text-[10px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-emerald-400' : 'text-black/30'}`}>Os 4 pilares para resolver qualquer problema tecnológico e educacional.</p>
+      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-6xl w-full mx-auto px-2 mb-8 md:mb-12 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+        <div>
+          <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Pensamento Computacional</h2>
+          <p className={`max-w-2xl uppercase text-[10px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-emerald-400' : 'text-black/30'}`}>Os 4 pilares para resolver qualquer problema tecnológico e educacional.</p>
+        </div>
+
+        <Flashcard 
+          id="comp"
+          question="Como programadores pensam?" 
+          answer="O foco não é a linguagem ou a sintaxe. É a capacidade de dividir um grande problema em partes e resolver passo a passo." 
+          isDarkMode={isDarkMode} 
+          className="!w-44 !h-44 sm:!w-48 sm:!h-48 shrink-0 !m-0"
+        />
+      </motion.div>
+      <div className="max-w-6xl w-full mx-auto px-2">
         
         <div className="flex flex-col lg:flex-row gap-8 md:gap-11 items-start mb-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 flex-1">
@@ -645,14 +668,6 @@ const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
                   <p className="text-[11px] text-white/70 mt-1 font-sans">Qualidade</p>
                 </div>
               </motion.div>
-              <div className="mt-8 flex justify-center">
-                <Flashcard 
-                  question="Como pensar como um programador?" 
-                  answer="O foco não é a linguagem ou a sintaxe. É a capacidade de dividir um grande problema em partes pequenas e criar um passo a passo claro para resolvê-las (algoritmo)." 
-                  isDarkMode={isDarkMode} 
-                  className="!m-0"
-                />
-              </div>
             </div>
           </motion.div>
         </div>
@@ -933,7 +948,7 @@ const ComputationalThinking = ({ isDarkMode }: { isDarkMode: boolean }) => {
           </AnimatePresence>
         </motion.div>
 
-      </motion.div>
+      </div>
     </div>
   );
 };
@@ -1280,6 +1295,7 @@ void loop() {
             <p className={`max-w-2xl uppercase text-[10px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-emerald-400' : 'text-black/30'}`}>Transformando teoria em movimento e inovação.</p>
           </div>
           <Flashcard 
+            id="robo"
             question="O que é um Microcontrolador?" 
             answer="É um pequeno computador em um único chip (como o Arduino). Ele lê sensores, processa a lógica programada (se/então) e controla atuadores (motores, LEDs)." 
             isDarkMode={isDarkMode} 
@@ -1950,6 +1966,7 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
 
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-40px" }} transition={{ delay: 0.2, duration: 0.6 }} className="lg:col-span-4 flex items-center justify-center">
           <Flashcard 
+            id="dns"
             question="O que é DNS?" 
             answer="É como a lista de contatos do seu celular. Quando você digita google.com, o DNS descobre qual é o endereço IP 'verdadeiro' do servidor para conectá-lo. (Ex: 142.250.191.46)" 
             isDarkMode={isDarkMode} 
@@ -2385,7 +2402,7 @@ const LifeSection = ({ isDarkMode, onUnlockExplorer }: { isDarkMode: boolean; on
               <span className={`text-[10px] font-mono tracking-widest uppercase font-bold px-3 py-1 rounded-full border ${
                 isDarkMode ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-500/5 text-emerald-700 border-emerald-500/15'
               }`}>
-                Nossa Missão Pedagógica
+                Minha missão pedagógica
               </span>
               <h2 className={`text-2xl md:text-4xl font-extrabold tracking-tight mt-2 italic font-serif ${
                 isDarkMode ? 'text-white' : 'text-slate-900'
@@ -2398,10 +2415,13 @@ const LifeSection = ({ isDarkMode, onUnlockExplorer }: { isDarkMode: boolean; on
               isDarkMode ? 'text-white/70' : 'text-slate-600'
             }`}>
               <p>
-                Professor apaixonado e dedicado à forte interposição entre a tecnologia industrial avançada e o aprendizado moderno de sistemas escolares. Com mais de 15 anos de imersão corporativa e acadêmica contínua no setor de TI, o <strong>Professor Lucas Mercer Leniar</strong> atua como um educador focado em desmistificar os quatro pilares do pensamento computacional.
+                Professor dedicado à integração entre tecnologia e educação, com sólida experiência no setor de TI ao longo de mais de 15 anos entre atuação prática e ambiente acadêmico. <strong>Lucas Mercer Leniar</strong> desenvolve seu trabalho com foco na aplicação real da tecnologia no contexto educacional, aproximando conceitos técnicos da vivência dos estudantes.
               </p>
               <p>
-                Sua abordagem integra o Pensamento Computacional de forma descomplicada, transformando termos complexos em metodologias práticas e instigantes. Lucas acredita firmemente que o desenvolvimento do raciocínio estruturado é o pilar central: capacitar o estudante a decompor problemas complexos, identificar padrões lógicos, focar no essencial por meio da abstração e formular algoritmos precisos é torná-lo autor de sua própria autonomia intelectual e técnica.
+                Sua atuação é centrada no ensino do pensamento computacional de forma acessível e aplicada. Por meio de metodologias práticas, transforma conceitos abstratos em experiências concretas de aprendizagem, incentivando o desenvolvimento da lógica, da análise e da resolução de problemas.
+              </p>
+              <p>
+                Acredita que capacitar o estudante a decompor problemas, reconhecer padrões, aplicar abstração e construir soluções passo a passo é fundamental para formar autonomia intelectual e técnica, preparando-o para os desafios do mundo contemporâneo.
               </p>
             </div>
 
@@ -2675,7 +2695,7 @@ const LifeSection = ({ isDarkMode, onUnlockExplorer }: { isDarkMode: boolean; on
 
           {/* TAB 3: STATISTICS & INTERACTIVE DATA GRID */}
           {activeTab === 'stats' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5 w-full">
               {statMetrics.map((stat, i) => {
                 const isExpanded = expandedStat === i;
                 return (
@@ -2686,33 +2706,33 @@ const LifeSection = ({ isDarkMode, onUnlockExplorer }: { isDarkMode: boolean; on
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: i * 0.08 }}
                     onClick={() => setExpandedStat(isExpanded ? null : i)}
-                    className={`rounded-3xl border p-4 lg:p-5 flex flex-col justify-start transition-all cursor-pointer overflow-hidden ${
+                    className={`rounded-[1.25rem] md:rounded-[1.5rem] border p-4 flex flex-col justify-start transition-all cursor-pointer overflow-hidden ${
                       isExpanded 
                         ? (isDarkMode ? stat.activeColor : 'bg-white border-none shadow-xl ring-2 ring-emerald-500/20')
                         : (isDarkMode ? 'bg-[#0f141a]/90 border-white/5 hover:border-emerald-500/30' : 'bg-white border-black/10 hover:shadow-lg hover:border-emerald-500/30')
                     }`}
                   >
-                    <motion.div layout className="space-y-3">
+                    <motion.div layout className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <span className={`inline-block py-1 px-2 text-[9px] font-mono font-bold rounded-lg uppercase tracking-wider ${stat.color}`}>
-                          {isExpanded ? 'DETALHES' : 'MÉTRICA ATIVA'}
+                        <span className={`inline-block py-[0.15rem] px-2 text-[8px] sm:text-[9px] font-mono font-bold rounded flex-shrink-0 uppercase tracking-widest ${stat.color}`}>
+                          {isExpanded ? 'DETALHES' : 'ESTATÍSTICA'}
                         </span>
-                        <ChevronRight size={14} className={`transition-transform duration-300 ${isExpanded ? 'rotate-90 text-emerald-500' : 'text-slate-400'}`} />
+                        <ChevronRight size={12} className={`transition-transform duration-300 ${isExpanded ? 'rotate-90 text-emerald-500' : 'text-slate-400'}`} />
                       </div>
-                      <span className={`block text-2xl md:text-3xl font-extrabold tracking-tight font-serif italic ${
+                      <span className={`block text-xl md:text-2xl font-extrabold tracking-tight font-serif italic ${
                         isDarkMode ? 'text-white' : 'text-slate-900'
                       }`}>
                         {stat.value}
                       </span>
                       <h5 className={`font-mono text-[9px] uppercase tracking-wider font-extrabold ${
-                        isDarkMode ? 'text-white/40' : 'text-slate-500'
+                        isDarkMode ? 'text-white/50' : 'text-slate-500'
                       }`}>
                         {stat.label}
                       </h5>
                     </motion.div>
                     
                     <motion.div layout>
-                      <p className={`text-[10px] font-sans normal-case tracking-normal leading-relaxed mt-3 pt-3 border-t border-black/5 dark:border-white/5 ${
+                      <p className={`text-[10px] font-sans normal-case tracking-normal leading-relaxed mt-2 pt-2 border-t border-black/5 dark:border-white/5 ${
                         isDarkMode ? 'text-white/50' : 'text-slate-500'
                       }`}>
                         {stat.info}
@@ -2752,6 +2772,7 @@ const LifeSection = ({ isDarkMode, onUnlockExplorer }: { isDarkMode: boolean; on
               })}
               <div className="flex items-center justify-center">
                 <Flashcard 
+                  id="life"
                   question="Por que ensinar tecnologia?" 
                   answer="Porque a tecnologia sem didática afasta as pessoas. Ensinar é democratizar: significa pegar aquilo que parece mágica ou inacessível, e mostrar que é matemática, lógica e paciência." 
                   isDarkMode={isDarkMode} 
@@ -2835,7 +2856,7 @@ const GamificationSection = ({
   achievements
 }: {
   isDarkMode: boolean;
-  achievements: { explorer: boolean; nightOwl: boolean; sysadmin: boolean };
+  achievements: { explorer: boolean; nightOwl: boolean; sysadmin: boolean; inquisitive: boolean };
 }) => {
   const badges = [
     {
@@ -2858,26 +2879,43 @@ const GamificationSection = ({
       icon: '💻',
       desc: 'Recebido ao resolver o problema no simulador de roteador na aba TI.',
       unlocked: achievements.sysadmin
+    },
+    {
+      id: 'inquisitive',
+      title: 'Mente Inquisitiva',
+      icon: '💡',
+      desc: 'Descoberto por virar todas as pílulas de conhecimento do site.',
+      unlocked: achievements.inquisitive
     }
   ];
 
   return (
     <div className="flex flex-col pt-6 md:pt-16 pb-12 overflow-y-auto w-full max-w-6xl mx-auto px-4 md:px-6">
-      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="mb-10 text-center">
-        <h2 className={`text-4xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Conquistas</h2>
-        <p className={`max-w-xl mx-auto uppercase text-[11px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-white/50' : 'text-black/50'}`}>
-          Metodologias Ativas & Engajamento
-        </p>
+      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="mb-10 flex flex-col md:flex-row items-center justify-between gap-6 w-full text-center md:text-left">
+        <div>
+          <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Conquistas</h2>
+          <p className={`max-w-xl uppercase text-[10px] sm:text-[11px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-white/50' : 'text-black/50'}`}>
+            Metodologias Ativas & Engajamento
+          </p>
+        </div>
+        
+        <Flashcard 
+          id="gamification"
+          question="Diferença de RAM e HD?" 
+          answer="A RAM é a sua 'Mesa de Trabalho' (rápida, pequena, apaga). O HD/SSD é o seu 'Arquivo' (demora, guarda tudo). O processador precisa trazer os dados do Arquivo para a Mesa!" 
+          isDarkMode={isDarkMode} 
+          className="!w-44 !h-44 sm:!w-48 sm:!h-48 shrink-0 !m-0"
+        />
       </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 w-full max-w-full overflow-hidden">
         {badges.map((badge, i) => (
           <motion.div
             key={badge.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className={`relative p-6 rounded-3xl border text-center transition-all duration-500 overflow-hidden ${
+            className={`relative p-4 sm:p-5 rounded-2xl sm:rounded-3xl border text-center transition-all duration-500 overflow-hidden flex flex-col items-center min-w-0 ${
               badge.unlocked 
                 ? (isDarkMode ? 'bg-[#0f141a] border-emerald-500/30' : 'bg-emerald-50/50 border-emerald-200')
                 : (isDarkMode ? 'bg-black/20 border-white/5 grayscale opacity-60' : 'bg-black/5 border-black/5 grayscale opacity-60')
@@ -2887,35 +2925,26 @@ const GamificationSection = ({
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 pointer-events-none" />
             )}
             
-            <div className={`text-6xl mb-6 relative z-10 transition-transform duration-500 ${badge.unlocked ? 'scale-110 drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]' : ''}`}>
+            <div className={`text-4xl sm:text-5xl mb-3 sm:mb-4 relative z-10 transition-transform duration-500 ${badge.unlocked ? 'scale-110 drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]' : ''}`}>
               {badge.unlocked ? badge.icon : '🔒'}
             </div>
             
-            <h3 className={`text-xl font-bold mb-2 font-serif tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+            <h3 className={`text-lg sm:text-xl font-bold mb-1 sm:mb-2 font-serif tracking-tight truncate w-full ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
               {badge.title}
             </h3>
             
-            <p className={`text-sm ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+            <p className={`text-[10px] sm:text-xs leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
               {badge.desc}
             </p>
             
             {badge.unlocked && (
-              <div className="mt-6 inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest">
-                <Unlock size={12} />
+              <div className="mt-4 sm:mt-5 inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-widest whitespace-nowrap">
+                <Unlock size={10} className="sm:w-3 sm:h-3" />
                 Desbloqueado
               </div>
             )}
           </motion.div>
         ))}
-        
-        <div className="flex items-center justify-center">
-          <Flashcard 
-            question="Diferença de RAM e HD?" 
-            answer="A RAM é a sua 'Mesa de Trabalho' (muito rápida, mas pequena e apaga quando desliga). O HD/SSD é o seu 'Arquivo de Aço' (guarda tudo para sempre, mas demora mais para pegar). O processador precisa trazer os dados do Arquivo para a Mesa antes de poder trabalhar neles!" 
-            isDarkMode={isDarkMode} 
-            className="!m-0"
-          />
-        </div>
       </div>
     </div>
   );
@@ -3433,15 +3462,40 @@ export default function App() {
     return saved ? saved === 'true' : false;
   });
 
-  const [achievements, setAchievements] = useState<{ explorer: boolean; nightOwl: boolean; sysadmin: boolean }>(() => {
+  const [achievements, setAchievements] = useState<{ explorer: boolean; nightOwl: boolean; sysadmin: boolean; inquisitive: boolean }>(() => {
     try {
       const saved = localStorage.getItem('ll_achievements');
       if (saved) return JSON.parse(saved);
     } catch (e) {}
-    return { explorer: false, nightOwl: false, sysadmin: false };
+    return { explorer: false, nightOwl: false, sysadmin: false, inquisitive: false };
   });
 
   const [showToast, setShowToast] = useState<{ id: string; title: string; icon: string } | null>(null);
+
+  const [flippedCards, setFlippedCards] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('ll_flipped_cards');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return [];
+  });
+
+  const handleFlashcardFlip = (id: string) => {
+    setFlippedCards(prev => {
+      if (!prev.includes(id)) {
+        const next = [...prev, id];
+        localStorage.setItem('ll_flipped_cards', JSON.stringify(next));
+        return next;
+      }
+      return prev;
+    });
+  };
+
+  useEffect(() => {
+    if (flippedCards.length >= 5) {
+      unlockAchievement('inquisitive');
+    }
+  }, [flippedCards]);
 
   const unlockAchievement = (id: keyof typeof achievements) => {
     setAchievements(prev => {
@@ -3449,7 +3503,8 @@ export default function App() {
         const badgeData = {
           explorer: { id: 'explorer', title: 'Explorador', icon: '🕵️‍♂️' },
           nightOwl: { id: 'nightOwl', title: 'Notívago', icon: '🌙' },
-          sysadmin: { id: 'sysadmin', title: 'SysAdmin', icon: '💻' }
+          sysadmin: { id: 'sysadmin', title: 'SysAdmin', icon: '💻' },
+          inquisitive: { id: 'inquisitive', title: 'Mente Inquisitiva', icon: '💡' }
         }[id];
         setShowToast(badgeData);
         setTimeout(() => setShowToast(null), 4000);
@@ -3511,9 +3566,10 @@ export default function App() {
 
 
   return (
-    <div className={`flex flex-col md:flex-row h-screen w-full font-sans overflow-hidden transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-600 relative ${
-      isDarkMode ? 'bg-[#080c0f] text-slate-100' : 'bg-[#fafcfc] text-[#1a1a1a]'
-    }`}>
+    <FlashcardContext.Provider value={{ onFlip: handleFlashcardFlip }}>
+      <div className={`flex flex-col md:flex-row h-screen w-full font-sans overflow-hidden transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-600 relative ${
+        isDarkMode ? 'bg-[#080c0f] text-slate-100' : 'bg-[#fafcfc] text-[#1a1a1a]'
+      }`}>
       {/* Background Decorators */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden mix-blend-screen transition-opacity duration-1000">
         <NetworkBackground isDarkMode={isDarkMode} />
@@ -3890,5 +3946,6 @@ export default function App() {
         )}
       </AnimatePresence>
     </div>
+    </FlashcardContext.Provider>
   );
 }
