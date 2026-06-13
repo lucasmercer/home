@@ -3424,8 +3424,7 @@ const ProjectsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
       role: "Criador & Mantenedor",
       desc: "Automações em Shell Script para provisionamento e auditoria ágil em sistemas Linux, com foco em segurança (Hardening) e infraestrutura como código.",
       tags: ["Linux", "Bash", "Security", "Open Source"],
-      image: "https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=1000&auto=format&fit=crop",
-      link: "https://civico.sh/"
+      image: "https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=1000&auto=format&fit=crop"
     },
     {
       title: "Robótica Educacional",
