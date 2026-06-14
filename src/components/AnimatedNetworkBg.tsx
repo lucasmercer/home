@@ -35,8 +35,10 @@ export const NetworkBackground: React.FC<NetworkBackgroundProps> = ({ isDarkMode
 
     const initPoints = () => {
       points = [];
-      // Adjust density based on screen size (less points on mobile)
-      const numberOfPoints = Math.floor((canvas.width * canvas.height) / 12000);
+      // Adjust density based on screen size but cap it to avoid O(n^2) performance issues in Safari
+      const isMobile = window.innerWidth < 768;
+      const calculatedPoints = Math.floor((canvas.width * canvas.height) / (isMobile ? 30000 : 15000));
+      const numberOfPoints = Math.min(isMobile ? 30 : 80, calculatedPoints); // Fixed maximum to prevent lag
       for (let i = 0; i < numberOfPoints; i++) {
         points.push({
           x: Math.random() * canvas.width,
@@ -144,7 +146,8 @@ export const NetworkBackground: React.FC<NetworkBackgroundProps> = ({ isDarkMode
   }, [isDarkMode]);
 
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none" style={{ maskImage: 'radial-gradient(ellipse at top right, black 0%, transparent 80%)', WebkitMaskImage: 'radial-gradient(ellipse at top right, black 0%, transparent 80%)' }}>
+    <div className="absolute inset-0 z-0 pointer-events-none">
+      <div className={`absolute inset-0 bg-gradient-to-bl from-transparent ${isDarkMode ? 'to-[#0e1520]' : 'to-white'} z-10`} />
       <canvas
         ref={canvasRef}
         className={`w-full h-full transition-opacity duration-1000 ${isDarkMode ? 'opacity-80' : 'opacity-60'}`}
