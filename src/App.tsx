@@ -3379,9 +3379,6 @@ const GamificationSection = ({
                 </div>
                 <p className="text-slate-500 text-[10px] mb-1"># Execute isto no simulador Lucas Leniar Shell (LL-SH):</p>
                 <code className="text-amber-300 font-bold select-all bg-black px-1.5 py-0.5 rounded">sudo init-matrix-pedagogico</code>
-                <p className="text-[10px] text-slate-500 mt-2">
-                  Dica: Vá até a seção de <strong className="text-emerald-400">Projetos</strong>, insira a senha <strong className="text-amber-300">lucas123</strong> e execute o comando acima no terminal ao lado!
-                </p>
               </div>
 
               <div className="mt-6 text-[10px] uppercase font-mono tracking-widest text-emerald-500 font-bold">
