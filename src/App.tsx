@@ -57,7 +57,7 @@ import {
 import { NetworkBackground } from './components/AnimatedNetworkBg';
 import { BugBreakoutGame } from './components/BugBreakoutGame';
 
-type SectionId = 'home' | 'computational' | 'robotics' | 'gamification' | 'tech' | 'life' | 'utfpr' | 'horarios' | 'scripts' | 'projects' | 'skills';
+type SectionId = 'home' | 'computational' | 'robotics' | 'gamification' | 'tech' | 'life' | 'utfpr' | 'scripts' | 'projects' | 'skills';
 
 interface Section {
   id: SectionId;
@@ -74,7 +74,7 @@ const SECTIONS: Section[] = [
   { id: 'robotics', label: 'Robótica Educacional', icon: <Bot size={20} /> },
   { id: 'tech', label: 'TI & Técnico', icon: <Terminal size={20} /> },
   { id: 'utfpr', label: 'UTFPR', icon: <GraduationCap size={20} /> },
-  { id: 'horarios', label: 'Gestão Escolar', icon: <Calendar size={20} /> },
+
   { id: 'scripts', label: 'Arquivos SH', icon: <FileCode size={20} /> },
 ];
 
@@ -403,17 +403,6 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
             <span className="font-bold text-[10px] md:text-[11px] uppercase tracking-wider text-center">UTFPR</span>
           </motion.button>
 
-          {/* Gestão Escolar */}
-          <motion.button
-            whileHover={{ y: -2 }}
-            onClick={() => onNavigate('horarios')}
-             className={`flex-1 min-w-[80px] flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border transition-all duration-300 shadow-sm
-              ${isDarkMode ? 'bg-[#1a212b] border-white/10 hover:border-[#657c36]/50 hover:bg-[#657c36]/20 text-slate-300' : 'bg-white border-slate-200 hover:border-[#657c36] hover:bg-[#657c36]/10 text-slate-700'}
-            `}
-          >
-            <Network size={20} className={isDarkMode ? 'text-[#a3c757] mb-2' : 'text-[#657c36] mb-2'} />
-            <span className="font-bold text-[10px] md:text-[11px] uppercase tracking-wider text-center">Gestão Escolar</span>
-          </motion.button>
 
           {/* Scripts SH */}
           <motion.button
@@ -4237,7 +4226,6 @@ const sectionIdToPlainId = (section: SectionId): string => {
     case 'gamification': return 'gamificacao';
     case 'tech': return 'ti';
     case 'utfpr': return 'utfpr';
-    case 'horarios': return 'horarios';
     case 'scripts': return 'scripts';
     default: return 'inicio';
   }
@@ -4248,7 +4236,7 @@ export default function App() {
   const [maximizedSection, setMaximizedSection] = useState<SectionId | null>(null);
   const [hoveredSection, setHoveredSection] = useState<SectionId | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isIFrameSection = ['utfpr', 'horarios'].includes(activeSection);
+  const isIFrameSection = ['utfpr'].includes(activeSection);
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   const [achievements, setAchievements] = useState<{ easterEgg: boolean; nightOwl: boolean; sysadmin: boolean; inquisitive: boolean; computational: boolean; robotics: boolean }>(() => {
@@ -4756,9 +4744,7 @@ export default function App() {
               <section id="utfpr" className="h-[100dvh] md:h-screen flex flex-col p-4 md:p-12 border-b border-black/5 dark:border-white/5">
                 <IFrameSection isActiveSection={activeSection === 'utfpr'} url="https://utfpr.lucasleniar.com.br/" title="UTFPR" isMaximized={false} onToggleMaximize={() => setMaximizedSection('utfpr')} isDarkMode={isDarkMode} />
               </section>
-              <section id="horarios" className="h-[100dvh] md:h-screen flex flex-col p-4 md:p-12 border-b border-black/5 dark:border-white/5">
-                <IFrameSection isActiveSection={activeSection === 'horarios'} url="https://horarios.lucasleniar.com.br/" title="Gestão Escolar" isMaximized={false} onToggleMaximize={() => setMaximizedSection('horarios')} isDarkMode={isDarkMode} />
-              </section>
+
               <section id="scripts" className="min-h-screen flex flex-col p-4 md:p-12">
                 <ShellFilesSection isMaximized={false} onToggleMaximize={() => setMaximizedSection('scripts')} isDarkMode={isDarkMode} />
               </section>
@@ -4817,9 +4803,7 @@ export default function App() {
             {maximizedSection === 'utfpr' && (
               <IFrameSection url="https://utfpr.lucasleniar.com.br/" title="UTFPR" isMaximized={true} onToggleMaximize={() => setMaximizedSection(null)} isDarkMode={isDarkMode} />
             )}
-            {maximizedSection === 'horarios' && (
-              <IFrameSection url="https://horarios.lucasleniar.com.br/" title="Gestão Escolar" isMaximized={true} onToggleMaximize={() => setMaximizedSection(null)} isDarkMode={isDarkMode} />
-            )}
+
             {maximizedSection === 'scripts' && (
               <ShellFilesSection isMaximized={true} onToggleMaximize={() => setMaximizedSection(null)} isDarkMode={isDarkMode} />
             )}
