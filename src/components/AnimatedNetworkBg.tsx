@@ -147,7 +147,7 @@ export const NetworkBackground: React.FC<NetworkBackgroundProps> = ({ isDarkMode
 
   return (
     <div className="absolute inset-0 z-0 pointer-events-none">
-      <div className={`absolute inset-0 bg-gradient-to-bl from-transparent ${isDarkMode ? 'to-[#0e1520]' : 'to-white'} z-10`} />
+      <div className={`absolute inset-0 bg-gradient-to-bl from-transparent ${isDarkMode ? 'to-[#111827]' : 'to-[#f4f7f6]'} z-10`} />
       <canvas
         ref={canvasRef}
         className={`w-full h-full transition-opacity duration-1000 ${isDarkMode ? 'opacity-80' : 'opacity-60'}`}
