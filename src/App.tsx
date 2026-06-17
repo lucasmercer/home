@@ -52,12 +52,15 @@ import {
   Briefcase,
   Sparkles,
   Trophy,
-  Lock
+  Lock,
+  Wifi,
+  RadioReceiver
 } from 'lucide-react';
 import { NetworkBackground } from './components/AnimatedNetworkBg';
 import { BugBreakoutGame } from './components/BugBreakoutGame';
+import { IoTSection } from './components/IoTSection';
 
-type SectionId = 'home' | 'computational' | 'robotics' | 'gamification' | 'tech' | 'life' | 'utfpr' | 'scripts' | 'projects' | 'skills';
+type SectionId = 'home' | 'life' | 'methodology' | 'projects' | 'iot' | 'students' | 'utfpr' | 'scripts';
 
 interface Section {
   id: SectionId;
@@ -67,15 +70,13 @@ interface Section {
 
 const SECTIONS: Section[] = [
   { id: 'home', label: 'Início', icon: <Home size={20} /> },
-  { id: 'life', label: 'Sobre Lucas', icon: <User size={20} /> },
-  { id: 'projects', label: 'Projetos', icon: <Briefcase size={20} /> },
-  { id: 'gamification', label: 'Conquistas', icon: <Medal size={20} /> },
-  { id: 'computational', label: 'Pensamento Computacional', icon: <Brain size={20} /> },
-  { id: 'robotics', label: 'Robótica Educacional', icon: <Bot size={20} /> },
-  { id: 'tech', label: 'TI & Técnico', icon: <Terminal size={20} /> },
+  { id: 'life', label: 'Sobre', icon: <User size={20} /> },
+  { id: 'methodology', label: 'Como eu ensino', icon: <Brain size={20} /> },
+  { id: 'projects', label: 'Projetos Web', icon: <Briefcase size={20} /> },
+  { id: 'iot', label: 'Projetos de IoT', icon: <Wifi size={20} /> },
+  { id: 'students', label: 'Projetos com Alunos', icon: <GraduationCap size={20} /> },
   { id: 'utfpr', label: 'UTFPR', icon: <GraduationCap size={20} /> },
-
-  { id: 'scripts', label: 'Arquivos SH', icon: <FileCode size={20} /> },
+  { id: 'scripts', label: 'Arquivos SH', icon: <FileCode size={20} /> }
 ];
 
 const ProfileImage = ({ isDarkMode, onClick }: { isDarkMode?: boolean; onClick?: () => void }) => {
@@ -121,16 +122,16 @@ const ProfileImage = ({ isDarkMode, onClick }: { isDarkMode?: boolean; onClick?:
 
   return (
     <div className="relative group w-full max-w-xs md:max-w-none flex justify-center" style={{ perspective: '1000px' }}>
-      <div className="absolute inset-4 bg-emerald-500 rounded-full blur-[60px] md:blur-[80px] opacity-20 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none" />
+      <div className="hidden md:block absolute inset-4 bg-blue-500 rounded-full blur-[60px] md:blur-[80px] opacity-20 group-hover:opacity-40 transition-opacity duration-700 pointer-events-none" />
       <motion.div
         ref={cardRef}
         onClick={onClick}
         animate={{ rotateX, rotateY }}
         transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.5 }}
         style={{ transformStyle: 'preserve-3d' }}
-        className={`relative w-full max-w-[320px] md:max-w-none md:w-[400px] rounded-3xl ${isDarkMode !== false ? 'bg-[#0f141a]/40 border border-white/5' : 'bg-white/40 border border-black/5'} overflow-hidden shadow-2xl flex flex-col justify-end cursor-pointer backdrop-blur-sm`}
+        className={`relative w-full max-w-[320px] md:max-w-none md:w-[400px] rounded-3xl ${isDarkMode !== false ? 'bg-slate-900/40 border border-white/5' : 'bg-white/40 border border-black/5'} overflow-hidden shadow-2xl flex flex-col justify-end cursor-pointer md:backdrop-blur-sm`}
       >
-        <div className={`absolute inset-0 bg-gradient-to-tr ${isDarkMode ? 'from-emerald-500/10 to-transparent' : 'from-emerald-500/5 to-transparent'} z-0`} />
+        <div className={`absolute inset-0 bg-gradient-to-tr ${isDarkMode ? 'from-blue-500/10 to-transparent' : 'from-blue-500/5 to-transparent'} z-0`} />
         
         <img
           src="https://lucasleniar.com.br/home.gif"
@@ -142,7 +143,7 @@ const ProfileImage = ({ isDarkMode, onClick }: { isDarkMode?: boolean; onClick?:
         <div className="absolute inset-x-0 bottom-0 p-8 h-32 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10 flex items-end" style={{ transform: 'translateZ(50px)' }}>
           <p className="text-[11px] font-bold text-white uppercase tracking-[0.2em] font-mono leading-tight">
             Professor<br/>
-            <span className="text-emerald-400">Lucas Leniar</span>
+            <span className="text-blue-400">Lucas Leniar</span>
           </p>
         </div>
       </motion.div>
@@ -164,39 +165,9 @@ const Flashcard = ({ id, question, answer, isDarkMode, className = "mx-auto my-8
     }
   };
 
-  return (
-    <div className={`w-44 h-44 sm:w-48 sm:h-48 md:w-56 md:h-56 [perspective:1000px] hover:-translate-y-1 transition-transform z-20 shrink-0 ${className}`} onClick={handleFlip}>
-      <motion.div
-        className="relative w-full h-full cursor-pointer [transform-style:preserve-3d]"
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20 }}
-      >
-        {/* Front */}
-        <div className={`absolute inset-0 [backface-visibility:hidden] p-3 sm:p-4 flex flex-col items-center justify-center shadow-[2px_4px_12px_rgba(0,0,0,0.15)] rounded-[0.25rem] rotate-[-1deg] ${isDarkMode ? 'bg-yellow-600/30 border border-yellow-500/30 text-yellow-200' : 'bg-[#fff7d1] border border-yellow-300 text-slate-800'}`}>
-          <div className="absolute top-2 left-2 text-[8px] sm:text-[9px] font-mono tracking-widest uppercase opacity-70 flex items-center gap-1 font-bold">
-             📌 Pílula
-          </div>
-          <p className="text-center font-bold font-serif text-xs sm:text-sm leading-tight mt-2 overflow-y-auto w-full h-full flex items-center justify-center">
-            {question}
-          </p>
-          <div className="absolute bottom-2 text-[8px] font-mono opacity-60 uppercase tracking-widest">
-            Clique para virar ↺
-          </div>
-        </div>
-
-        {/* Back */}
-        <div 
-          className={`absolute inset-0 [backface-visibility:hidden] p-3 sm:p-4 flex flex-col items-center justify-center overflow-y-auto shadow-[2px_4px_12px_rgba(0,0,0,0.15)] rounded-[0.25rem] rotate-[1deg] ${isDarkMode ? 'bg-emerald-900/60 border border-emerald-500/30 text-emerald-100' : 'bg-emerald-100 border border-emerald-300 text-emerald-900'}`}
-          style={{ transform: "rotateY(180deg)" }}
-        >
-           <p className="text-center font-medium text-[9px] sm:text-[10px] leading-snug text-balance m-auto w-full">
-            {answer}
-          </p>
-        </div>
-      </motion.div>
-    </div>
-  );
+  return null;
 };
+
 
 const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame }: { onNavigate: (id: SectionId) => void; isDarkMode: boolean; onUnlockEasterEgg?: () => void; onOpenBugGame?: () => void }) => {
   const [typed1, setTyped1] = useState("");
@@ -234,28 +205,28 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
 
   const expertises = [
     { 
-      icon: <Code2 size={20} />, 
-      label: "Desenvolvimento", 
-      color: "emerald",
-      desc: "Experiência em automação com scripts Bash e desenvolvimento web com React e Node.js, com foco em organização, escalabilidade e aplicações práticas." 
+      icon: <Brain size={20} />, 
+      label: "Pensamento Computacional", 
+      color: "blue",
+      desc: "Transformando o ensino de tecnologia com metodologias que desenvolvem a lógica e a capacidade analítica dos alunos." 
     },
     { 
-      icon: <Cpu size={20} />, 
-      label: "Hardware", 
-      color: "blue",
-      desc: "Atuação em manutenção e diagnóstico de hardware, com desenvolvimento de projetos em Arduino e ESP32, focados na integração entre dispositivos físicos e aplicações de software." 
+      icon: <Wifi size={20} />, 
+      label: "Internet das Coisas", 
+      color: "emerald",
+      desc: "Projetos reais com automação (Arduino, ESP32) levando dispositivos inteligentes diretamente para a sala de aula." 
     },
     { 
       icon: <GraduationCap size={20} />, 
-      label: "Educação", 
+      label: "Metodologia Prática", 
       color: "purple",
-      desc: "Foco no desenvolvimento do pensamento computacional e no ensino de robótica educacional, promovendo aprendizagem ativa, lógica e resolução de problemas." 
+      desc: "Aprendizado baseado em projetos, conectando os desafios do mundo do hardware e software com o cotidiano do estudante." 
     },
     { 
-      icon: <Laptop size={20} />, 
-      label: "Sistemas", 
+      icon: <Code2 size={20} />, 
+      label: "Sistemas & Desenvolvimento", 
       color: "orange",
-      desc: "Atuação em redes e servidores Linux em contextos educacionais e práticos, com foco em estabilidade e organização, aliada ao desenvolvimento de scripts Bash (.sh) e sistemas para automação de tarefas e gerenciamento de serviços." 
+      desc: "Ferramentas escaláveis, scripts de automação e aplicações web construídas com clareza, desempenho e propósito educacional." 
     },
   ];
 
@@ -270,24 +241,24 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
       >
         <div className="flex items-center gap-3 mb-4">
           <span className={`inline-block px-3 py-1.5 rounded-full text-[10px] font-mono font-bold tracking-widest uppercase border ${
-            isDarkMode ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+            isDarkMode ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-blue-500/10 text-blue-600 border-blue-500/20'
           }`}>
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
-            {getGreeting()}, Mundo.
+            <span className="inline-block w-2 h-2 rounded-full bg-blue-500 mr-2 animate-pulse"></span>
+            {getGreeting()}, Aluno.
           </span>
           <span className={`hidden sm:inline-block px-3 py-1.5 rounded-full text-[10px] font-mono tracking-widest uppercase border border-slate-500/20 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
-            ROOT_USER_ACTIVE
+            PROFESSOR_ESPECIALISTA
           </span>
         </div>
         
         <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter leading-[1.1] mb-4 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
           {typed1 || "\u00A0"}
           {typed1 === text1 && <br />}
-          <span className={`whitespace-nowrap ${isDarkMode ? 'text-emerald-400 font-serif italic' : 'text-emerald-600 font-serif italic'}`}>
+          <span className={`whitespace-nowrap ${isDarkMode ? 'text-blue-400 font-serif italic' : 'text-blue-600 font-serif italic'}`}>
             {typed2}
           </span>
           {typed2 === text2 && '.'}
-          <span className="font-mono text-emerald-500 animate-[pulse_1s_infinite] ml-1 opacity-80 font-light">|</span>
+          <span className="font-mono text-blue-500 animate-[pulse_1s_infinite] ml-1 opacity-80 font-light">|</span>
         </h1>
 
         {/* Mobile Profile Image */}
@@ -305,26 +276,26 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
           />
         </div>
 
-        <div className={`text-base md:text-lg max-w-2xl leading-relaxed mb-4 border-l-2 pl-4 md:pl-6 ${isDarkMode ? 'border-emerald-500/30 text-white/70' : 'border-emerald-500/30 text-slate-600'}`}>
+        <div className={`text-base md:text-lg max-w-2xl leading-relaxed mb-4 border-l-2 pl-4 md:pl-6 ${isDarkMode ? 'border-blue-500/30 text-white/70' : 'border-blue-500/30 text-slate-600'}`}>
           <p className="mb-3">
-            Explorando as fronteiras entre a educação técnica e a engenharia de infraestrutura.
+            Professor de Computação que transforma tecnologia complexa em <strong className={isDarkMode ? 'text-blue-400 font-semibold' : 'text-blue-600 font-semibold'}>aprendizado real.</strong>
           </p>
           <p>
-            Especialista em <strong className={isDarkMode ? 'text-emerald-400 font-semibold' : 'text-emerald-600 font-semibold'}>pensamento computacional</strong> e <strong className={isDarkMode ? 'text-emerald-400 font-semibold' : 'text-emerald-600 font-semibold'}>tecnologia da informação</strong>, construindo sistemas confiáveis e formando mentes críticas.
+            Guiando alunos do código às automações de <strong className={isDarkMode ? 'text-blue-400 font-semibold' : 'text-blue-600 font-semibold'}>IoT</strong>, mostrando a prática por trás da inovação.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2 mb-4">
           {expertises.map((item, i) => {
             const hoverBorderColor = {
-              emerald: 'hover:border-emerald-500/30',
+              emerald: 'hover:border-blue-500/30',
               blue: 'hover:border-blue-500/30',
               purple: 'hover:border-purple-500/30',
               orange: 'hover:border-orange-500/30',
             }[item.color as 'emerald' | 'blue' | 'purple' | 'orange'];
 
             const IconColor = {
-              emerald: isDarkMode ? 'text-emerald-400' : 'text-emerald-600',
+              emerald: isDarkMode ? 'text-blue-400' : 'text-blue-600',
               blue: isDarkMode ? 'text-blue-400' : 'text-blue-600',
               purple: isDarkMode ? 'text-purple-400' : 'text-purple-600',
               orange: isDarkMode ? 'text-orange-400' : 'text-orange-600',
@@ -372,7 +343,7 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
             whileHover={{ y: -2 }}
             onClick={() => onNavigate('computational')}
             className={`flex-1 min-w-[120px] flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border transition-all duration-300 shadow-sm
-              ${isDarkMode ? 'bg-emerald-500/10 border-emerald-500/30 hover:border-emerald-400 hover:bg-emerald-500/20 text-emerald-300' : 'bg-emerald-50 border-emerald-200 hover:border-emerald-500 hover:bg-emerald-100 text-emerald-800'}
+              ${isDarkMode ? 'bg-blue-500/10 border-blue-500/30 hover:border-blue-400 hover:bg-blue-500/20 text-blue-300' : 'bg-blue-50 border-blue-200 hover:border-blue-500 hover:bg-blue-100 text-blue-800'}
             `}
           >
             <Brain size={20} className="mb-2" />
@@ -384,7 +355,7 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
             whileHover={{ y: -2 }}
             onClick={() => onNavigate('tech')}
             className={`flex-1 min-w-[120px] flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border transition-all duration-300 shadow-sm
-              ${isDarkMode ? 'bg-[#1a212b] border-white/10 hover:border-blue-500/50 hover:bg-blue-500/10 text-slate-300' : 'bg-white border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700'}
+              ${isDarkMode ? 'bg-slate-800 border-white/10 hover:border-blue-500/50 hover:bg-blue-500/10 text-slate-300' : 'bg-white border-slate-200 hover:border-blue-500 hover:bg-blue-50 text-slate-700'}
             `}
           >
             <Terminal size={20} className={isDarkMode ? 'text-blue-400 mb-2' : 'text-blue-600 mb-2'} />
@@ -396,7 +367,7 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
             whileHover={{ y: -2 }}
             onClick={() => onNavigate('utfpr')}
              className={`flex-1 min-w-[80px] flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border transition-all duration-300 shadow-sm
-              ${isDarkMode ? 'bg-[#1a212b] border-white/10 hover:border-yellow-500/50 hover:bg-yellow-500/10 text-slate-300' : 'bg-white border-slate-200 hover:border-yellow-500 hover:bg-yellow-50 text-slate-700'}
+              ${isDarkMode ? 'bg-slate-800 border-white/10 hover:border-yellow-500/50 hover:bg-yellow-500/10 text-slate-300' : 'bg-white border-slate-200 hover:border-yellow-500 hover:bg-yellow-50 text-slate-700'}
             `}
           >
             <GraduationCap size={20} className={isDarkMode ? 'text-yellow-400 mb-2' : 'text-yellow-600 mb-2'} />
@@ -409,7 +380,7 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
             whileHover={{ y: -2 }}
             onClick={() => onNavigate('scripts')}
              className={`flex-1 min-w-[80px] flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border transition-all duration-300 shadow-sm
-              ${isDarkMode ? 'bg-[#1a212b] border-white/10 hover:border-orange-500/50 hover:bg-orange-500/10 text-slate-300' : 'bg-white border-slate-200 hover:border-orange-500 hover:bg-orange-50 text-slate-700'}
+              ${isDarkMode ? 'bg-slate-800 border-white/10 hover:border-orange-500/50 hover:bg-orange-500/10 text-slate-300' : 'bg-white border-slate-200 hover:border-orange-500 hover:bg-orange-50 text-slate-700'}
             `}
           >
             <FileCode size={20} className={isDarkMode ? 'text-orange-400 mb-2' : 'text-orange-600 mb-2'} />
@@ -442,7 +413,7 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
     <div className="w-full mt-12 flex justify-center items-center">
       <button
         onClick={onOpenBugGame}
-        className={`text-xs md:text-sm font-mono tracking-widest uppercase transition-colors px-6 py-2 rounded-full border ${isDarkMode ? 'text-white/40 border-white/10 hover:text-white/80 hover:border-emerald-500/50 hover:bg-emerald-500/10' : 'text-black/40 border-black/10 hover:text-black/80 hover:border-emerald-500/50 hover:bg-emerald-500/10'}`}
+        className={`text-xs md:text-sm font-mono tracking-widest uppercase transition-colors px-6 py-2 rounded-full border ${isDarkMode ? 'text-white/40 border-white/10 hover:text-white/80 hover:border-blue-500/50 hover:bg-blue-500/10' : 'text-black/40 border-black/10 hover:text-black/80 hover:border-blue-500/50 hover:bg-blue-500/10'}`}
       >
         Encontrou um Bug?
       </button>
@@ -453,7 +424,7 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
 
 const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMode: boolean, onUnlockComputational?: () => void }) => {
   const pillars = [
-    { title: "Decomposição", desc: "Quebrar problemas complexos em partes menores.", icon: <Layers className="text-emerald-500" size={32} /> },
+    { title: "Decomposição", desc: "Quebrar problemas complexos em partes menores.", icon: <Layers className="text-blue-500" size={32} /> },
     { title: "Reconhecimento", desc: "Identificar semelhanças e tendências entre problemas.", icon: <Search className="text-blue-500" size={32} /> },
     { title: "Abstração", desc: "Focar no que é importante, ignorando detalhes.", icon: <Ghost className="text-purple-500" size={32} /> },
     { title: "Algoritmos", desc: "Desenvolver instruções passo a passo.", icon: <GitBranch className="text-orange-500" size={32} /> }
@@ -616,8 +587,8 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
     <div className="flex flex-col pt-4 md:pt-12 uppercase tracking-tighter overflow-visible w-full">
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-6xl w-full mx-auto px-2 mb-8 md:mb-12 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
         <div>
-          <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Pensamento Computacional</h2>
-          <p className={`max-w-2xl uppercase text-[10px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-emerald-400' : 'text-black/30'}`}>Os 4 pilares para resolver qualquer problema tecnológico e educacional.</p>
+          <h2 className={`text-3xl md:text-5xl font-black mb-3 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Metodologia & Pensamento Computacional</h2>
+          <p className={`max-w-2xl uppercase text-[10px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-blue-400' : 'text-black/30'}`}>Os 4 pilares para resolver qualquer problema tecnológico e educacional.</p>
         </div>
 
         <Flashcard 
@@ -642,17 +613,17 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                 transition={{ delay: i * 0.1, duration: 0.5 }}
                 className={`p-6 rounded-2xl border transition-all group relative overflow-hidden ${
                   isDarkMode 
-                  ? 'bg-black/30 border-white/5 hover:bg-[#12181d] hover:border-emerald-500/20 hover:shadow-2xl hover:shadow-emerald-500/5' 
-                  : 'bg-black/[0.01] border-black/[0.05] hover:bg-white hover:shadow-xl hover:shadow-emerald-500/5'
+                  ? 'bg-black/30 border-white/5 hover:bg-[#12181d] hover:border-blue-500/20 hover:shadow-2xl hover:shadow-blue-500/5' 
+                  : 'bg-black/[0.01] border-black/[0.05] hover:bg-white hover:shadow-xl hover:shadow-blue-500/5'
                 }`}
               >
                 <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10">{pillar.icon}</div>
                 <div className="relative z-10">
                   <div className="mb-4">{pillar.icon}</div>
-                  <h3 className={`text-xl font-bold mb-2 tracking-tight group-hover:text-emerald-500 transition-colors ${isDarkMode ? 'text-white/90' : 'text-black/80'}`}>{pillar.title}</h3>
+                  <h3 className={`text-xl font-bold mb-2 tracking-tight group-hover:text-blue-500 transition-colors ${isDarkMode ? 'text-white/90' : 'text-black/80'}`}>{pillar.title}</h3>
                   <p className={`leading-relaxed text-sm font-sans normal-case tracking-normal ${isDarkMode ? 'text-white/40' : 'text-black/40'}`}>{pillar.desc}</p>
                 </div>
-                <div className="absolute bottom-0 left-0 h-1 w-0 bg-emerald-500 group-hover:w-full transition-all duration-500" />
+                <div className="absolute bottom-0 left-0 h-1 w-0 bg-blue-500 group-hover:w-full transition-all duration-500" />
               </motion.div>
             ))}
           </div>
@@ -665,7 +636,7 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
             className="w-full lg:w-72 shrink-0 lg:sticky lg:top-8"
           >
             <div className="relative group">
-              <div className="absolute inset-4 bg-emerald-500 rounded-full blur-[80px] opacity-15 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none animate-pulse" />
+              <div className="hidden md:block absolute inset-4 bg-blue-500 rounded-full blur-[80px] opacity-15 group-hover:opacity-30 transition-opacity duration-700 pointer-events-none animate-pulse" />
               <motion.div 
                 animate={{ y: [0, -6, 0] }} 
                 transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}
@@ -693,19 +664,19 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
           transition={{ duration: 0.7 }}
           className={`rounded-3xl border p-6 md:p-10 shadow-2xl relative overflow-hidden w-full ${
             isDarkMode 
-            ? 'bg-[#0f141a] border-white/5 shadow-black/40' 
+            ? 'bg-slate-900 border-white/5 shadow-black/40' 
             : 'bg-white border-slate-200'
           }`}
         >
-          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-bl-[120px] pointer-events-none" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-bl-[120px] pointer-events-none" />
           
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
             <div className="flex items-center gap-3">
-              <div className={`p-2.5 rounded-xl text-emerald-600 ${isDarkMode ? 'bg-emerald-500/15' : 'bg-emerald-500/10'}`}>
+              <div className={`p-2.5 rounded-xl text-blue-600 ${isDarkMode ? 'bg-blue-500/15' : 'bg-blue-500/10'}`}>
                 <Terminal size={24} />
               </div>
               <div>
-                <span className={`text-[10px] uppercase tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-emerald-400' : 'text-emerald-700'}`}>Laboratório de Lógica</span>
+                <span className={`text-[10px] uppercase tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>Laboratório de Lógica</span>
                 <h3 className={`text-xl md:text-2xl font-bold tracking-tight font-serif italic ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Desafio de Algoritmos</h3>
               </div>
             </div>
@@ -728,7 +699,7 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setGameState('playing')}
-                  className="flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 text-white font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all cursor-pointer"
+                  className="flex items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-blue-500 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all cursor-pointer"
                 >
                   Iniciar Laboratório Prático <Play size={14} />
                 </motion.button>
@@ -746,12 +717,12 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                 {/* Compiler / Blocks panel */}
                 <div className="lg:col-span-5 flex flex-col gap-4">
                   <div className={`p-5 rounded-2xl border ${isDarkMode ? 'bg-[#151c24] border-white/5' : 'bg-slate-50 border-slate-200'}`}>
-                    <span className={`text-[10px] font-mono font-bold tracking-[0.2em] uppercase block mb-3 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-700'}`}>COMANDOS DISPONÍVEIS</span>
+                    <span className={`text-[10px] font-mono font-bold tracking-[0.2em] uppercase block mb-3 ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>COMANDOS DISPONÍVEIS</span>
                     <div className="grid grid-cols-2 gap-2">
                        <button 
                         onClick={() => addCommand('FORWARD')} 
                         disabled={gameState === 'executing'}
-                        className={`py-3 rounded-lg font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider border transition-all shadow-sm ${isDarkMode ? 'bg-[#1c242e] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-white disabled:opacity-50' : 'bg-white border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 disabled:opacity-50'}`}
+                        className={`py-3 rounded-lg font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider border transition-all shadow-sm ${isDarkMode ? 'bg-[#1c242e] border-white/10 hover:border-blue-500/50 hover:bg-blue-500/10 text-white disabled:opacity-50' : 'bg-white border-slate-300 hover:border-blue-500 hover:bg-blue-50 text-slate-700 disabled:opacity-50'}`}
                        >
                          ↑ AVANÇAR
                        </button>
@@ -759,14 +730,14 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                         <button 
                           onClick={() => addCommand('LEFT')} 
                           disabled={gameState === 'executing'}
-                          className={`py-3 rounded-lg font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider border transition-all shadow-sm ${isDarkMode ? 'bg-[#1c242e] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-white disabled:opacity-50' : 'bg-white border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 disabled:opacity-50'}`}
+                          className={`py-3 rounded-lg font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider border transition-all shadow-sm ${isDarkMode ? 'bg-[#1c242e] border-white/10 hover:border-blue-500/50 hover:bg-blue-500/10 text-white disabled:opacity-50' : 'bg-white border-slate-300 hover:border-blue-500 hover:bg-blue-50 text-slate-700 disabled:opacity-50'}`}
                         >
                           ↰ ESQUERDA
                         </button>
                         <button 
                           onClick={() => addCommand('RIGHT')} 
                           disabled={gameState === 'executing'}
-                          className={`py-3 rounded-lg font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider border transition-all shadow-sm ${isDarkMode ? 'bg-[#1c242e] border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-white disabled:opacity-50' : 'bg-white border-slate-300 hover:border-emerald-500 hover:bg-emerald-50 text-slate-700 disabled:opacity-50'}`}
+                          className={`py-3 rounded-lg font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider border transition-all shadow-sm ${isDarkMode ? 'bg-[#1c242e] border-white/10 hover:border-blue-500/50 hover:bg-blue-500/10 text-white disabled:opacity-50' : 'bg-white border-slate-300 hover:border-blue-500 hover:bg-blue-50 text-slate-700 disabled:opacity-50'}`}
                         >
                           DIREITA ↱
                         </button>
@@ -777,7 +748,7 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                   <div className={`flex-[1] flex flex-col p-4 rounded-2xl border min-h-[220px] ${isDarkMode ? 'bg-[#11171d] border-white/5' : 'bg-white border-slate-200'}`}>
                     <div className="flex justify-between items-center mb-3">
                       <span className={`text-[10px] font-mono font-bold tracking-[0.2em] uppercase ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>FILA DE INSTRUÇÕES</span>
-                      <span className={`text-[9px] font-mono font-bold ${commands.length === 15 ? 'text-red-500' : isDarkMode ? 'text-emerald-500/50' : 'text-emerald-600/60'}`}>{commands.length}/15</span>
+                      <span className={`text-[9px] font-mono font-bold ${commands.length === 15 ? 'text-red-500' : isDarkMode ? 'text-blue-500/50' : 'text-blue-600/60'}`}>{commands.length}/15</span>
                     </div>
                     
                     <div className="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
@@ -792,7 +763,7 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                             onClick={() => removeCommand(idx)}
                             className={`px-3 py-2.5 rounded-lg border flex items-center justify-between font-mono text-[10px] font-bold tracking-wider cursor-pointer group transition-all ${
                               currentCmdIdx === idx 
-                                ? (isDarkMode ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]' : 'bg-emerald-100 border-emerald-500 text-emerald-700')
+                                ? (isDarkMode ? 'bg-blue-500/20 border-blue-500 text-blue-400 shadow-[0_0_10px_rgba(16,185,129,0.2)]' : 'bg-blue-100 border-blue-500 text-blue-700')
                                 : (isDarkMode ? 'bg-[#161c24] border-white/10 text-slate-300 hover:border-red-500/50' : 'bg-slate-50 border-slate-200 text-slate-700 hover:border-red-300')
                             }`}
                           >
@@ -812,7 +783,7 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                        <button
                          onClick={clearCommands}
                          disabled={gameState === 'executing'}
-                         className={`p-3 rounded-xl border flex items-center justify-center transition-all ${isDarkMode ? 'bg-[#1a212b] border-white/5 text-slate-400 hover:bg-red-500/10 hover:text-red-400 disabled:opacity-50' : 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-red-50 hover:text-red-600 disabled:opacity-50'}`}
+                         className={`p-3 rounded-xl border flex items-center justify-center transition-all ${isDarkMode ? 'bg-slate-800 border-white/5 text-slate-400 hover:bg-red-500/10 hover:text-red-400 disabled:opacity-50' : 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-red-50 hover:text-red-600 disabled:opacity-50'}`}
                          title="Limpar Comandos"
                        >
                          <Trash2 size={16} />
@@ -822,8 +793,8 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                          disabled={gameState === 'executing' || commands.length === 0}
                          className={`flex-1 py-3 px-4 flex items-center justify-center gap-2 rounded-xl text-[10px] font-mono font-bold uppercase tracking-widest border transition-all ${
                            gameState === 'executing' 
-                             ? 'bg-emerald-600/50 text-white cursor-not-allowed border-transparent' 
-                             : 'bg-emerald-600 hover:bg-emerald-500 text-white border-emerald-500 cursor-pointer shadow-lg hover:shadow-emerald-500/20'
+                             ? 'bg-blue-600/50 text-white cursor-not-allowed border-transparent' 
+                             : 'bg-blue-600 hover:bg-blue-500 text-white border-blue-500 cursor-pointer shadow-lg hover:shadow-blue-500/20'
                          }`}
                        >
                          {gameState === 'executing' ? 'COMPILANDO...' : 'EXECUTAR ALGORITMO'} <Play size={14} />
@@ -858,7 +829,7 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
 
                         let cellClass = isDarkMode ? "bg-[#1c242e] border-white/5" : "bg-white border-slate-200 shadow-sm";
                         if (isTarget) {
-                          cellClass = isDarkMode ? "bg-emerald-500/20 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]" : "bg-emerald-100 border-emerald-400";
+                          cellClass = isDarkMode ? "bg-blue-500/20 border-blue-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]" : "bg-blue-100 border-blue-400";
                         } else if (isObs) {
                           cellClass = isDarkMode ? "bg-slate-800 border-slate-700" : "bg-slate-300 border-slate-400";
                         }
@@ -869,7 +840,7 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                             className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-md md:rounded-lg border flex items-center justify-center transition-all duration-300 relative ${cellClass}`}
                           >
                             {isTarget && !isRobot && (
-                              <Award size={20} className={isDarkMode ? 'text-emerald-400 opacity-80' : 'text-emerald-600 opacity-80'} />
+                              <Award size={20} className={isDarkMode ? 'text-blue-400 opacity-80' : 'text-blue-600 opacity-80'} />
                             )}
                             {isObs && (
                               <div className="w-full h-full p-2 opacity-50">
@@ -892,9 +863,9 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                   </div>
 
                   {/* Terminal Logs */}
-                  <div className={`p-4 rounded-xl border font-mono text-[9px] md:text-[10px] uppercase leading-relaxed shadow-inner h-32 overflow-y-auto ${isDarkMode ? 'bg-[#05080c] border-white/5 text-blue-400/80' : 'bg-slate-900 border-slate-900 text-emerald-400'}`}>
+                  <div className={`p-4 rounded-xl border font-mono text-[9px] md:text-[10px] uppercase leading-relaxed shadow-inner h-32 overflow-y-auto ${isDarkMode ? 'bg-[#05080c] border-white/5 text-blue-400/80' : 'bg-slate-900 border-slate-900 text-blue-400'}`}>
                     {logs.map((log, i) => (
-                      <div key={i} className={`${i === 0 ? (log.includes('ERRO') || log.includes('FALHA') ? 'text-red-400 font-bold' : log.includes('SUCESSO') ? 'text-emerald-400 font-bold' : isDarkMode ? 'text-white' : 'text-emerald-300') : 'opacity-60'}`}>
+                      <div key={i} className={`${i === 0 ? (log.includes('ERRO') || log.includes('FALHA') ? 'text-red-400 font-bold' : log.includes('SUCESSO') ? 'text-blue-400 font-bold' : isDarkMode ? 'text-white' : 'text-blue-300') : 'opacity-60'}`}>
                         {log}
                       </div>
                     ))}
@@ -912,7 +883,7 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                 className="space-y-8 flex flex-col items-center justify-center py-6 text-center"
               >
                 <div className="flex flex-col items-center gap-4">
-                  <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.3)]">
+                  <div className="w-20 h-20 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-500 shadow-[0_0_30px_rgba(16,185,129,0.3)]">
                     <Award size={40} className="animate-pulse" />
                   </div>
                   <h4 className={`text-2xl md:text-3xl font-bold font-serif italic tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Lógica Estruturada com Sucesso!</h4>
@@ -928,7 +899,7 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                     value={studentName}
                     onChange={(e) => setStudentName(e.target.value)}
                     maxLength={32}
-                    className={`w-full px-5 py-4 rounded-xl border text-sm font-sans font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-emerald-500/40 transition-all text-center placeholder:text-center ${
+                    className={`w-full px-5 py-4 rounded-xl border text-sm font-sans font-bold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all text-center placeholder:text-center ${
                       isDarkMode 
                       ? 'bg-[#151c24] border-white/10 text-white placeholder:text-white/30' 
                       : 'bg-white border-slate-300 text-slate-800 placeholder:text-slate-400'
@@ -936,8 +907,8 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
                   />
                   
                   {studentName.length > 2 && (
-                    <div className={`p-6 rounded-2xl border text-left mt-6 flex flex-col items-center space-y-4 shadow-xl ${isDarkMode ? 'bg-gradient-to-br from-[#101915] to-[#151c24] border-emerald-500/30' : 'bg-gradient-to-br from-emerald-50 to-white border-emerald-200'}`}>
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-600 bg-emerald-500/10 px-3 py-1 rounded-full">CERTIFICADO DIGITAL LÓGICO</span>
+                    <div className={`p-6 rounded-2xl border text-left mt-6 flex flex-col items-center space-y-4 shadow-xl ${isDarkMode ? 'bg-gradient-to-br from-[#101915] to-[#151c24] border-blue-500/30' : 'bg-gradient-to-br from-blue-50 to-white border-blue-200'}`}>
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-blue-600 bg-blue-500/10 px-3 py-1 rounded-full">CERTIFICADO DIGITAL LÓGICO</span>
                       <h5 className={`text-lg font-bold font-sans uppercase tracking-tight text-center ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
                         {studentName}
                       </h5>
@@ -967,12 +938,11 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          className={`mt-10 p-6 md:p-8 rounded-3xl border text-left flex flex-col items-start shadow-xl ${isDarkMode ? 'bg-[#0f141a] border-white/5' : 'bg-slate-50 border-slate-200'}`}
+          className={`mt-10 p-6 md:p-8 rounded-3xl border text-left flex flex-col items-start shadow-xl ${isDarkMode ? 'bg-slate-900 border-white/5' : 'bg-slate-50 border-slate-200'}`}
         >
-          <span className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-widest text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 rounded-full mb-4 inline-block">
+          <span className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-widest text-blue-500 bg-blue-500/10 border border-blue-500/20 rounded-full mb-4 inline-block">
             Módulo Educacional
           </span>
-          <h3 className={`text-xl md:text-2xl font-bold font-serif italic mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Aulas Ministradas: Pensamento Computacional</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
             {[
               { id: 1, topic: 'Decomposição de Desafios', dur: '12h', xp: '+250 XP', active: true },
@@ -982,16 +952,16 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
             ].map((aula) => (
               <div key={aula.id} className={`p-4 rounded-xl border flex flex-col justify-between h-32 transition-all ${
                 aula.active 
-                ? (isDarkMode ? 'bg-emerald-500/10 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]' : 'bg-emerald-50 border-emerald-300 shadow-md') 
+                ? (isDarkMode ? 'bg-blue-500/10 border-blue-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]' : 'bg-blue-50 border-blue-300 shadow-md') 
                 : (isDarkMode ? 'bg-black/20 border-white/5 opacity-60' : 'bg-white opacity-60 border-slate-200')
               }`}>
                 <div className="flex justify-between items-start mb-2">
-                  <span className={`text-[9px] font-mono font-bold uppercase ${aula.active ? 'text-emerald-500' : 'text-slate-400'}`}>Aula {aula.id}</span>
-                  {aula.active && <span className="text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-500 px-1.5 py-0.5 rounded">{aula.xp}</span>}
+                  <span className={`text-[9px] font-mono font-bold uppercase ${aula.active ? 'text-blue-500' : 'text-slate-400'}`}>Aula {aula.id}</span>
+                  {aula.active && <span className="text-[9px] font-mono font-bold bg-blue-500/20 text-blue-500 px-1.5 py-0.5 rounded">{aula.xp}</span>}
                 </div>
                 <strong className={`text-sm leading-snug tracking-tight font-sans ${isDarkMode ? 'text-white/90' : 'text-slate-800'}`}>{aula.topic}</strong>
                 <div className="flex items-center gap-1.5 mt-auto pt-2">
-                  <span className={`w-1.5 h-1.5 rounded-full ${aula.active ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
+                  <span className={`w-1.5 h-1.5 rounded-full ${aula.active ? 'bg-blue-500 animate-pulse' : 'bg-slate-400'}`} />
                   <span className={`text-[9px] uppercase font-mono tracking-widest ${isDarkMode ? 'text-white/40' : 'text-slate-400'}`}>{aula.active ? 'COMPLETO' : 'PENDENTE'}</span>
                 </div>
               </div>
@@ -1008,7 +978,7 @@ const RoboticsSection = ({ isDarkMode, onUnlockRobotics }: { isDarkMode: boolean
   const features = [
     { title: "Arduino & ESP32", desc: "Desenvolvimento de protótipos e sistemas embarcados.", icon: <Cpu className="text-orange-500" size={32} /> },
     { title: "Lógica de Programação", desc: "Aplicação prática de algoritmos em hardware.", icon: <Layers className="text-blue-500" size={32} /> },
-    { title: "Projetos Maker", desc: "Criação de soluções interativas e automatizadas.", icon: <Box className="text-emerald-500" size={32} /> },
+    { title: "Projetos Maker", desc: "Criação de soluções interativas e automatizadas.", icon: <Box className="text-blue-500" size={32} /> },
     { title: "Educação Tecnológica", desc: "Metodologias ativas aplicadas à robótica.", icon: <GraduationCap className="text-purple-500" size={32} /> }
   ];
 
@@ -1346,8 +1316,8 @@ void loop() {
         {/* Header */}
         <div className="flex flex-col md:flex-row items-center gap-6 justify-between px-1 mb-8 md:mb-12">
           <div>
-            <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Robótica Educacional</h2>
-            <p className={`max-w-2xl uppercase text-[10px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-emerald-400' : 'text-black/30'}`}>Transformando teoria em movimento e inovação.</p>
+            <h2 className={`text-3xl md:text-5xl font-black mb-3 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Projetos com Alunos</h2>
+            <p className={`max-w-2xl uppercase text-[10px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-blue-400' : 'text-black/30'}`}>Transformando teoria em movimento e inovação.</p>
           </div>
           <Flashcard 
             id="robo"
@@ -1371,16 +1341,16 @@ void loop() {
                 className={`p-6 md:p-8 rounded-2xl border transition-all group relative overflow-hidden ${
                   isDarkMode 
                     ? 'bg-white/[0.02] border-white/5 hover:bg-white/[0.04]' 
-                    : 'bg-black/[0.01] border-black/[0.05] hover:bg-white hover:shadow-xl hover:shadow-emerald-500/5'
+                    : 'bg-black/[0.01] border-black/[0.05] hover:bg-white hover:shadow-xl hover:shadow-blue-500/5'
                 }`}
               >
                 <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10">{feature.icon}</div>
                 <div className="relative z-10">
                   <div className="mb-4">{feature.icon}</div>
-                  <h3 className={`text-lg font-bold mb-2 tracking-tight group-hover:text-emerald-500 transition-colors ${isDarkMode ? 'text-white/90' : 'text-black/80'}`}>{feature.title}</h3>
+                  <h3 className={`text-lg font-bold mb-2 tracking-tight group-hover:text-blue-500 transition-colors ${isDarkMode ? 'text-white/90' : 'text-black/80'}`}>{feature.title}</h3>
                   <p className={`leading-relaxed text-xs font-sans normal-case tracking-normal ${isDarkMode ? 'text-white/45' : 'text-black/45'}`}>{feature.desc}</p>
                 </div>
-                <div className="absolute bottom-0 left-0 h-1 w-0 bg-emerald-500 group-hover:w-full transition-all duration-500" />
+                <div className="absolute bottom-0 left-0 h-1 w-0 bg-blue-500 group-hover:w-full transition-all duration-500" />
               </motion.div>
             ))}
           </div>
@@ -1394,7 +1364,7 @@ void loop() {
             className="w-full lg:w-72 shrink-0 lg:sticky lg:top-8"
           >
             <div className="relative group">
-              <div className="absolute inset-0 bg-emerald-600 rounded-3xl blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
+              <div className="hidden md:block absolute inset-0 bg-blue-600 rounded-3xl blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
               <div className={`relative rounded-3xl overflow-hidden shadow-2xl border ${isDarkMode ? 'border-white/5 bg-white/[0.02]' : 'border-black/5 bg-black/[0.02]'}`}>
                 <img 
                   src="https://lucasleniar.com.br/robotica.gif" 
@@ -1412,9 +1382,9 @@ void loop() {
         </div>
 
         {/* WORKBENCH LAB DIVIDER */}
-        <div className="mt-8 mb-8 border-t border-emerald-500/10 pt-10 px-1">
+        <div className="mt-8 mb-8 border-t border-blue-500/10 pt-10 px-1">
           <div className="flex items-center gap-3 mb-2">
-            <span className="p-1 px-2.5 bg-emerald-500/10 text-emerald-500 rounded-lg text-xs font-mono font-bold">PROTOTIPAGEM REALTIME</span>
+            <span className="p-1 px-2.5 bg-blue-500/10 text-blue-500 rounded-lg text-xs font-mono font-bold">PROTOTIPAGEM REALTIME</span>
             <h3 className={`text-xl md:text-2xl font-bold tracking-tight italic font-serif leading-none ${isDarkMode ? 'text-white' : 'text-black'}`}>Mesa de Trabalho Maker</h3>
           </div>
           <p className={`text-xs font-sans normal-case tracking-normal font-medium ${isDarkMode ? 'text-white/40' : 'text-black/40'}`}>
@@ -1427,7 +1397,7 @@ void loop() {
           {/* 1. Project Selector Sidebar */}
           <div className="lg:col-span-4 p-6 border-r border-slate-800 flex flex-col justify-between bg-[#080d15]">
             <div className="space-y-4">
-              <span className="text-[9px] font-mono font-bold tracking-[0.2em] uppercase block mb-1 text-emerald-400">1. Instalar Firmware</span>
+              <span className="text-[9px] font-mono font-bold tracking-[0.2em] uppercase block mb-1 text-blue-400">1. Instalar Firmware</span>
               
               <div className="space-y-2">
                 {(Object.keys(programs) as ProgramId[]).map((progId) => (
@@ -1440,15 +1410,15 @@ void loop() {
                     }}
                     className={`w-full p-4 rounded-xl border text-left transition-all cursor-pointer block group ${
                       activeProg === progId 
-                        ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400 shadow-md' 
+                        ? 'bg-blue-500/15 border-blue-500/40 text-blue-400 shadow-md' 
                         : 'border-white/5 bg-[#111724] hover:bg-white/[0.04] text-slate-300'
                     }`}
                   >
-                    <span className="flex items-center gap-2 font-mono font-bold text-[10px] uppercase tracking-wider group-hover:text-emerald-400 transition-colors mb-1.5">
-                      <span className={`w-1.5 h-1.5 rounded-full ${activeProg === progId ? 'bg-emerald-500 animate-ping' : 'bg-slate-600'}`} />
+                    <span className="flex items-center gap-2 font-mono font-bold text-[10px] uppercase tracking-wider group-hover:text-blue-400 transition-colors mb-1.5">
+                      <span className={`w-1.5 h-1.5 rounded-full ${activeProg === progId ? 'bg-blue-500 animate-ping' : 'bg-slate-600'}`} />
                       {programs[progId].title}
                     </span>
-                    <span className={`text-[11px] font-sans normal-case tracking-normal block leading-tight ${activeProg === progId ? 'text-emerald-300/80' : 'text-slate-400 group-hover:text-slate-200'}`}>
+                    <span className={`text-[11px] font-sans normal-case tracking-normal block leading-tight ${activeProg === progId ? 'text-blue-300/80' : 'text-slate-400 group-hover:text-slate-200'}`}>
                       {programs[progId].desc}
                     </span>
                   </button>
@@ -1466,7 +1436,7 @@ void loop() {
 
           {/* 2. Hardware / Breadboard simulation map */}
           <div className="lg:col-span-4 p-6 flex flex-col justify-between items-center bg-[#0a0f18] border-r border-slate-800">
-            <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-emerald-400 uppercase w-full text-left mb-6">2. Bancada Virtual</span>
+            <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-blue-400 uppercase w-full text-left mb-6">2. Bancada Virtual</span>
             
             {/* Visual Hardware Schematic */}
             <div className="w-full flex flex-col items-center justify-center space-y-8 py-4 relative">
@@ -1579,8 +1549,8 @@ void loop() {
                     <div className="flex flex-col items-center">
                       <div className={`w-7 h-7 rounded-full border-2 transition-all duration-300 flex items-center justify-center relative ${
                         leds.green 
-                          ? 'bg-emerald-500 border-emerald-400 drop-shadow-[0_0_15px_rgba(16,185,129,0.9)] scale-110' 
-                          : 'bg-emerald-950/40 border-emerald-900/30 text-emerald-500/20'
+                          ? 'bg-blue-500 border-blue-400 drop-shadow-[0_0_15px_rgba(16,185,129,0.9)] scale-110' 
+                          : 'bg-blue-950/40 border-blue-900/30 text-blue-500/20'
                       }`}>
                         <div className="w-2.5 h-2.5 bg-white/40 rounded-full absolute top-1 right-1" />
                       </div>
@@ -1595,7 +1565,7 @@ void loop() {
                       animate={{ opacity: 1, height: 'auto' }}
                       className="border-t border-white/5 pt-3.5 flex flex-col items-center"
                     >
-                      <span className="text-[8px] font-mono font-bold text-emerald-400 block mb-2">ENTRADA DIGITAL 2: SENSOR</span>
+                      <span className="text-[8px] font-mono font-bold text-blue-400 block mb-2">ENTRADA DIGITAL 2: SENSOR</span>
                       <button
                         onMouseDown={() => setSensorTriggered(true)}
                         onMouseUp={() => setSensorTriggered(false)}
@@ -1604,7 +1574,7 @@ void loop() {
                         className={`px-4 py-2 text-[10px] font-mono font-bold rounded-xl transition-all cursor-pointer ${
                           sensorTriggered 
                             ? 'bg-red-600 text-white shadow-lg scale-95 shadow-red-500/30' 
-                            : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30'
+                            : 'bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500/30'
                         }`}
                       >
                         {sensorTriggered ? "📶 MOVIMENTO DETECTADO!" : "🚶 SIMULAR MOVIMENTO (PIR)"}
@@ -1619,8 +1589,8 @@ void loop() {
             {/* Board online pulse */}
             <div className="flex items-center gap-2 mt-4 self-start">
               <span className={`relative flex h-2 w-2`}>
-                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isRunning ? 'bg-emerald-400' : 'bg-red-400'}`}></span>
-                <span className={`relative inline-flex rounded-full h-2 w-2 ${isRunning ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isRunning ? 'bg-blue-400' : 'bg-red-400'}`}></span>
+                <span className={`relative inline-flex rounded-full h-2 w-2 ${isRunning ? 'bg-blue-500' : 'bg-red-500'}`}></span>
               </span>
               <span className="text-[9px] font-mono tracking-wider text-slate-400">
                 {isRunning ? 'CHIP ATIVO (RUNNING)' : 'CHIP INATIVO (STOPPED)'}
@@ -1631,7 +1601,7 @@ void loop() {
           {/* 3. Code View and Serial Logs Monitor */}
           <div className="lg:col-span-4 p-6 flex flex-col justify-between bg-[#0b0f15]">
             <div className="flex flex-col space-y-4">
-              <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-emerald-400 uppercase">3. IDE Editor & mBlock & Serial</span>
+              <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-blue-400 uppercase">3. IDE Editor & mBlock & Serial</span>
               
               {/* Tabs for Code and mBlock Blocks */}
               <div className="flex bg-[#070a0f] p-1 rounded-xl gap-1 border border-white/5">
@@ -1801,7 +1771,7 @@ void loop() {
                     </div>
                     <ol className="list-decimal list-inside space-y-1.5 text-slate-300 px-1">
                       <li>
-                        <strong className="text-white">Selecione Arduino Uno:</strong> Vá em <strong className="text-emerald-400">Dispositivos</strong>, clique em <strong className="text-emerald-400">+ Adicionar</strong>, selecione a placa <strong className="text-white underline">Arduino Uno</strong> e clique em OK.
+                        <strong className="text-white">Selecione Arduino Uno:</strong> Vá em <strong className="text-blue-400">Dispositivos</strong>, clique em <strong className="text-blue-400">+ Adicionar</strong>, selecione a placa <strong className="text-white underline">Arduino Uno</strong> e clique em OK.
                       </li>
                       <li>
                         <strong className="text-white">Mudança de Modo:</strong> Mude a chave da placa de <strong className="text-white">"Ao Vivo (Live)"</strong> para <strong className="text-purple-400">"Carregar (Upload)"</strong> no canto superior direito para habilitar os blocos de firmware do chip.
@@ -1810,7 +1780,7 @@ void loop() {
                         <strong className="text-white">Recrie os Blocos:</strong> Arraste e posicione os blocos de acordo com o esquema da aba <strong className="text-blue-400">mBlock Blocos</strong> ao lado.
                       </li>
                       <li>
-                        <strong className="text-white">Conexão USB:</strong> Conecte sua placa física. Clique em <strong className="text-emerald-400">Conectar</strong> e escolha a porta serial apropriada (Ex: <em className="text-emerald-400 font-mono">COM3, COM7</em>).
+                        <strong className="text-white">Conexão USB:</strong> Conecte sua placa física. Clique em <strong className="text-blue-400">Conectar</strong> e escolha a porta serial apropriada (Ex: <em className="text-blue-400 font-mono">COM3, COM7</em>).
                       </li>
                       <li>
                         <strong className="text-white">Gravar no Arduino:</strong> Clique no botão de cor azul <strong className="text-blue-400">"Carregar (Upload)"</strong>. Os blocos mBlock serão compilados e gravados de forma definitiva na placa!
@@ -1833,7 +1803,7 @@ void loop() {
                   <button
                     onClick={startUpload}
                     disabled={isUploading}
-                    className="flex-1 py-3 bg-emerald-600 text-white rounded-xl font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-emerald-500 disabled:bg-slate-800 transition-all cursor-pointer flex items-center justify-center gap-1.5 text-center leading-none"
+                    className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-mono text-[10px] font-bold uppercase tracking-wider hover:bg-blue-500 disabled:bg-slate-800 transition-all cursor-pointer flex items-center justify-center gap-1.5 text-center leading-none"
                   >
                     {isUploading ? `Gravando... ${uploadProgress}%` : "Carregar Código"}
                   </button>
@@ -1846,7 +1816,7 @@ void loop() {
                   <motion.div 
                     initial={{ width: 0 }} 
                     animate={{ width: `${uploadProgress}%` }} 
-                    className="h-full bg-emerald-500" 
+                    className="h-full bg-blue-500" 
                   />
                 </div>
               )}
@@ -1855,7 +1825,7 @@ void loop() {
             {/* Simulated Live Serial Monitor Terminal */}
             <div className="mt-6 border-t border-white/5 pt-4">
               <span className="text-[8px] font-mono font-bold text-yellow-500 tracking-widest block mb-2 uppercase">Monitor Serial (9600 Baud)</span>
-              <div className="bg-black/40 rounded-xl p-3 h-28 border border-white/5 overflow-y-auto font-mono text-[9px] text-emerald-400 space-y-1 select-text">
+              <div className="bg-black/40 rounded-xl p-3 h-28 border border-white/5 overflow-y-auto font-mono text-[9px] text-blue-400 space-y-1 select-text">
                 {logs.map((logStr, idx) => (
                   <div key={idx} className="whitespace-pre-wrap leading-normal font-medium">
                     {logStr}
@@ -1871,9 +1841,9 @@ void loop() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          className={`mt-10 p-6 md:p-8 rounded-3xl border text-left flex flex-col items-start shadow-xl ${isDarkMode ? 'bg-[#0f141a] border-white/5' : 'bg-slate-50 border-slate-200'}`}
+          className={`mt-10 p-6 md:p-8 rounded-3xl border text-left flex flex-col items-start shadow-xl ${isDarkMode ? 'bg-slate-900 border-white/5' : 'bg-slate-50 border-slate-200'}`}
         >
-          <span className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-widest text-[#10b981] bg-emerald-500/10 border border-emerald-500/20 rounded-full mb-4 inline-block">
+          <span className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-widest text-[#10b981] bg-blue-500/10 border border-blue-500/20 rounded-full mb-4 inline-block">
             Módulo Educacional
           </span>
           <h3 className={`text-xl md:text-2xl font-bold font-serif italic mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Aulas Ministradas: Robótica Educacional</h3>
@@ -1886,16 +1856,16 @@ void loop() {
             ].map(aula => (
               <div key={aula.id} className={`p-4 rounded-xl border flex flex-col justify-between h-32 transition-all ${
                 aula.active 
-                ? (isDarkMode ? 'bg-emerald-500/10 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]' : 'bg-emerald-50 border-emerald-300 shadow-md') 
+                ? (isDarkMode ? 'bg-blue-500/10 border-blue-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]' : 'bg-blue-50 border-blue-300 shadow-md') 
                 : (isDarkMode ? 'bg-black/20 border-white/5 opacity-60' : 'bg-white opacity-60 border-slate-200')
               }`}>
                 <div className="flex justify-between items-start mb-2">
-                  <span className={`text-[9px] font-mono font-bold uppercase ${aula.active ? 'text-emerald-500' : 'text-slate-400'}`}>Aula {aula.id}</span>
-                  {aula.active && <span className="text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-500 px-1.5 py-0.5 rounded">{aula.xp}</span>}
+                  <span className={`text-[9px] font-mono font-bold uppercase ${aula.active ? 'text-blue-500' : 'text-slate-400'}`}>Aula {aula.id}</span>
+                  {aula.active && <span className="text-[9px] font-mono font-bold bg-blue-500/20 text-blue-500 px-1.5 py-0.5 rounded">{aula.xp}</span>}
                 </div>
                 <strong className={`text-sm leading-snug tracking-tight font-sans ${isDarkMode ? 'text-white/90' : 'text-slate-800'}`}>{aula.topic}</strong>
                 <div className="flex items-center gap-1.5 mt-auto pt-2">
-                  <span className={`w-1.5 h-1.5 rounded-full ${aula.active ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
+                  <span className={`w-1.5 h-1.5 rounded-full ${aula.active ? 'bg-blue-500 animate-pulse' : 'bg-slate-400'}`} />
                   <span className={`text-[9px] uppercase font-mono tracking-widest ${isDarkMode ? 'text-white/40' : 'text-slate-400'}`}>{aula.active ? 'COMPLETO' : 'PENDENTE'}</span>
                 </div>
               </div>
@@ -2042,8 +2012,8 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
               <Server size={22} className={isDarkMode ? 'text-blue-400' : 'text-blue-600'} />
               <span className={`text-[10px] uppercase font-mono font-bold tracking-wider ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>Infra & SO</span>
             </motion.div>
-            <motion.div whileHover={{ y: -4, scale: 1.02 }} className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all cursor-default ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-emerald-500/10 hover:border-emerald-500/30' : 'bg-black/[0.02] border-black/10 hover:bg-emerald-50 hover:border-emerald-200'}`}>
-              <Network size={22} className={isDarkMode ? 'text-emerald-400' : 'text-emerald-600'} />
+            <motion.div whileHover={{ y: -4, scale: 1.02 }} className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all cursor-default ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-blue-500/10 hover:border-blue-500/30' : 'bg-black/[0.02] border-black/10 hover:bg-blue-50 hover:border-blue-200'}`}>
+              <Network size={22} className={isDarkMode ? 'text-blue-400' : 'text-blue-600'} />
               <span className={`text-[10px] uppercase font-mono font-bold tracking-wider ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>Redes & TCP/IP</span>
             </motion.div>
             <motion.div whileHover={{ y: -4, scale: 1.02 }} className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 text-center transition-all cursor-default ${isDarkMode ? 'bg-white/[0.02] border-white/10 hover:bg-yellow-500/10 hover:border-yellow-500/30' : 'bg-black/[0.02] border-black/10 hover:bg-yellow-50 hover:border-yellow-200'}`}>
@@ -2089,7 +2059,7 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
           {/* NOC Incident Selection sidebar */}
           <div className={`lg:col-span-4 p-6 border-r flex flex-col justify-between ${isDarkMode ? 'border-slate-800 bg-[#080d15]' : 'border-slate-200 bg-slate-50'}`}>
             <div className="space-y-4">
-              <span className={`text-[10px] font-mono font-bold tracking-[0.2em] uppercase block mb-2 ${isDarkMode ? 'text-emerald-400' : 'text-blue-600'}`}>TICKETS DE INCIDENTE</span>
+              <span className={`text-[10px] font-mono font-bold tracking-[0.2em] uppercase block mb-2 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>TICKETS DE INCIDENTE</span>
               
               <div className="space-y-2">
                 {[
@@ -2113,7 +2083,7 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
                       </span>
                       <span className={`text-[9px] px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider leading-none ${
                         prob.fixed 
-                          ? (isDarkMode ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-100 text-emerald-700')
+                          ? (isDarkMode ? 'bg-blue-500/20 text-blue-400' : 'bg-blue-100 text-blue-700')
                           : ['ram', 'firewall'].includes(prob.id) ? (isDarkMode ? 'bg-red-500/20 text-red-400 animate-pulse' : 'bg-red-100 text-red-600 animate-pulse') : (isDarkMode ? 'bg-yellow-500/20 text-yellow-400 animate-pulse' : 'bg-yellow-100 text-yellow-700 animate-pulse')
                       }`}>
                         {prob.fixed ? 'Resolvido' : 'Crítico'}
@@ -2155,7 +2125,7 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
                 <div className="flex flex-col items-center relative z-10 group">
                   <div className={`p-4 rounded-xl border-2 transition-all duration-300 shadow-lg ${
                     probFixed.dhcp 
-                      ? (isDarkMode ? 'bg-emerald-900/40 border-emerald-500/50 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-emerald-100 border-emerald-400 text-emerald-600')
+                      ? (isDarkMode ? 'bg-blue-900/40 border-blue-500/50 text-blue-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-blue-100 border-blue-400 text-blue-600')
                       : activeProb === 'dhcp' ? (isDarkMode ? 'bg-yellow-900/40 border-yellow-500/50 text-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.2)] animate-pulse' : 'bg-yellow-100 border-yellow-400 text-yellow-600 animate-pulse') 
                       : (isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-400' : 'bg-white border-slate-300 text-slate-400')
                   }`}>
@@ -2171,8 +2141,8 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
                 <div className={`flex-1 h-[3px] relative overflow-hidden mx-3 rounded-full ${isDarkMode ? 'bg-slate-800' : 'bg-slate-300'}`}>
                   <div className={`absolute inset-y-0 left-0 w-full rounded-full transition-all duration-1000 ${
                     probFixed.dhcp 
-                      ? 'bg-emerald-500 shadow-[0_0_15px_#10b981]' 
-                      : activeProb === 'dhcp' ? 'bg-yellow-500 shadow-md animate-pulse' : (isDarkMode ? 'bg-emerald-500/30' : 'bg-emerald-400')
+                      ? 'bg-blue-500 shadow-[0_0_15px_#10b981]' 
+                      : activeProb === 'dhcp' ? 'bg-yellow-500 shadow-md animate-pulse' : (isDarkMode ? 'bg-blue-500/30' : 'bg-blue-400')
                   }`} />
                 </div>
 
@@ -2180,7 +2150,7 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
                 <div className="flex flex-col items-center relative z-10 group">
                   <div className={`p-4 rounded-xl border-2 transition-all duration-300 shadow-lg ${
                     probFixed.dns || probFixed.firewall || probFixed.ram
-                      ? (isDarkMode ? 'bg-emerald-900/40 border-emerald-500/50 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-emerald-100 border-emerald-400 text-emerald-600')
+                      ? (isDarkMode ? 'bg-blue-900/40 border-blue-500/50 text-blue-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]' : 'bg-blue-100 border-blue-400 text-blue-600')
                       : ['dns', 'firewall', 'ram'].includes(activeProb) ? (isDarkMode ? 'bg-yellow-900/40 border-yellow-500/50 text-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.2)] animate-pulse' : 'bg-yellow-100 border-yellow-400 text-yellow-600 animate-pulse') 
                       : (isDarkMode ? 'bg-slate-800 border-slate-700 text-slate-400' : 'bg-white border-slate-300 text-slate-400')
                   }`}>
@@ -2194,8 +2164,8 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
                 <div className={`flex-1 h-[3px] relative overflow-hidden mx-3 rounded-full ${isDarkMode ? 'bg-slate-800' : 'bg-slate-300'}`}>
                   <div className={`absolute inset-y-0 left-0 w-full rounded-full transition-all duration-1000 ${
                     probFixed.dns && probFixed.firewall
-                      ? 'bg-emerald-500 shadow-[0_0_15px_#10b981]' 
-                      : ['dns', 'firewall'].includes(activeProb) ? 'bg-yellow-500 animate-pulse' : (isDarkMode ? 'bg-emerald-500/30' : 'bg-emerald-400')
+                      ? 'bg-blue-500 shadow-[0_0_15px_#10b981]' 
+                      : ['dns', 'firewall'].includes(activeProb) ? 'bg-yellow-500 animate-pulse' : (isDarkMode ? 'bg-blue-500/30' : 'bg-blue-400')
                   }`} />
                 </div>
 
@@ -2218,7 +2188,7 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
                 <div className={`w-full max-w-[280px] mt-8 border rounded-xl p-4 text-left shadow-md ${isDarkMode ? 'bg-[#161c24] border-white/5' : 'bg-white border-slate-200'}`}>
                   <div className="flex justify-between items-center mb-2 text-[10px] font-mono font-bold uppercase tracking-wider">
                     <span className={isDarkMode ? 'text-white/60' : 'text-slate-500'}>MÉTRICA DE CARGA DO LINK:</span>
-                    <span className={probFixed.ram ? 'text-emerald-500' : 'text-red-500 animate-pulse'}>
+                    <span className={probFixed.ram ? 'text-blue-500' : 'text-red-500 animate-pulse'}>
                       {sysRamUsage}% RAM usado
                     </span>
                   </div>
@@ -2227,7 +2197,7 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
                       initial={{ width: '98%' }} 
                       animate={{ width: `${sysRamUsage}%` }} 
                       transition={{ duration: 0.8 }}
-                      className={`h-full ${probFixed.ram ? 'bg-emerald-500' : 'bg-red-500'}`} 
+                      className={`h-full ${probFixed.ram ? 'bg-blue-500' : 'bg-red-500'}`} 
                     />
                   </div>
                 </div>
@@ -2235,7 +2205,7 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
             </div>
 
             <div className={`text-left p-5 rounded-xl text-xs font-sans normal-case tracking-normal leading-relaxed border shadow-md w-full ${isDarkMode ? 'bg-[#141b25] text-white/70 border-white/5' : 'bg-white text-slate-700 border-slate-200'}`}>
-              <span className={`block font-bold text-[10px] font-mono uppercase tracking-widest mb-2 ${isDarkMode ? 'text-emerald-400' : 'text-blue-600'}`}>Sintoma Registrado:</span>
+              <span className={`block font-bold text-[10px] font-mono uppercase tracking-widest mb-2 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>Sintoma Registrado:</span>
               {activeProb === 'dhcp' && (
                 <span>O computador de um colaborador perdeu acesso à rede local de arquivos e intranet corporativa, pois o DHCP Server falhou em enviar um Lease IP válido, assumindo um endereço APIPA (169.254.x.x).</span>
               )}
@@ -2264,9 +2234,9 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
               {/* Action Button */}
               <div className="mt-4">
                 {probFixed[activeProb] ? (
-                  <div className={`p-4 border rounded-xl text-center shadow-md ${isDarkMode ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-emerald-50 border-emerald-300'}`}>
-                    <span className={`font-mono text-[12px] font-bold block uppercase tracking-wider ${isDarkMode ? 'text-emerald-400' : 'text-emerald-700'}`}>✔️ INCIDENTE TRATADO</span>
-                    <span className={`text-[11px] font-sans normal-case tracking-normal block mt-1 ${isDarkMode ? 'text-emerald-400/60' : 'text-emerald-700/70'}`}>Infraestrutura operando com estabilidade no setor.</span>
+                  <div className={`p-4 border rounded-xl text-center shadow-md ${isDarkMode ? 'bg-blue-500/10 border-blue-500/20' : 'bg-blue-50 border-blue-300'}`}>
+                    <span className={`font-mono text-[12px] font-bold block uppercase tracking-wider ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>✔️ INCIDENTE TRATADO</span>
+                    <span className={`text-[11px] font-sans normal-case tracking-normal block mt-1 ${isDarkMode ? 'text-blue-400/60' : 'text-blue-700/70'}`}>Infraestrutura operando com estabilidade no setor.</span>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -2303,7 +2273,7 @@ const ITSection = ({ isDarkMode, onUnlockSysAdmin }: { isDarkMode: boolean; onUn
                 </span>
                 <span className={`text-[9px] font-mono font-bold ${isDarkMode ? 'text-white/30' : 'text-slate-400'}`}>root@noc-sv01:~#</span>
               </div>
-              <div className={`rounded-xl p-4 h-48 border overflow-y-auto font-mono text-[10px] space-y-2 select-text shadow-inner ${isDarkMode ? 'bg-black/60 border-white/5 text-blue-300/80 shadow-black' : 'bg-slate-900 border-slate-900 text-emerald-400 shadow-slate-900/50'}`}>
+              <div className={`rounded-xl p-4 h-48 border overflow-y-auto font-mono text-[10px] space-y-2 select-text shadow-inner ${isDarkMode ? 'bg-black/60 border-white/5 text-blue-300/80 shadow-black' : 'bg-slate-900 border-slate-900 text-blue-400 shadow-slate-900/50'}`}>
                 {diagnosticLogs.map((log, index) => (
                   <div key={index} className="whitespace-pre-wrap leading-relaxed font-medium break-words">
                     {log}
@@ -2415,8 +2385,8 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
       value: "+3.000",
       label: "Alunos Formados & Impactados",
       info: "Capacitados em conceitos de infraestrutura de rede de computadores, hardware avançado e desenvolvimento.",
-      color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
-      activeColor: "border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.2)] bg-emerald-500/5",
+      color: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+      activeColor: "border-blue-500 shadow-[0_0_15px_rgba(16,185,129,0.2)] bg-blue-500/5",
       points: ["Engenharia de Software", "Sistemas de Informação", "Egressos no Mercado Top 10"],
       progress: 88
     },
@@ -2451,16 +2421,16 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
         viewport={{ once: true, margin: "-40px" }}
         transition={{ duration: 0.6 }}
         className={`rounded-3xl border p-6 md:p-8 mb-10 shadow-xl relative overflow-hidden transition-all ${
-        isDarkMode ? 'bg-[#0f141a]/90 border-white/5' : 'bg-white border-black/10'
+        isDarkMode ? 'bg-slate-900/90 border-white/5' : 'bg-white border-black/10'
       }`}>
-        <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
+        <div className="hidden md:block absolute top-0 right-0 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
         
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           {/* Picture on the left */}
           <div className="col-span-1 md:col-span-4 flex flex-col items-center">
             <div className="relative group">
               {/* Animated decorative ring */}
-              <div className="absolute inset-x-0 -inset-y-2 bg-gradient-to-tr from-emerald-500 to-blue-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
+              <div className="hidden md:block absolute inset-x-0 -inset-y-2 bg-gradient-to-tr from-blue-500 to-blue-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-500" />
               
               <div className={`relative w-40 h-40 md:w-56 md:h-56 rounded-2xl overflow-hidden border-2 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02] ${
                 isDarkMode ? 'border-white/10 bg-[#161c24]' : 'border-slate-200 bg-slate-50'
@@ -2475,8 +2445,8 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 
                 {/* Floating identity pill */}
                 <div className="absolute inset-x-0 bottom-0 py-3 bg-gradient-to-t from-black/95 to-black/20 text-center">
-                  <span className="text-[9px] font-mono font-bold tracking-[0.25em] text-emerald-400 uppercase leading-none block">
-                    PROFESSOR & ENGENHEIRO DE SOFTWARE
+                  <span className="text-[9px] font-mono font-bold tracking-[0.25em] text-blue-400 uppercase leading-none block">
+                    PROFESSOR ESPECIALISTA
                   </span>
                 </div>
               </div>
@@ -2487,7 +2457,7 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
           <div className="col-span-1 md:col-span-8 flex flex-col justify-center space-y-4">
             <div className="space-y-1 text-center md:text-left">
               <span className={`text-[10px] font-mono tracking-widest uppercase font-bold px-3 py-1 rounded-full border ${
-                isDarkMode ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-emerald-500/5 text-emerald-700 border-emerald-500/15'
+                isDarkMode ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-blue-500/5 text-blue-700 border-blue-500/15'
               }`}>
                 Minha missão pedagógica
               </span>
@@ -2502,13 +2472,13 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
               isDarkMode ? 'text-white/70' : 'text-slate-600'
             }`}>
               <p>
-                Professor dedicado à integração entre tecnologia e educação, com sólida experiência no setor de TI ao longo de mais de 15 anos entre atuação prática e ambiente acadêmico. <strong>Lucas Mercer Leniar</strong> desenvolve seu trabalho com foco na aplicação real da tecnologia no contexto educacional, aproximando conceitos técnicos da vivência dos estudantes.
+                A tecnologia não é apenas sobre ensinar código, é sobre dar vida a ideias. Atuo há anos unindo o universo da Infraestrutura DevOps, Robótica e Softwares para construir um <strong>ecossistema de educação prática e tangível</strong>.
               </p>
               <p>
-                Sua atuação é centrada no ensino do pensamento computacional de forma acessível e aplicada. Por meio de metodologias práticas, transforma conceitos abstratos em experiências concretas de aprendizagem, incentivando o desenvolvimento da lógica, da análise e da resolução de problemas.
+                Minha missão clara é transformar conceitos muitas vezes massivos e abstratos em plataformas ou robôs vivos na sala de aula. <strong>Educar com as mãos na massa</strong> ajuda meus alunos a entenderem não apenas o &quot;como&quot;, mas principalmente o &quot;porquê&quot; da tecnologia e de seu aprendizado contínuo.
               </p>
               <p>
-                Acredita que capacitar o estudante a decompor problemas, reconhecer padrões, aplicar abstração e construir soluções passo a passo é fundamental para formar autonomia intelectual e técnica, preparando-o para os desafios do mundo contemporâneo.
+                Acredito que através da Internet das Coisas (IoT) e da Robótica Educacional, quebramos a barreira do código abstrato e fortalecemos a confiança com a prova em laboratório do <strong>pensamento funcionando na realidade</strong>.
               </p>
             </div>
 
@@ -2534,7 +2504,7 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                       title="Clique para copiar os metadados"
                     >
                       <div className={`p-1.5 rounded-lg shrink-0 ${
-                        isDarkMode ? 'bg-[#1e2733] text-emerald-400' : 'bg-slate-200/50 text-emerald-700'
+                        isDarkMode ? 'bg-[#1e2733] text-blue-400' : 'bg-slate-200/50 text-blue-700'
                       }`}>
                         {item.icon}
                       </div>
@@ -2552,7 +2522,7 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                       </div>
                       
                       <div className="absolute right-2.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="text-[8px] font-mono text-emerald-500 uppercase font-black">Copiar</span>
+                        <span className="text-[8px] font-mono text-blue-500 uppercase font-black">Copiar</span>
                       </div>
                     </button>
                   ) : (
@@ -2565,7 +2535,7 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                       }`}
                     >
                       <div className={`p-1.5 rounded-lg shrink-0 ${
-                        isDarkMode ? 'bg-[#1e2733] text-emerald-400' : 'bg-slate-200/50 text-emerald-700'
+                        isDarkMode ? 'bg-[#1e2733] text-blue-400' : 'bg-slate-200/50 text-blue-700'
                       }`}>
                         {item.icon}
                       </div>
@@ -2593,7 +2563,7 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
       {/* Introduction Card with Photo & Quick Actions */}
       <div className="flex justify-center mb-8">
         <div className={`p-1 rounded-2xl border flex gap-1 ${
-          isDarkMode ? 'bg-[#0f141a] border-white/5' : 'bg-slate-100 border-black/5'
+          isDarkMode ? 'bg-slate-900 border-white/5' : 'bg-slate-100 border-black/5'
         }`}>
           {[
             { id: 'stats', label: 'Métricas de Impacto', icon: <Award size={14} /> },
@@ -2606,8 +2576,8 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
               className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl font-mono text-[10.5px] uppercase font-bold tracking-wider transition-all cursor-pointer ${
                 activeTab === tab.id
                   ? isDarkMode 
-                    ? 'bg-emerald-500/10 border-0 text-emerald-400 shadow-lg' 
-                    : 'bg-white border text-emerald-700 border-slate-200 shadow-md'
+                    ? 'bg-blue-500/10 border-0 text-blue-400 shadow-lg' 
+                    : 'bg-white border text-blue-700 border-slate-200 shadow-md'
                   : 'text-slate-400 hover:text-slate-100 bg-transparent'
               }`}
             >
@@ -2631,13 +2601,13 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
           {/* TAB 1: INTERACTIVE TIMELINE */}
           {activeTab === 'timeline' && (
             <div className={`rounded-3xl border p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 shadow-lg ${
-              isDarkMode ? 'bg-[#0f141a]/90 border-white/5' : 'bg-slate-50 border-black/10'
+              isDarkMode ? 'bg-slate-900/90 border-white/5' : 'bg-slate-50 border-black/10'
             }`}>
               
               {/* Year Selection sidebar (col-span-4) */}
               <div className="lg:col-span-4 flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible pb-3 lg:pb-0 pr-1 border-b lg:border-b-0 lg:border-r border-dashed border-black/10 dark:border-white/5">
                 <span className={`text-[9px] font-mono font-bold tracking-[0.2em] uppercase block mb-2 w-full text-left hidden lg:block ${
-                  isDarkMode ? 'text-emerald-400' : 'text-emerald-700'
+                  isDarkMode ? 'text-blue-400' : 'text-blue-700'
                 }`}>
                   Fases da Carreira
                 </span>
@@ -2685,7 +2655,7 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                   <div className="flex flex-wrap items-center gap-3 mb-3">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-400">MARCO DA INFRAESTRUTURA</span>
                     <span className={`text-[9px] px-2 py-0.5 rounded font-mono font-bold ${
-                      isDarkMode ? 'bg-[#151c24] text-emerald-400' : 'bg-slate-200 text-emerald-700'
+                      isDarkMode ? 'bg-[#151c24] text-blue-400' : 'bg-slate-200 text-blue-700'
                     }`}>
                       Anos Ativos
                     </span>
@@ -2715,8 +2685,8 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                         key={idx}
                         className={`text-[9px] font-mono font-semibold px-2.5 py-1 rounded-lg border transition-all hover:scale-105 ${
                           isDarkMode 
-                            ? 'bg-[#11161b] border-white/5 text-emerald-300' 
-                            : 'bg-white border-slate-200 text-emerald-700 shadow-sm'
+                            ? 'bg-slate-800 border-white/5 text-blue-300' 
+                            : 'bg-white border-slate-200 text-blue-700 shadow-sm'
                         }`}
                       >
                         ⚡ {tag}
@@ -2741,14 +2711,14 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                   transition={{ delay: i * 0.08, duration: 0.3 }}
                   className={`rounded-3xl border p-6 flex flex-col justify-between transition-all group hover:shadow-xl ${
                     isDarkMode 
-                      ? 'bg-[#0f141a]/90 border-white/5 hover:border-emerald-500/20 hover:bg-[#121922]' 
-                      : 'bg-white border-black/10 hover:border-emerald-500/30'
+                      ? 'bg-slate-900/90 border-white/5 hover:border-blue-500/20 hover:bg-[#121922]' 
+                      : 'bg-white border-black/10 hover:border-blue-500/30'
                   }`}
                 >
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
                       <div className={`p-3 rounded-2xl transition-all group-hover:scale-110 ${
-                        isDarkMode ? 'bg-[#161c24] text-emerald-400 border border-white/5' : 'bg-slate-100 text-emerald-700 border border-slate-200'
+                        isDarkMode ? 'bg-[#161c24] text-blue-400 border border-white/5' : 'bg-slate-100 text-blue-700 border border-slate-200'
                       }`}>
                         {pillar.icon}
                       </div>
@@ -2774,7 +2744,7 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                   </div>
 
                   <div className={`mt-4 pt-3.5 border-t text-[10.5px] font-medium leading-relaxed border-black/5 dark:border-white/5 flex gap-1.5 items-start ${
-                    isDarkMode ? 'text-emerald-400' : 'text-emerald-700 font-semibold'
+                    isDarkMode ? 'text-blue-400' : 'text-blue-700 font-semibold'
                   }`}>
                     <span className="font-bold text-[10px] font-mono">Benefício:</span>
                     <span className="italic">{pillar.benefit}</span>
@@ -2799,8 +2769,8 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                     onClick={() => setExpandedStat(isExpanded ? null : i)}
                     className={`rounded-[1.25rem] md:rounded-[1.5rem] border p-4 flex flex-col justify-start transition-all cursor-pointer overflow-hidden ${
                       isExpanded 
-                        ? (isDarkMode ? stat.activeColor : 'bg-white border-none shadow-xl ring-2 ring-emerald-500/20')
-                        : (isDarkMode ? 'bg-[#0f141a]/90 border-white/5 hover:border-emerald-500/30' : 'bg-white border-black/10 hover:shadow-lg hover:border-emerald-500/30')
+                        ? (isDarkMode ? stat.activeColor : 'bg-white border-none shadow-xl ring-2 ring-blue-500/20')
+                        : (isDarkMode ? 'bg-slate-900/90 border-white/5 hover:border-blue-500/30' : 'bg-white border-black/10 hover:shadow-lg hover:border-blue-500/30')
                     }`}
                   >
                     <motion.div layout className="space-y-2">
@@ -2808,7 +2778,7 @@ const LifeSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                         <span className={`inline-block py-[0.15rem] px-2 text-[8px] sm:text-[9px] font-mono font-bold rounded flex-shrink-0 uppercase tracking-widest ${stat.color}`}>
                           {isExpanded ? 'DETALHES' : 'ESTATÍSTICA'}
                         </span>
-                        <ChevronRight size={12} className={`transition-transform duration-300 ${isExpanded ? 'rotate-90 text-emerald-500' : 'text-slate-400'}`} />
+                        <ChevronRight size={12} className={`transition-transform duration-300 ${isExpanded ? 'rotate-90 text-blue-500' : 'text-slate-400'}`} />
                       </div>
                       <span className={`block text-xl md:text-2xl font-extrabold tracking-tight font-serif italic ${
                         isDarkMode ? 'text-white' : 'text-slate-900'
@@ -2914,7 +2884,7 @@ const IFrameSection = ({
         {onToggleMaximize && (
           <button
             onClick={onToggleMaximize}
-            className="absolute top-4 right-4 z-50 p-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full transition-all duration-250 shadow-2xl border border-emerald-400/20 cursor-pointer hover:scale-110 active:scale-95 flex items-center justify-center"
+            className="absolute top-4 right-4 z-50 p-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-full transition-all duration-250 shadow-2xl border border-blue-400/20 cursor-pointer hover:scale-110 active:scale-95 flex items-center justify-center"
             title="Restaurar Layout"
           >
             <Minimize2 size={16} />
@@ -2940,7 +2910,7 @@ const IFrameSection = ({
             {onToggleMaximize && (
               <button
                 onClick={onToggleMaximize}
-                className="uppercase tracking-widest font-mono font-bold text-emerald-600 hover:text-emerald-500 flex items-center gap-1.5 transition-all bg-emerald-500/10 rounded-full border border-emerald-500/20 cursor-pointer hover:bg-emerald-500/20 text-[9.5px] px-3 py-1.2"
+                className="uppercase tracking-widest font-mono font-bold text-blue-600 hover:text-blue-500 flex items-center gap-1.5 transition-all bg-blue-500/10 rounded-full border border-blue-500/20 cursor-pointer hover:bg-blue-500/20 text-[9.5px] px-3 py-1.2"
               >
                 Maximizar <Maximize2 size={11} />
               </button>
@@ -3154,9 +3124,9 @@ const GamificationSection = ({
       rank = 'Mestre Admin Supremo';
       title = 'Nível 6: Mestre Hacker Educacional';
       detailsStr = 'SENSACIONAL! Você desvendou 100% das trilhas acadêmicas pedagógicas!';
-      bgGradient = 'from-emerald-500/15 via-amber-500/5 to-emerald-500/15 border-amber-500/40';
+      bgGradient = 'from-blue-500/15 via-amber-500/5 to-blue-500/15 border-amber-500/40';
       textAccent = 'text-amber-400 animate-pulse';
-      fillBar = 'bg-gradient-to-r from-emerald-400 to-amber-400 shadow-[0_0_15px_#f59e0b]';
+      fillBar = 'bg-gradient-to-r from-blue-400 to-amber-400 shadow-[0_0_15px_#f59e0b]';
     }
 
     return { xpPercent, rank, title, detailsStr, bgGradient, textAccent, fillBar };
@@ -3170,7 +3140,7 @@ const GamificationSection = ({
       {/* Title & Flashcard Header */}
       <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="mb-10 flex flex-col md:flex-row items-center justify-between gap-6 w-full text-center md:text-left">
         <div>
-          <span className="px-3 py-1 text-[10px] font-mono rounded-full font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 mb-3 inline-block">
+          <span className="px-3 py-1 text-[10px] font-mono rounded-full font-bold uppercase tracking-widest bg-blue-500/10 text-blue-500 border border-blue-500/20 mb-3 inline-block">
             SISTEMA GAMIFICADO
           </span>
           <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-3 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Conquistas</h2>
@@ -3221,7 +3191,7 @@ const GamificationSection = ({
           
           <div className="flex justify-between items-center mt-2 text-[10px] font-mono uppercase tracking-wider text-slate-400">
             <span>0% (EXPLORADOR)</span>
-            <span className="font-bold text-emerald-500">{progress.xpPercent}% COMPLETO</span>
+            <span className="font-bold text-blue-500">{progress.xpPercent}% COMPLETO</span>
             <span>100% (MESTRE ADMIN)</span>
           </div>
         </div>
@@ -3240,7 +3210,7 @@ const GamificationSection = ({
 
       {/* Information Helper Header */}
       <div className={`text-xs font-mono mb-4 px-2 tracking-wide flex items-center gap-1.5 ${isDarkMode ? 'text-white/40' : 'text-black/40'}`}>
-        <Sparkles size={12} className="text-emerald-500 animate-pulse" />
+        <Sparkles size={12} className="text-blue-500 animate-pulse" />
         <span>Instruções: Cliques nos badges revelam dicas e reproduzem sons exclusivos retrôs.</span>
       </div>
 
@@ -3263,7 +3233,7 @@ const GamificationSection = ({
               onClick={() => handleBadgeClick(badge.id, badge.unlocked)}
               className={`relative p-5 rounded-3xl border text-center transition-all duration-300 overflow-hidden flex flex-col items-center min-h-[210px] cursor-pointer select-none group min-w-0 ${
                 badge.unlocked 
-                  ? (isDarkMode ? 'bg-[#0f141a] border-emerald-500/30 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]' : 'bg-emerald-50/50 border-emerald-200 hover:border-emerald-300 hover:shadow-lg')
+                  ? (isDarkMode ? 'bg-slate-900 border-blue-500/30 hover:border-blue-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]' : 'bg-blue-50/50 border-blue-200 hover:border-blue-300 hover:shadow-lg')
                   : (isDarkMode ? 'bg-black/20 border-white/5 opacity-60 hover:opacity-100 hover:border-white/10' : 'bg-black/5 border-black/5 opacity-60 hover:opacity-100 hover:border-slate-300')
               }`}
             >
@@ -3290,14 +3260,14 @@ const GamificationSection = ({
               ))}
 
               {badge.unlocked && (
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-emerald-500/5 to-emerald-500/0 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-blue-500/5 to-blue-500/0 pointer-events-none" />
               )}
               
               <div className={`text-4xl sm:text-5xl mb-4 relative z-10 transition-transform duration-500 group-hover:scale-115 ${badge.unlocked ? 'scale-110 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'text-slate-400 group-hover:rotate-12'}`}>
                 {badge.unlocked ? badge.icon : '🔒'}
               </div>
               
-              <h3 className={`text-base sm:text-lg font-bold mb-2 font-serif tracking-tight truncate w-full group-hover:text-emerald-500 transition-colors ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+              <h3 className={`text-base sm:text-lg font-bold mb-2 font-serif tracking-tight truncate w-full group-hover:text-blue-500 transition-colors ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 {badge.title}
               </h3>
               
@@ -3306,7 +3276,7 @@ const GamificationSection = ({
               </p>
               
               {badge.unlocked ? (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-widest whitespace-nowrap">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-500/10 text-blue-500 rounded-full text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-widest whitespace-nowrap">
                   <Unlock size={10} />
                   Desbloqueado
                 </div>
@@ -3352,8 +3322,8 @@ const GamificationSection = ({
             exit={{ opacity: 0, y: -30 }}
             className={`mt-10 p-6 rounded-3xl border text-center relative overflow-hidden ${
               isDarkMode 
-                ? 'bg-gradient-to-r from-emerald-950/40 via-amber-950/30 to-emerald-950/40 border-amber-500/40' 
-                : 'bg-gradient-to-r from-emerald-50 via-amber-50 to-emerald-50 border-amber-300'
+                ? 'bg-gradient-to-r from-blue-950/40 via-amber-950/30 to-blue-950/40 border-amber-500/40' 
+                : 'bg-gradient-to-r from-blue-50 via-amber-50 to-blue-50 border-amber-300'
             }`}
           >
             {/* Animated gold star highlights */}
@@ -3373,7 +3343,7 @@ const GamificationSection = ({
               </p>
 
               {/* Secret console command */}
-              <div className="p-4 rounded-xl font-mono text-xs max-w-md w-full bg-black/60 border border-amber-500/30 text-emerald-400 text-left relative group">
+              <div className="p-4 rounded-xl font-mono text-xs max-w-md w-full bg-black/60 border border-amber-500/30 text-blue-400 text-left relative group">
                 <div className="absolute top-2 right-2 text-[9px] uppercase font-bold text-amber-500 bg-amber-500/10 p-1 rounded">
                   COMANDO SUPREMO
                 </div>
@@ -3381,7 +3351,7 @@ const GamificationSection = ({
                 <code className="text-amber-300 font-bold select-all bg-black px-1.5 py-0.5 rounded">sudo init-matrix-pedagogico</code>
               </div>
 
-              <div className="mt-6 text-[10px] uppercase font-mono tracking-widest text-emerald-500 font-bold">
+              <div className="mt-6 text-[10px] uppercase font-mono tracking-widest text-blue-500 font-bold">
                 CRACHÁ DE GRADUAÇÃO ATIVA ASSINADO: L. L. 2026
               </div>
             </div>
@@ -3403,7 +3373,7 @@ const ProjectsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
   ]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const projects = [
+  const projects: { title: string; date: string; role: string; desc: string; tags: string[]; image: string; link?: string }[] = [
     {
       title: "Cívico Terminal",
       date: "2023 - Presente",
@@ -3604,7 +3574,7 @@ const ProjectsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
       {/* Block Header */}
       <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mb-10 text-center md:text-left">
         <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Portfólio de Projetos</h2>
-        <p className={`max-w-xl uppercase text-[10px] sm:text-[11px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-emerald-400' : 'text-black/40'}`}>
+        <p className={`max-w-xl uppercase text-[10px] sm:text-[11px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-blue-400' : 'text-black/40'}`}>
           Exploração visual dos meus trabalhos integrando tecnologia, educação e infraestrutura.
         </p>
       </motion.div>
@@ -3618,7 +3588,7 @@ const ProjectsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
             <h3 className={`text-sm font-mono uppercase tracking-widest font-bold ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>
               📂 Projetos Ativos ({projects.length})
             </h3>
-            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 font-bold border border-emerald-500/10">
+            <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-500 font-bold border border-blue-500/10">
               Grade 2x2
             </span>
           </div>
@@ -3633,7 +3603,7 @@ const ProjectsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 transition={{ duration: 0.4, delay: i * 0.08 }}
                 className={`group rounded-2xl overflow-hidden border flex flex-col h-full transition-all duration-300 hover:shadow-lg ${
                   isDarkMode 
-                    ? 'bg-[#11181c] border-white/5 hover:border-emerald-500/30' 
+                    ? 'bg-[#11181c] border-white/5 hover:border-blue-500/30' 
                     : 'bg-white border-black/5 hover:border-black/10'
                 }`}
               >
@@ -3650,16 +3620,16 @@ const ProjectsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
 
                 {/* Content Body */}
                 <div className="flex flex-col p-4 flex-grow relative z-10 -mt-6">
-                  <div className={`text-[9px] font-mono tracking-widest font-bold px-2 py-1 rounded-full border mb-2 w-fit inline-flex backdrop-blur-md shadow-sm ${
+                  <div className={`text-[9px] font-mono tracking-widest font-bold px-2 py-1 rounded-full border mb-2 w-fit inline-flex md:backdrop-blur-md shadow-sm ${
                     isDarkMode ? 'bg-black/50 text-white/90 border-white/15' : 'bg-white/80 text-black/90 border-black/10'
                   }`}>
                     {project.date}
                   </div>
                   
-                  <h4 className={`text-base font-bold tracking-tight mb-1 ${isDarkMode ? 'text-white group-hover:text-emerald-400' : 'text-slate-900 group-hover:text-emerald-700'} transition-colors truncate`}>
+                  <h4 className={`text-base font-bold tracking-tight mb-1 ${isDarkMode ? 'text-white group-hover:text-blue-400' : 'text-slate-900 group-hover:text-blue-700'} transition-colors truncate`}>
                     {project.title}
                   </h4>
-                  <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-500 mb-2">
+                  <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-blue-500 mb-2">
                     {project.role}
                   </p>
                   
@@ -3681,7 +3651,7 @@ const ProjectsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                       target="_blank" 
                       rel="noopener noreferrer" 
                       className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest font-mono transition-colors w-fit pt-2.5 border-t border-dashed w-full ${
-                        isDarkMode ? 'border-white/10 text-emerald-400 hover:text-emerald-300' : 'border-black/5 text-emerald-600 hover:text-emerald-700'
+                        isDarkMode ? 'border-white/10 text-blue-400 hover:text-blue-300' : 'border-black/5 text-blue-600 hover:text-blue-700'
                       }`}
                     >
                       Visitar <ArrowRight size={10} className="group-hover:translate-x-1 transition-transform animate-pulse" />
@@ -3707,13 +3677,13 @@ const ProjectsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
               <div className="flex items-center gap-1.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+                <div className="w-2.5 h-2.5 rounded-full bg-blue-500/80" />
                 <span className="text-[10px] tracking-wider font-mono text-white/40 ml-3 truncate max-w-[130px] md:max-w-none">
                   lucas@portfolio-sh:~
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
-                <ShieldCheck size={12} className="text-emerald-500" />
+                <ShieldCheck size={12} className="text-blue-500" />
                 <span className="text-[9px] font-mono uppercase font-bold text-white/30">
                   Superuser
                 </span>
@@ -3725,21 +3695,21 @@ const ProjectsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
               {/* TERMINAL ACTIVE WORKSPACE */}
               <div className="flex-grow flex flex-col overflow-hidden">
                 <div 
-                  className="flex-grow overflow-y-auto font-mono text-xs text-emerald-150 space-y-1 mb-4 pr-1 scrollbar-thin scrollbar-thumb-white/5 custom-scroll text-left select-text"
+                  className="flex-grow overflow-y-auto font-mono text-xs text-blue-150 space-y-1 mb-4 pr-1 scrollbar-thin scrollbar-thumb-white/5 custom-scroll text-left select-text"
                   ref={(el) => { if (el) el.scrollTop = el.scrollHeight; }}
                 >
                   {terminalHistory.map((line, idx) => (
                     <div key={idx} className="whitespace-pre-wrap leading-relaxed hover:bg-white/[0.03] px-1 py-0.5 rounded transition-all break-all text-left">
                       {line.startsWith('lucas@portfolio-sh:~$') ? (
-                        <span><span className="text-emerald-400 font-bold">lucas@portfolio-sh:~$</span> {line.replace('lucas@portfolio-sh:~$ ', '')}</span>
+                        <span><span className="text-blue-400 font-bold">lucas@portfolio-sh:~$</span> {line.replace('lucas@portfolio-sh:~$ ', '')}</span>
                       ) : line.startsWith('Erro:') ? (
                         <span className="text-red-400">{line}</span>
                       ) : line.startsWith('[SUCCESS]') ? (
-                        <span className="text-emerald-300 font-bold">{line}</span>
+                        <span className="text-blue-300 font-bold">{line}</span>
                       ) : line.startsWith('🔓') || line.startsWith('🏆') ? (
                         <span className="text-amber-400 font-bold">{line}</span>
                       ) : line.startsWith('🧬') || line.startsWith('💻') ? (
-                        <span className="text-emerald-400 font-medium">{line}</span>
+                        <span className="text-blue-400 font-medium">{line}</span>
                       ) : (
                         line
                       )}
@@ -3748,7 +3718,7 @@ const ProjectsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                 </div>
 
                 <form onSubmit={handleTerminalSubmit} className="flex items-center gap-1 border-t border-white/10 pt-3 mt-auto shrink-0 select-none">
-                  <span className="text-xs font-mono text-emerald-400 font-bold shrink-0">lucas@portfolio-sh:~$</span>
+                  <span className="text-xs font-mono text-blue-400 font-bold shrink-0">lucas@portfolio-sh:~$</span>
                   <input
                     type="text"
                     autoComplete="off"
@@ -3756,9 +3726,9 @@ const ProjectsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
                     value={terminalInput}
                     onChange={(e) => setTerminalInput(e.target.value)}
                     placeholder="help, whoami, neofetch, run civico.sh..."
-                    className="flex-1 bg-transparent border-0 font-mono text-xs text-emerald-150 focus:outline-none focus:ring-0 p-0 placeholder-emerald-100/10 caret-emerald-400"
+                    className="flex-1 bg-transparent border-0 font-mono text-xs text-blue-150 focus:outline-none focus:ring-0 p-0 placeholder-blue-100/10 caret-blue-400"
                   />
-                  <span className="animate-pulse w-1.5 h-3.5 bg-emerald-400 inline-block shrink-0" />
+                  <span className="animate-pulse w-1.5 h-3.5 bg-blue-400 inline-block shrink-0" />
                 </form>
               </div>
             </div>
@@ -3960,20 +3930,20 @@ const ShellFilesSection = ({
           animate={{ opacity: 1, y: 0 }}
           className="max-w-2xl w-full rounded-xl border border-[#2d3748] bg-[#0a0e11] shadow-[0_0_40px_rgba(16,185,129,0.1)] overflow-hidden font-mono"
         >
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-[#11161b]">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-slate-800">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-red-500/80" />
               <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-              <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+              <div className="w-3 h-3 rounded-full bg-blue-500/80" />
             </div>
             <div className="text-[11px] text-white/40 tracking-widest flex items-center gap-2 max-w-[200px] truncate">
-              <ShieldCheck size={12} className="text-emerald-500" />
+              <ShieldCheck size={12} className="text-blue-500" />
               <span>root@lucasleniar:~</span>
             </div>
           </div>
           
           <div className="p-6 md:p-10 space-y-6">
-            <div className="space-y-1.5 text-sm md:text-base text-emerald-400 text-left">
+            <div className="space-y-1.5 text-sm md:text-base text-blue-400 text-left">
               <p>LL-SH (Lucas Leniar Secure Shell) v2.5.1</p>
               <p>Warning: Restricted Authorization Area.</p>
               <p className="text-white/60 pt-4 pb-2">Please authenticate to decrypt repository.</p>
@@ -3981,12 +3951,12 @@ const ShellFilesSection = ({
             
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="flex items-center gap-3">
-                <span className="text-emerald-500 font-bold">Password:</span>
+                <span className="text-blue-500 font-bold">Password:</span>
                 <input 
                   type="password" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="flex-1 bg-transparent border-none focus:outline-none focus:ring-0 text-emerald-300 font-mono text-lg placeholder-emerald-990/50"
+                  className="flex-1 bg-transparent border-none focus:outline-none focus:ring-0 text-blue-300 font-mono text-lg placeholder-blue-990/50"
                   placeholder="type password..."
                   autoFocus
                 />
@@ -4015,13 +3985,13 @@ const ShellFilesSection = ({
          <div className={`flex items-center justify-between px-1 ${isMaximized ? 'mb-4' : 'mb-6 md:mb-8'}`}>
             <div className="text-left">
               <h2 className={`font-bold tracking-tight italic font-serif leading-none mb-1 md:mb-2 ${isMaximized ? 'text-xl md:text-2xl' : 'text-2xl md:text-4xl'} ${isDarkMode ? 'text-white' : 'text-black'}`}>Arquivos SH</h2>
-              <p className={`uppercase text-[9px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-emerald-400' : 'text-black/30'}`}>Repositório privado de automação e scripts Bash.</p>
+              <p className={`uppercase text-[9px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-blue-400' : 'text-black/30'}`}>Repositório privado de automação e scripts Bash.</p>
             </div>
             <div className="flex gap-2">
               {onToggleMaximize && (
                 <button
                   onClick={onToggleMaximize}
-                  className={`uppercase tracking-widest font-mono font-bold text-emerald-600 hover:text-emerald-500 flex items-center gap-1.5 transition-all bg-emerald-500/10 rounded-full border border-emerald-500/20 cursor-pointer hover:bg-emerald-500/20 ${
+                  className={`uppercase tracking-widest font-mono font-bold text-blue-600 hover:text-blue-500 flex items-center gap-1.5 transition-all bg-blue-500/10 rounded-full border border-blue-500/20 cursor-pointer hover:bg-blue-500/20 ${
                     isMaximized ? 'text-[9px] px-2.5 py-1' : 'text-[9.5px] px-3 py-1.2'
                   }`}
                 >
@@ -4061,7 +4031,7 @@ const ShellFilesSection = ({
                 whileHover={{ y: -4, scale: 1.02 }}
                 transition={{ delay: i * 0.05, duration: 0.4 }}
                 className={`p-4 md:p-5 rounded-2xl border shadow-sm hover:shadow-[0_10px_30px_rgba(16,185,129,0.1)] transition-all group relative overflow-hidden flex flex-col ${
-                  isDarkMode ? 'bg-[#11161b] border-white/5 shadow-black/40' : 'bg-white border-black/[0.05]'
+                  isDarkMode ? 'bg-slate-800 border-white/5 shadow-black/40' : 'bg-white border-black/[0.05]'
                 }`}
               >
                 <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
@@ -4070,7 +4040,7 @@ const ShellFilesSection = ({
                 
                 <div className="relative z-10 flex-1 flex flex-col text-left">
                   <div className="mb-4 flex items-center justify-between">
-                     <div className="p-2.5 bg-emerald-500/10 rounded-xl text-emerald-600">
+                     <div className="p-2.5 bg-blue-500/10 rounded-xl text-blue-600">
                         <FileCode size={20} />
                      </div>
                      <span className={`text-[9px] font-mono font-bold uppercase transition-colors ${isDarkMode ? 'text-white/20' : 'text-black/20'}`}>.sh</span>
@@ -4081,17 +4051,17 @@ const ShellFilesSection = ({
                   
                   <div className="space-y-3 mb-4">
                     <div className="space-y-1.5">
-                      <label className={`text-[8.5px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-emerald-400/60' : 'text-black/30'}`}>Download</label>
+                      <label className={`text-[8.5px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-blue-400/60' : 'text-black/30'}`}>Download</label>
                       <div className="relative group/copy">
                         <code className={`block w-full p-2.5 border rounded-lg text-[9px] font-mono break-all pr-10 ${
-                          isDarkMode ? 'bg-black/50 border-white/5 text-emerald-400' : 'bg-black/[0.03] border-black/5 text-emerald-700'
+                          isDarkMode ? 'bg-black/50 border-white/5 text-blue-400' : 'bg-black/[0.03] border-black/5 text-blue-700'
                         }`}>
                           wget {file.url.replace('https://', '')}
                         </code>
                         <button 
                           onClick={() => handleCopy(`wget ${file.url.replace('https://', '')}`, file.name + '-download')}
                           className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 transition-colors ${
-                            isDarkMode ? 'text-white/20 hover:text-emerald-400' : 'text-black/20 hover:text-emerald-600'
+                            isDarkMode ? 'text-white/20 hover:text-blue-400' : 'text-black/20 hover:text-blue-600'
                           }`}
                         >
                           {copiedId === file.name + '-download' ? <Check size={16} /> : <Copy size={16} />}
@@ -4100,21 +4070,21 @@ const ShellFilesSection = ({
                     </div>
 
                     <div className={`p-3 rounded-xl border text-left ${
-                      isDarkMode ? 'bg-emerald-950/20 border-emerald-900/45 text-emerald-300' : 'bg-emerald-50 border-emerald-100 text-emerald-800'
+                      isDarkMode ? 'bg-blue-950/20 border-blue-900/45 text-blue-300' : 'bg-blue-50 border-blue-100 text-blue-800'
                     }`}>
                       <p className="text-[9px] leading-relaxed mb-1.5 normal-case font-sans tracking-normal">
                         Use o usuário <span className="font-bold underline">root</span>:
                       </p>
                       <div className="relative group/exec">
                         <code className={`block font-mono font-bold p-2.5 rounded-lg pr-8 text-[10px] ${
-                          isDarkMode ? 'bg-emerald-900/30 text-emerald-300' : 'bg-emerald-900/10 text-emerald-900'
+                          isDarkMode ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-900/10 text-blue-900'
                         }`}>
                           sudo bash {file.name}
                         </code>
                         <button 
                           onClick={() => handleCopy(`sudo bash ${file.name}`, file.name + '-exec')}
                           className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 transition-colors ${
-                            isDarkMode ? 'text-emerald-300/30 hover:text-emerald-400' : 'text-emerald-800/30 hover:text-emerald-900'
+                            isDarkMode ? 'text-blue-300/30 hover:text-blue-400' : 'text-blue-800/30 hover:text-blue-900'
                           }`}
                         >
                           {copiedId === file.name + '-exec' ? <Check size={14} /> : <Copy size={14} />}
@@ -4122,20 +4092,20 @@ const ShellFilesSection = ({
                       </div>
                     </div>
 
-                    <div className="space-y-1.5 pt-2 border-t border-dashed border-emerald-500/10">
+                    <div className="space-y-1.5 pt-2 border-t border-dashed border-blue-500/10">
                       <div className="flex items-center justify-between">
-                        <label className={`text-[8.5px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-emerald-400/80' : 'text-emerald-700/80'}`}>💡 Execução Direta</label>
+                        <label className={`text-[8.5px] font-bold uppercase tracking-widest ${isDarkMode ? 'text-blue-400/80' : 'text-blue-700/80'}`}>💡 Execução Direta</label>
                       </div>
                       <div className="relative group/direct">
                         <code className={`block w-full p-2.5 border rounded-lg text-[9px] font-mono break-all pr-10 ${
-                          isDarkMode ? 'bg-black/60 border-emerald-500/15 text-emerald-300' : 'bg-emerald-50/40 border-emerald-500/10 text-emerald-800'
+                          isDarkMode ? 'bg-black/60 border-blue-500/15 text-blue-300' : 'bg-blue-50/40 border-blue-500/10 text-blue-800'
                         }`}>
                           wget -qO- {file.url.replace('https://', '')} | sudo bash
                         </code>
                         <button 
                           onClick={() => handleCopy(`wget -qO- ${file.url.replace('https://', '')} | sudo bash`, file.name + '-direct')}
                           className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 transition-colors ${
-                            isDarkMode ? 'text-white/20 hover:text-emerald-400' : 'text-black/20 hover:text-emerald-600'
+                            isDarkMode ? 'text-white/20 hover:text-blue-400' : 'text-black/20 hover:text-blue-600'
                           }`}
                         >
                           {copiedId === file.name + '-direct' ? <Check size={16} /> : <Copy size={16} />}
@@ -4148,8 +4118,8 @@ const ShellFilesSection = ({
                     <a 
                       href={file.url}
                       download={file.name}
-                      className={`flex-1 text-center py-2.5 text-[9px] font-bold rounded-lg hover:bg-emerald-600 transition-all uppercase tracking-widest flex items-center justify-center gap-1.5 cursor-pointer ${
-                        isDarkMode ? 'bg-emerald-600/20 hover:bg-emerald-600 text-white' : 'bg-black text-white'
+                      className={`flex-1 text-center py-2.5 text-[9px] font-bold rounded-lg hover:bg-blue-600 transition-all uppercase tracking-widest flex items-center justify-center gap-1.5 cursor-pointer ${
+                        isDarkMode ? 'bg-blue-600/20 hover:bg-blue-600 text-white' : 'bg-black text-white'
                       }`}
                     >
                        Baixar Script <ArrowRight size={12} />
@@ -4165,28 +4135,28 @@ const ShellFilesSection = ({
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500/80" />
                 <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                <div className="w-3 h-3 rounded-full bg-blue-500/80" />
                 <span className="text-[11px] tracking-widest font-mono text-white/40 ml-4 hidden md:block">lucas@portfolio-sh:~ (Simulador)</span>
               </div>
-              <Terminal size={14} className="text-emerald-500/50" />
+              <Terminal size={14} className="text-blue-500/50" />
             </div>
 
             <div 
-              className="h-64 md:h-80 overflow-y-auto font-mono text-sm text-emerald-100 space-y-1 mb-4 pr-2 selection:bg-emerald-500/30 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent custom-scroll pr-1 pl-1 text-left select-text"
+              className="h-64 md:h-80 overflow-y-auto font-mono text-sm text-blue-100 space-y-1 mb-4 pr-2 selection:bg-blue-500/30 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent custom-scroll pr-1 pl-1 text-left select-text"
               ref={(el) => { if (el) el.scrollTop = el.scrollHeight; }}
             >
               {terminalHistory.map((line, idx) => (
                 <div key={idx} className="whitespace-pre-wrap leading-relaxed hover:bg-white/[0.04] px-1 py-0.5 rounded transition-colors break-all text-left">
                   {line.startsWith('lucas@portfolio-sh:~$') ? (
-                    <span><span className="text-emerald-400 font-bold">lucas@portfolio-sh:~$</span> {line.replace('lucas@portfolio-sh:~$ ', '')}</span>
+                    <span><span className="text-blue-400 font-bold">lucas@portfolio-sh:~$</span> {line.replace('lucas@portfolio-sh:~$ ', '')}</span>
                   ) : line.startsWith('Erro:') ? (
                     <span className="text-red-400">{line}</span>
                   ) : line.startsWith('[SUCCESS]') ? (
-                    <span className="text-emerald-300 font-bold">{line}</span>
+                    <span className="text-blue-300 font-bold">{line}</span>
                   ) : line.startsWith('🔓') || line.startsWith('🏆') ? (
                     <span className="text-amber-400 font-bold">{line}</span>
                   ) : line.startsWith('🧬') || line.startsWith('💻') ? (
-                    <span className="text-emerald-400 font-medium">{line}</span>
+                    <span className="text-blue-400 font-medium">{line}</span>
                   ) : (
                     line
                   )}
@@ -4195,7 +4165,7 @@ const ShellFilesSection = ({
             </div>
 
             <form onSubmit={handleTerminalSubmit} className="flex items-center gap-2 border-t border-white/10 pt-4 mt-2">
-              <span className="text-sm font-mono text-emerald-400 font-bold select-none shrink-0">lucas@portfolio-sh:~$</span>
+              <span className="text-sm font-mono text-blue-400 font-bold select-none shrink-0">lucas@portfolio-sh:~$</span>
               <input
                 type="text"
                 autoComplete="off"
@@ -4203,9 +4173,9 @@ const ShellFilesSection = ({
                 value={terminalInput}
                 onChange={(e) => setTerminalInput(e.target.value)}
                 placeholder="Ex: help, whoami, run civico.sh..."
-                className="flex-1 bg-transparent border-0 font-mono text-sm text-emerald-100 focus:outline-none focus:ring-0 p-0 placeholder-emerald-100/20 caret-emerald-400"
+                className="flex-1 bg-transparent border-0 font-mono text-sm text-blue-100 focus:outline-none focus:ring-0 p-0 placeholder-blue-100/20 caret-blue-400"
               />
-              <span className="animate-pulse w-2 h-4 bg-emerald-400 inline-block shrink-0" />
+              <span className="animate-pulse w-2 h-4 bg-blue-400 inline-block shrink-0" />
             </form>
          </div>
       </motion.div>
@@ -4217,11 +4187,10 @@ const sectionIdToPlainId = (section: SectionId): string => {
   switch (section) {
     case 'home': return 'inicio';
     case 'life': return 'sobre';
+    case 'methodology': return 'methodology';
     case 'projects': return 'projetos';
-    case 'computational': return 'computacional';
-    case 'robotics': return 'robotica';
-    case 'gamification': return 'gamificacao';
-    case 'tech': return 'ti';
+    case 'iot': return 'iot';
+    case 'students': return 'alunos';
     case 'utfpr': return 'utfpr';
     case 'scripts': return 'scripts';
     default: return 'inicio';
@@ -4234,7 +4203,15 @@ export default function App() {
   const [hoveredSection, setHoveredSection] = useState<SectionId | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isIFrameSection = ['utfpr'].includes(activeSection);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    try {
+      const saved = localStorage.getItem('lucas-leniar-theme');
+      if (saved !== null) return saved === 'true';
+      return false; // Default to light mode for better legibility
+    } catch {
+      return false;
+    }
+  });
 
   const [achievements, setAchievements] = useState<{ easterEgg: boolean; nightOwl: boolean; sysadmin: boolean; inquisitive: boolean; computational: boolean; robotics: boolean }>(() => {
     try {
@@ -4394,196 +4371,36 @@ export default function App() {
 
   return (
     <FlashcardContext.Provider value={{ onFlip: handleFlashcardFlip }}>
-      <div className={`flex flex-col md:flex-row h-screen w-full font-sans overflow-hidden transition-colors duration-300 selection:bg-emerald-500/20 selection:text-emerald-600 relative ${
-        isDarkMode ? 'bg-[#080c0f] text-slate-100' : 'bg-[#fafcfc] text-[#1a1a1a]'
+      <div className={`flex flex-col md:flex-row h-screen w-full font-sans overflow-hidden transition-colors duration-300 selection:bg-blue-500/20 selection:text-blue-600 relative ${
+          isDarkMode ? 'bg-[#111827] text-slate-100' : 'bg-white text-slate-800'
       }`}>
       {/* Background Decorators */}
-      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden mix-blend-screen transition-opacity duration-1000">
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden transition-opacity duration-1000">
         <NetworkBackground isDarkMode={isDarkMode} />
-        <div className={`absolute w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] rounded-full blur-[120px] top-[-10%] left-[-10%] opacity-30 md:opacity-40 transition-colors duration-1000 ${isDarkMode ? 'bg-emerald-500/15' : 'bg-emerald-400/20'}`} />
-        <div className={`absolute w-[30vw] h-[30vw] max-w-[500px] max-h-[500px] rounded-full blur-[100px] bottom-[-5%] right-[-5%] opacity-20 md:opacity-30 transition-colors duration-1000 ${isDarkMode ? 'bg-blue-500/10' : 'bg-blue-400/20'}`} />
+        <div className={`hidden md:block absolute w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] rounded-full blur-[120px] top-[-10%] left-[-10%] opacity-30 md:opacity-40 transition-colors duration-1000 ${isDarkMode ? 'bg-blue-500/15' : 'bg-blue-400/20'}`} />
+        <div className={`hidden md:block absolute w-[30vw] h-[30vw] max-w-[500px] max-h-[500px] rounded-full blur-[100px] bottom-[-5%] right-[-5%] opacity-20 md:opacity-30 transition-colors duration-1000 ${isDarkMode ? 'bg-blue-500/10' : 'bg-blue-400/20'}`} />
       </div>
 
       {/* Mobile Header Bar */}
       {!maximizedSection && (
         <div className={`md:hidden flex items-center justify-between px-5 py-4 border-b shrink-0 z-30 transition-colors duration-300 ${
-          isDarkMode ? 'bg-[#0f151a] border-white/5 text-white' : 'bg-[#fcfcfc] border-black/5 text-black'
+          isDarkMode ? 'bg-slate-900 border-white/5 text-white' : 'bg-white border-black/5 text-black'
         }`}>
           <div>
-            <h1 className={`text-md font-bold tracking-tighter ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>LUCAS LENIAR</h1>
-            <p className={`text-[8px] uppercase tracking-[0.15em] font-mono leading-none ${isDarkMode ? 'text-emerald-400/40' : 'text-black/40'}`}>Systems Architect & Educator</p>
+            <h1 className={`text-md font-bold tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>LUCAS LENIAR</h1>
+            <p className={`text-[8px] uppercase tracking-[0.15em] font-mono leading-none ${isDarkMode ? 'text-blue-400/40' : 'text-black/40'}`}>Tecnologia & Educação Prática</p>
           </div>
-          <button
-            onClick={() => setIsMobileMenuOpen(true)}
-            className={`p-2.5 rounded-lg cursor-pointer transition-colors ${
-              isDarkMode ? 'hover:bg-white/5 text-emerald-400' : 'hover:bg-black/5 text-emerald-650'
-            }`}
-            title="Abrir Menu"
-          >
-            <Menu size={22} />
-          </button>
         </div>
       )}
-
-      {/* Mobile Drawer Navigation overlay */}
-      <AnimatePresence>
-        {isMobileMenuOpen && !maximizedSection && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black z-40 md:hidden"
-            />
-            {/* Drawer container */}
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-              className={`fixed top-0 left-0 bottom-0 w-72 max-w-[85vw] z-50 flex flex-col py-6 shadow-2xl md:hidden ${
-                isDarkMode ? 'bg-[#0a0f12] border-r border-white/5 text-slate-100' : 'bg-white border-r border-black/5 text-[#1a1a1a]'
-              }`}
-            >
-              <div className="px-6 mb-8 flex items-center justify-between">
-                <div>
-                  <h1 className={`text-lg font-bold tracking-tighter ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>LUCAS LENIAR</h1>
-                  <p className={`text-[9px] uppercase tracking-[0.15em] font-mono ${isDarkMode ? 'text-emerald-400/40' : 'text-black/40'}`}>Systems Architect & Educator</p>
-                </div>
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`p-2 rounded-lg cursor-pointer transition-colors ${
-                    isDarkMode ? 'hover:bg-white/5 text-white/60' : 'hover:bg-black/5 text-black/60'
-                  }`}
-                  title="Fechar Menu"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              <div className="flex-1 space-y-1.5 px-3 overflow-y-auto">
-                {SECTIONS.map((section) => (
-                  <a
-                    key={section.id}
-                    href={`#${sectionIdToPlainId(section.id)}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleSectionChange(section.id);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    onMouseEnter={() => setHoveredSection(section.id)}
-                    onMouseLeave={() => setHoveredSection(null)}
-                    aria-current={activeSection === section.id ? 'page' : undefined}
-                    aria-label={`Menu: ir para seção ${section.label}`}
-                    className={`w-full cursor-pointer flex items-center justify-start gap-4 px-3.5 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 ${
-                      activeSection === section.id 
-                        ? isDarkMode 
-                          ? 'bg-emerald-500/10 text-emerald-400 font-semibold' 
-                          : 'bg-emerald-500/10 text-emerald-600 font-semibold'
-                        : isDarkMode 
-                          ? 'text-white/50 hover:text-white/90 hover:bg-white/5' 
-                          : 'text-black/50 hover:text-black/90 hover:bg-black/5'
-                    }`}
-                  >
-                    <div className={`flex-shrink-0 transition-transform relative ${activeSection === section.id ? 'scale-110' : 'group-hover:scale-110'} ${
-                      activeSection === section.id ? 'text-emerald-500' : ''
-                    }`}>
-                      {section.icon}
-                      {section.id === 'gamification' && unlockedCount > 0 && (
-                        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-slate-900">
-                          {unlockedCount}
-                        </span>
-                      )}
-                      {section.id === 'computational' && (
-                        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-blue-550 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-slate-900">
-                          4
-                        </span>
-                      )}
-                      {section.id === 'projects' && (
-                        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-indigo-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-slate-900">
-                          4
-                        </span>
-                      )}
-                      {section.id === 'scripts' && (
-                        <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-slate-900">
-                          3
-                        </span>
-                      )}
-                    </div>
-                    <div className="font-semibold text-[13px] whitespace-nowrap tracking-tight text-left leading-tight z-10 flex items-center justify-between w-full pr-5">
-                      <span className="truncate">{section.label}</span>
-                    </div>
-                    {activeSection === section.id && (
-                      <div className="absolute right-3.5 z-10">
-                        <ChevronRight size={14} className={isDarkMode ? 'text-emerald-400' : 'text-emerald-600'} />
-                      </div>
-                    )}
-
-                    {/* Sweep loading hover effect */}
-                    {hoveredSection === section.id && (
-                      <div className="absolute bottom-0 left-0 w-full h-[2.5px] bg-emerald-500/10 overflow-hidden">
-                        <motion.div
-                          className="h-full bg-gradient-to-r from-emerald-500 via-emerald-300 to-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
-                          initial={{ x: "-100%" }}
-                          animate={{ x: "100%" }}
-                          transition={{ 
-                            repeat: Infinity, 
-                            duration: 1.2, 
-                            ease: "linear" 
-                          }}
-                          style={{ width: "100%" }}
-                        />
-                      </div>
-                    )}
-                  </a>
-                ))}
-              </div>
-
-              {/* Theme switcher */}
-              <div className={`px-4 py-3 border-t mx-3 mb-4 rounded-xl transition-all duration-300 ${isDarkMode ? 'border-white/5 bg-white/[0.01]' : 'border-black/5 bg-black/[0.01]'}`}>
-                <button
-                  onClick={() => setIsDarkMode(!isDarkMode)}
-                  className={`w-full flex items-center justify-start gap-3 p-2 rounded-lg transition-all duration-300 group cursor-pointer ${
-                    isDarkMode 
-                      ? 'text-emerald-400 hover:bg-white/5' 
-                      : 'text-black/60 hover:bg-black/5'
-                  }`}
-                  title={isDarkMode ? "Mudar para Modo Claro" : "Mudar para Modo Escuro"}
-                >
-                  <div className="flex-shrink-0 group-hover:scale-110 transition-transform">
-                    {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-                  </div>
-                  <div className="font-semibold text-xs tracking-tight text-left leading-tight">
-                    {isDarkMode ? 'Modo Claro' : 'Modo Escuro'}
-                  </div>
-                </button>
-              </div>
-
-              {/* Social icons */}
-              <div className={`px-6 space-y-4 pt-6 mt-2 border-t text-center ${isDarkMode ? 'border-white/5 text-white/20' : 'border-black/5 text-black/30'}`}>
-                 <div className="flex gap-4 justify-center">
-                    <a href="https://www.linkedin.com/in/lucasleniar/" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-emerald-400' : 'hover:text-emerald-650'}`}><Linkedin size={18} /></a>
-                    <a href="https://www.instagram.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-emerald-400' : 'hover:text-emerald-650'}`}><Instagram size={18} /></a>
-                    <a href="https://www.facebook.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-emerald-400' : 'hover:text-emerald-650'}`}><Facebook size={18} /></a>
-                    <a href="https://lucasleniar.com.br" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-emerald-400' : 'hover:text-emerald-650'}`}><Globe size={18} /></a>
-                 </div>
-                 <p className="text-[10px] font-mono">© {new Date().getFullYear()} ALL RIGHTS RESERVED</p>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
 
       {/* Desktop Sidebar Navigation */}
       {!maximizedSection && (
         <nav className={`hidden md:flex w-20 md:w-64 border-r flex-col py-8 transition-all duration-300 z-20 shrink-0 ${
-          isDarkMode ? 'bg-[#0f151a] border-white/5' : 'bg-[#fcfcfc] border-black/5'
+          isDarkMode ? 'bg-slate-900 border-white/5' : 'bg-white border-black/5'
         }`}>
           <div className="px-6 mb-12 hidden md:block">
-            <h1 className={`text-xl font-bold tracking-tighter ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>LUCAS LENIAR</h1>
-            <p className={`text-[10px] uppercase tracking-[0.2em] font-mono font-semibold ${isDarkMode ? 'text-emerald-400/40' : 'text-black/40'}`}>Systems Architect & Educator</p>
+            <h1 className={`text-xl font-bold tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>LUCAS LENIAR</h1>
+            <p className={`text-[10px] uppercase tracking-[0.2em] font-mono font-semibold ${isDarkMode ? 'text-blue-400/40' : 'text-black/40'}`}>Tecnologia & Educação Prática</p>
           </div>
 
           <div className="flex-1 space-y-2 px-3">
@@ -4599,37 +4416,37 @@ export default function App() {
                 onMouseLeave={() => setHoveredSection(null)}
                 aria-current={activeSection === section.id ? 'page' : undefined}
                 aria-label={`Menu: ir para seção ${section.label}`}
-                className={`w-full cursor-pointer flex items-center justify-start gap-3 px-3 py-3 rounded-lg transition-all duration-300 group relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 ${
+                className={`w-full cursor-pointer flex items-center justify-start gap-3 px-3 py-3 rounded-lg transition-all duration-300 group relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 ${
                   activeSection === section.id 
                     ? isDarkMode 
-                      ? 'bg-emerald-500/10 text-emerald-400' 
-                      : 'bg-emerald-500/10 text-emerald-600'
+                      ? 'bg-blue-500/10 text-blue-400' 
+                      : 'bg-blue-500/10 text-blue-600'
                     : isDarkMode 
                       ? 'text-white/40 hover:text-white/80 hover:bg-white/5' 
                       : 'text-black/40 hover:text-black/80 hover:bg-black/5'
                 }`}
               >
                 <div className={`flex-shrink-0 transition-transform relative ${activeSection === section.id ? 'scale-110' : 'group-hover:scale-110'} ${
-                  activeSection === section.id ? 'text-emerald-500' : ''
+                  activeSection === section.id ? 'text-blue-500' : ''
                 }`}>
                   {section.icon}
                   {section.id === 'gamification' && unlockedCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-[#0f151a]">
+                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-blue-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-slate-900">
                       {unlockedCount}
                     </span>
                   )}
                   {section.id === 'computational' && (
-                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-blue-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-[#0f151a]">
+                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-blue-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-slate-900">
                       4
                     </span>
                   )}
                   {section.id === 'projects' && (
-                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-indigo-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-[#0f151a]">
+                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-indigo-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-slate-900">
                       4
                     </span>
                   )}
                   {section.id === 'scripts' && (
-                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-[#0f151a]">
+                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-blue-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-slate-900">
                       3
                     </span>
                   )}
@@ -4639,15 +4456,15 @@ export default function App() {
                 </div>
                 {activeSection === section.id && (
                   <div className="absolute right-3 hidden md:block z-10">
-                    <ChevronRight size={14} className={isDarkMode ? 'text-emerald-400' : 'text-emerald-600'} />
+                    <ChevronRight size={14} className={isDarkMode ? 'text-blue-400' : 'text-blue-600'} />
                   </div>
                 )}
 
                 {/* Embedded High-tech sweep loading effect on hover */}
                 {hoveredSection === section.id && (
-                  <div className="absolute bottom-0 left-0 w-full h-[2.5px] bg-emerald-500/10 overflow-hidden">
+                  <div className="absolute bottom-0 left-0 w-full h-[2.5px] bg-blue-500/10 overflow-hidden">
                     <motion.div
-                      className="h-full bg-gradient-to-r from-emerald-500 via-emerald-300 to-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
+                      className="h-full bg-gradient-to-r from-blue-500 via-blue-300 to-blue-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
                       initial={{ x: "-100%" }}
                       animate={{ x: "100%" }}
                       transition={{ 
@@ -4669,7 +4486,7 @@ export default function App() {
               onClick={() => setIsDarkMode(!isDarkMode)}
               className={`w-full flex items-center justify-start gap-3 p-2 rounded-lg transition-all duration-300 group cursor-pointer ${
                 isDarkMode 
-                  ? 'text-emerald-400 hover:bg-white/5' 
+                  ? 'text-blue-400 hover:bg-white/5' 
                   : 'text-black/60 hover:bg-black/5'
               }`}
               title={isDarkMode ? "Mudar para Modo Claro" : "Mudar para Modo Escuro"}
@@ -4685,10 +4502,10 @@ export default function App() {
 
           <div className={`px-6 space-y-4 pt-6 mt-2 border-t md:block hidden text-center ${isDarkMode ? 'border-white/5 text-white/20' : 'border-black/5 text-black/30'}`}>
              <div className="flex gap-4 justify-center">
-                <a href="https://www.linkedin.com/in/lucasleniar/" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-emerald-400' : 'hover:text-emerald-650'}`}><Linkedin size={18} /></a>
-                <a href="https://www.instagram.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-emerald-400' : 'hover:text-emerald-650'}`}><Instagram size={18} /></a>
-                <a href="https://www.facebook.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-emerald-400' : 'hover:text-emerald-650'}`}><Facebook size={18} /></a>
-                <a href="https://lucasleniar.com.br" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-emerald-400' : 'hover:text-emerald-650'}`}><Globe size={18} /></a>
+                <a href="https://www.linkedin.com/in/lucasleniar/" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-blue-400' : 'hover:text-blue-650'}`}><Linkedin size={18} /></a>
+                <a href="https://www.instagram.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-blue-400' : 'hover:text-blue-650'}`}><Instagram size={18} /></a>
+                <a href="https://www.facebook.com/lucasmercerl/" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-blue-400' : 'hover:text-blue-650'}`}><Facebook size={18} /></a>
+                <a href="https://lucasleniar.com.br" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isDarkMode ? 'hover:text-blue-400' : 'hover:text-blue-650'}`}><Globe size={18} /></a>
              </div>
              <p className="text-[10px] font-mono">© {new Date().getFullYear()} ALL RIGHTS RESERVED</p>
           </div>
@@ -4696,7 +4513,7 @@ export default function App() {
       )}
 
       {/* Main Content Area */}
-      <main ref={mainRef} className={`flex-1 relative flex flex-col min-h-0 overflow-y-auto`}>
+      <main ref={mainRef} className={`flex-1 relative flex flex-col min-h-0 overflow-y-auto pb-16 md:pb-0`}>
         <motion.div 
           className="absolute inset-0 z-0 opacity-[0.04] dark:opacity-[0.06] pointer-events-none" 
           animate={{
@@ -4723,25 +4540,21 @@ export default function App() {
               <section id="sobre" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5">
                 <LifeSection isDarkMode={isDarkMode} />
               </section>
+              <section id="methodology" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5">
+                <ComputationalThinking isDarkMode={isDarkMode} onUnlockComputational={() => unlockAchievement('computational')} />
+              </section>
               <section id="projetos" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5">
                 <ProjectsSection isDarkMode={isDarkMode} />
               </section>
-              <section id="gamificacao" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5">
-                <GamificationSection isDarkMode={isDarkMode} achievements={achievements} />
+              <section id="iot" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5 flex flex-col justify-center">
+                <IoTSection isDarkMode={isDarkMode} />
               </section>
-              <section id="computacional" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5">
-                <ComputationalThinking isDarkMode={isDarkMode} onUnlockComputational={() => unlockAchievement('computational')} />
-              </section>
-              <section id="robotica" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5">
+              <section id="alunos" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5">
                 <RoboticsSection isDarkMode={isDarkMode} onUnlockRobotics={() => unlockAchievement('robotics')} />
-              </section>
-              <section id="ti" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5">
-                <ITSection isDarkMode={isDarkMode} onUnlockSysAdmin={() => unlockAchievement('sysadmin')} />
               </section>
               <section id="utfpr" className="h-[100dvh] md:h-screen flex flex-col p-4 md:p-12 border-b border-black/5 dark:border-white/5">
                 <IFrameSection isActiveSection={activeSection === 'utfpr'} url="https://utfpr.lucasleniar.com.br/" title="UTFPR" isMaximized={false} onToggleMaximize={() => setMaximizedSection('utfpr')} isDarkMode={isDarkMode} />
               </section>
-
               <section id="scripts" className="min-h-screen flex flex-col p-4 md:p-12">
                 <ShellFilesSection isMaximized={false} onToggleMaximize={() => setMaximizedSection('scripts')} isDarkMode={isDarkMode} />
               </section>
@@ -4749,11 +4562,11 @@ export default function App() {
           </div>
         </div>
 
-        <div className="absolute top-4 right-4 w-16 h-16 border-t flex justify-end items-start border-r border-emerald-500/30 pointer-events-none transition-colors duration-300">
-          <div className="w-1.5 h-1.5 bg-emerald-500/50 -mt-[1px] -mr-[1px]" />
+        <div className="absolute top-4 right-4 w-16 h-16 border-t flex justify-end items-start border-r border-blue-500/30 pointer-events-none transition-colors duration-300">
+          <div className="w-1.5 h-1.5 bg-blue-500/50 -mt-[1px] -mr-[1px]" />
         </div>
-        <div className="absolute bottom-4 left-4 w-16 h-16 border-b flex justify-start items-end border-l border-emerald-500/30 pointer-events-none transition-colors duration-300">
-          <div className="w-1.5 h-1.5 bg-emerald-500/50 -mb-[1px] -ml-[1px]" />
+        <div className="absolute bottom-4 left-4 w-16 h-16 border-b flex justify-start items-end border-l border-blue-500/30 pointer-events-none transition-colors duration-300">
+          <div className="w-1.5 h-1.5 bg-blue-500/50 -mb-[1px] -ml-[1px]" />
         </div>
       </main>
 
@@ -4764,29 +4577,62 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* Gamification Toast */}
-      <AnimatePresence>
-        {showToast && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            className={`fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[100] flex items-center gap-4 p-4 pr-6 rounded-2xl shadow-2xl border ${
-              isDarkMode ? 'bg-[#11161b] border-emerald-500/30 text-white' : 'bg-white border-emerald-200 text-slate-800'
-            }`}
-          >
-            <div className="text-4xl drop-shadow-md">{showToast.icon}</div>
-            <div>
-              <div className="text-[10px] font-mono font-bold text-emerald-500 uppercase tracking-widest mb-1">
-                Conquista Desbloqueada!
-              </div>
-              <div className="font-serif font-bold text-lg">
-                {showToast.title}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      
+
+      {/* Mobile Bottom Navigation Bar */}
+      {!maximizedSection && (
+        <div style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} className={`md:hidden fixed bottom-0 left-0 right-0 z-40 border-t transition-colors duration-300 ${
+          isDarkMode ? 'bg-slate-900/90 backdrop-blur-lg border-white/10' : 'bg-white/90 backdrop-blur-lg border-black/10'
+        }`}>
+          <div className="flex items-center overflow-x-auto no-scrollbar px-2 pt-1 pb-2">
+            {SECTIONS.map((section) => (
+              <button
+                key={section.id}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSectionChange(section.id);
+                }}
+                className={`flex-shrink-0 flex flex-col items-center justify-center py-2 px-3 min-w-[4.5rem] group relative focus-visible:outline-none ${
+                  activeSection === section.id
+                    ? isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                    : isDarkMode ? 'text-white/50 hover:text-white/90' : 'text-black/50 hover:text-black/90'
+                }`}
+              >
+                <div className={`mb-1 transition-transform relative ${activeSection === section.id ? 'scale-110' : 'scale-100 group-hover:scale-110'}`}>
+                  {section.icon}
+                  {section.id === 'gamification' && unlockedCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-blue-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-slate-900">
+                      {unlockedCount}
+                    </span>
+                  )}
+                  {section.id === 'computational' && (
+                    <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-blue-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-slate-900">
+                      4
+                    </span>
+                  )}
+                  {section.id === 'projects' && (
+                     <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-indigo-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-slate-900">
+                      4
+                    </span>
+                  )}
+                  {section.id === 'scripts' && (
+                     <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-blue-500 text-white font-bold font-mono text-[8px] rounded-full flex items-center justify-center shadow-md border border-slate-900">
+                      3
+                    </span>
+                  )}
+                </div>
+                 <span className={`text-[9px] font-medium tracking-wide max-w-[64px] truncate text-center ${activeSection === section.id ? 'font-bold' : ''}`}>
+                   {section.label}
+                 </span>
+                {activeSection === section.id && (
+                  <motion.div layoutId="mobile-nav-indicator" className="absolute top-0 w-8 h-0.5 rounded-b-full bg-blue-500" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Maximized Overlay */}
       <AnimatePresence>
         {maximizedSection && (
@@ -4795,7 +4641,7 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className={`fixed inset-0 z-[200] flex flex-col ${isDarkMode ? 'bg-[#080c0f]' : 'bg-[#fafcfc]'}`}
+            className={`fixed inset-0 z-[200] flex flex-col ${isDarkMode ? 'bg-[#111827]' : 'bg-[#f4f7f6]'}`}
           >
             {maximizedSection === 'utfpr' && (
               <IFrameSection url="https://utfpr.lucasleniar.com.br/" title="UTFPR" isMaximized={true} onToggleMaximize={() => setMaximizedSection(null)} isDarkMode={isDarkMode} />
