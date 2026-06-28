@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Component, ErrorInfo, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Home, 
@@ -60,7 +60,7 @@ import { NetworkBackground } from './components/AnimatedNetworkBg';
 import { BugBreakoutGame } from './components/BugBreakoutGame';
 import { IoTSection } from './components/IoTSection';
 
-type SectionId = 'home' | 'life' | 'methodology' | 'projects' | 'iot' | 'students' | 'utfpr' | 'scripts';
+type SectionId = 'home' | 'life' | 'methodology' | 'projects' | 'iot' | 'students' | 'utfpr' | 'scripts' | 'gamification' | 'computational' | 'tech';
 
 interface Section {
   id: SectionId;
@@ -139,6 +139,7 @@ const ProfileImage = ({ isDarkMode, onClick }: { isDarkMode?: boolean; onClick?:
           className="w-full h-auto block transform-gpu z-0"
           style={{ transform: 'translateZ(40px) scaleX(-1)' }}
           referrerPolicy="no-referrer"
+          loading="lazy"
         />
         <div className="absolute inset-x-0 bottom-0 p-8 h-32 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10 flex items-end" style={{ transform: 'translateZ(50px)' }}>
           <p className="text-[11px] font-bold text-white uppercase tracking-[0.2em] font-mono leading-tight">
@@ -165,7 +166,42 @@ const Flashcard = ({ id, question, answer, isDarkMode, className = "mx-auto my-8
     }
   };
 
-  return null;
+  return (
+    <div className={`relative w-full max-w-sm cursor-pointer group flex justify-center ${className}`} onClick={handleFlip} style={{ perspective: '1000px' }}>
+      <motion.div
+        className="w-full h-40 sm:h-48 relative transition-all duration-500"
+        initial={false}
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        {/* Frente do Card */}
+        <div 
+          className={`absolute inset-0 w-full h-full p-6 flex flex-col justify-center items-center text-center rounded-2xl border-2 shadow-lg transition-colors ${isDarkMode ? 'bg-slate-800 border-blue-500/30 group-hover:border-blue-400' : 'bg-white border-blue-200 group-hover:border-blue-500'}`}
+          style={{ backfaceVisibility: 'hidden' }}
+        >
+          <div className={`text-xs uppercase font-bold tracking-widest mb-3 flex items-center justify-center gap-2
+            ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}
+          `}>
+            <Brain size={14} className={isFlipped ? "opacity-0" : "animate-pulse"} />
+            Flashcard
+          </div>
+          <p className={`font-medium ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`}>
+            {question}
+          </p>
+        </div>
+
+        {/* Verso do Card */}
+        <div 
+          className={`absolute inset-0 w-full h-full p-6 flex items-center justify-center text-center rounded-2xl border-2 shadow-lg ${isDarkMode ? 'bg-slate-900 border-blue-400/50' : 'bg-blue-50 border-blue-400'}`}
+          style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+        >
+          <p className={`font-bold text-sm sm:text-base ${isDarkMode ? 'text-blue-100' : 'text-blue-900'}`}>
+            {answer}
+          </p>
+        </div>
+      </motion.div>
+    </div>
+  );
 };
 
 
@@ -251,7 +287,8 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
           </span>
         </div>
         
-        <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter leading-[1.1] mb-4 ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>
+        <h1 className="sr-only">Lucas Leniar - Professor de Computação e Tecnologia Educacional em Ponta Grossa, Paraná</h1>
+        <div className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter leading-[1.1] mb-4 ${isDarkMode ? 'text-white' : 'text-slate-800'}`} aria-hidden="true">
           {typed1 || "\u00A0"}
           {typed1 === text1 && <br />}
           <span className={`whitespace-nowrap ${isDarkMode ? 'text-blue-400 font-serif italic' : 'text-blue-600 font-serif italic'}`}>
@@ -259,7 +296,7 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
           </span>
           {typed2 === text2 && '.'}
           <span className="font-mono text-blue-500 animate-[pulse_1s_infinite] ml-1 opacity-80 font-light">|</span>
-        </h1>
+        </div>
 
         {/* Mobile Profile Image */}
         <div className="md:hidden mb-6 flex justify-center w-full scale-[0.85]">
@@ -278,10 +315,10 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
 
         <div className={`text-base md:text-lg max-w-2xl leading-relaxed mb-4 border-l-2 pl-4 md:pl-6 ${isDarkMode ? 'border-blue-500/30 text-white/70' : 'border-blue-500/30 text-slate-600'}`}>
           <p className="mb-3">
-            Professor de Computação que transforma tecnologia complexa em <strong className={isDarkMode ? 'text-blue-400 font-semibold' : 'text-blue-600 font-semibold'}>aprendizado real.</strong>
+            Professor de Computação focado em <strong className={isDarkMode ? 'text-blue-400 font-semibold' : 'text-blue-600 font-semibold'}>transformar teoria em prática</strong>.
           </p>
           <p>
-            Guiando alunos do código às automações de <strong className={isDarkMode ? 'text-blue-400 font-semibold' : 'text-blue-600 font-semibold'}>IoT</strong>, mostrando a prática por trás da inovação.
+            Ensino através dos pilares do pensamento computacional — decomposição, padrões, abstração e algoritmos — levando alunos do código à aplicação real.
           </p>
         </div>
 
@@ -302,7 +339,7 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
             }[item.color as 'emerald' | 'blue' | 'purple' | 'orange'];
 
             return (
-              <motion.div
+              <motion.article
                 key={i}
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -326,7 +363,7 @@ const HomeSection = ({ onNavigate, isDarkMode, onUnlockEasterEgg, onOpenBugGame 
                     {item.desc}
                   </p>
                 </div>
-              </motion.div>
+              </motion.article>
             );
           })}
         </div>
@@ -587,7 +624,7 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
     <div className="flex flex-col pt-4 md:pt-12 uppercase tracking-tighter overflow-visible w-full">
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="max-w-6xl w-full mx-auto px-2 mb-8 md:mb-12 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
         <div>
-          <h2 className={`text-3xl md:text-5xl font-black mb-3 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Metodologia & Pensamento Computacional</h2>
+          <h2 className={`text-3xl md:text-5xl font-black mb-3 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Pensamento computacional</h2>
           <p className={`max-w-2xl uppercase text-[10px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-blue-400' : 'text-black/30'}`}>Os 4 pilares para resolver qualquer problema tecnológico e educacional.</p>
         </div>
 
@@ -934,40 +971,7 @@ const ComputationalThinking = ({ isDarkMode, onUnlockComputational }: { isDarkMo
           </AnimatePresence>
         </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          className={`mt-10 p-6 md:p-8 rounded-3xl border text-left flex flex-col items-start shadow-xl ${isDarkMode ? 'bg-slate-900 border-white/5' : 'bg-slate-50 border-slate-200'}`}
-        >
-          <span className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-widest text-blue-500 bg-blue-500/10 border border-blue-500/20 rounded-full mb-4 inline-block">
-            Módulo Educacional
-          </span>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
-            {[
-              { id: 1, topic: 'Decomposição de Desafios', dur: '12h', xp: '+250 XP', active: true },
-              { id: 2, topic: 'Abstração Lógica', dur: '8h', xp: '+180 XP', active: true },
-              { id: 3, topic: 'Criação de Algoritmos', dur: '16h', xp: '+300 XP', active: gameState === 'success' },
-              { id: 4, topic: 'Identificação de Padrões', dur: '6h', xp: '+120 XP', active: false },
-            ].map((aula) => (
-              <div key={aula.id} className={`p-4 rounded-xl border flex flex-col justify-between h-32 transition-all ${
-                aula.active 
-                ? (isDarkMode ? 'bg-blue-500/10 border-blue-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]' : 'bg-blue-50 border-blue-300 shadow-md') 
-                : (isDarkMode ? 'bg-black/20 border-white/5 opacity-60' : 'bg-white opacity-60 border-slate-200')
-              }`}>
-                <div className="flex justify-between items-start mb-2">
-                  <span className={`text-[9px] font-mono font-bold uppercase ${aula.active ? 'text-blue-500' : 'text-slate-400'}`}>Aula {aula.id}</span>
-                  {aula.active && <span className="text-[9px] font-mono font-bold bg-blue-500/20 text-blue-500 px-1.5 py-0.5 rounded">{aula.xp}</span>}
-                </div>
-                <strong className={`text-sm leading-snug tracking-tight font-sans ${isDarkMode ? 'text-white/90' : 'text-slate-800'}`}>{aula.topic}</strong>
-                <div className="flex items-center gap-1.5 mt-auto pt-2">
-                  <span className={`w-1.5 h-1.5 rounded-full ${aula.active ? 'bg-blue-500 animate-pulse' : 'bg-slate-400'}`} />
-                  <span className={`text-[9px] uppercase font-mono tracking-widest ${isDarkMode ? 'text-white/40' : 'text-slate-400'}`}>{aula.active ? 'COMPLETO' : 'PENDENTE'}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+
 
       </div>
     </div>
@@ -1316,7 +1320,7 @@ void loop() {
         {/* Header */}
         <div className="flex flex-col md:flex-row items-center gap-6 justify-between px-1 mb-8 md:mb-12">
           <div>
-            <h2 className={`text-3xl md:text-5xl font-black mb-3 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Projetos com Alunos</h2>
+            <h2 className={`text-3xl md:text-5xl font-black mb-3 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Robótica educacional</h2>
             <p className={`max-w-2xl uppercase text-[10px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-blue-400' : 'text-black/30'}`}>Transformando teoria em movimento e inovação.</p>
           </div>
           <Flashcard 
@@ -1837,41 +1841,7 @@ void loop() {
         </div>
 
         {/* Gamified Classes Tracker */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          className={`mt-10 p-6 md:p-8 rounded-3xl border text-left flex flex-col items-start shadow-xl ${isDarkMode ? 'bg-slate-900 border-white/5' : 'bg-slate-50 border-slate-200'}`}
-        >
-          <span className="px-3 py-1 text-[9px] font-mono font-bold uppercase tracking-widest text-[#10b981] bg-blue-500/10 border border-blue-500/20 rounded-full mb-4 inline-block">
-            Módulo Educacional
-          </span>
-          <h3 className={`text-xl md:text-2xl font-bold font-serif italic mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Aulas Ministradas: Robótica Educacional</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
-            {[
-              { id: 1, topic: 'Protocolos de E/S', dur: '8h', xp: '+150 XP', active: true },
-              { id: 2, topic: 'Atuadores: Blink & Motores', dur: '10h', xp: '+200 XP', active: true },
-              { id: 3, topic: 'Sensores de Ambiente', dur: '12h', xp: '+250 XP', active: isRunning },
-              { id: 4, topic: 'Projeto Final Integrado', dur: '20h', xp: '+400 XP', active: false },
-            ].map(aula => (
-              <div key={aula.id} className={`p-4 rounded-xl border flex flex-col justify-between h-32 transition-all ${
-                aula.active 
-                ? (isDarkMode ? 'bg-blue-500/10 border-blue-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]' : 'bg-blue-50 border-blue-300 shadow-md') 
-                : (isDarkMode ? 'bg-black/20 border-white/5 opacity-60' : 'bg-white opacity-60 border-slate-200')
-              }`}>
-                <div className="flex justify-between items-start mb-2">
-                  <span className={`text-[9px] font-mono font-bold uppercase ${aula.active ? 'text-blue-500' : 'text-slate-400'}`}>Aula {aula.id}</span>
-                  {aula.active && <span className="text-[9px] font-mono font-bold bg-blue-500/20 text-blue-500 px-1.5 py-0.5 rounded">{aula.xp}</span>}
-                </div>
-                <strong className={`text-sm leading-snug tracking-tight font-sans ${isDarkMode ? 'text-white/90' : 'text-slate-800'}`}>{aula.topic}</strong>
-                <div className="flex items-center gap-1.5 mt-auto pt-2">
-                  <span className={`w-1.5 h-1.5 rounded-full ${aula.active ? 'bg-blue-500 animate-pulse' : 'bg-slate-400'}`} />
-                  <span className={`text-[9px] uppercase font-mono tracking-widest ${isDarkMode ? 'text-white/40' : 'text-slate-400'}`}>{aula.active ? 'COMPLETO' : 'PENDENTE'}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+
 
       </motion.div>
     </div>
@@ -3573,7 +3543,7 @@ const ProjectsSection = ({ isDarkMode }: { isDarkMode: boolean }) => {
       
       {/* Block Header */}
       <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mb-10 text-center md:text-left">
-        <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Portfólio de Projetos</h2>
+        <h2 className={`text-3xl md:text-5xl font-bold tracking-tight mb-4 italic font-serif ${isDarkMode ? 'text-white' : 'text-black'}`}>Desenvolvimento de software</h2>
         <p className={`max-w-xl uppercase text-[10px] sm:text-[11px] tracking-[0.2em] font-mono font-bold ${isDarkMode ? 'text-blue-400' : 'text-black/40'}`}>
           Exploração visual dos meus trabalhos integrando tecnologia, educação e infraestrutura.
         </p>
@@ -4197,7 +4167,37 @@ const sectionIdToPlainId = (section: SectionId): string => {
   }
 };
 
+class AppErrorBoundary extends React.Component<{children: ReactNode}, {hasError: boolean, error: any}> {
+  state = { hasError: false, error: null };
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error("Caught error in App:", error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '2rem', backgroundColor: '#fee2e2', color: '#991b1b', height: '100vh', fontFamily: 'monospace' }}>
+          <h2>Application Error</h2>
+          <pre>{String(this.state.error)}</pre>
+        </div>
+      );
+    }
+    // @ts-ignore
+    return this.props.children;
+  }
+}
+
 export default function App() {
+  return (
+    <AppErrorBoundary>
+      <MainApp />
+    </AppErrorBoundary>
+  );
+}
+
+function MainApp() {
   const [activeSection, setActiveSection] = useState<SectionId>('home');
   const [maximizedSection, setMaximizedSection] = useState<SectionId | null>(null);
   const [hoveredSection, setHoveredSection] = useState<SectionId | null>(null);
@@ -4246,7 +4246,9 @@ export default function App() {
     setFlippedCards(prev => {
       if (!prev.includes(id)) {
         const next = [...prev, id];
-        localStorage.setItem('ll_flipped_cards', JSON.stringify(next));
+        try {
+          localStorage.setItem('ll_flipped_cards', JSON.stringify(next));
+        } catch (e) {}
         return next;
       }
       return prev;
@@ -4275,7 +4277,9 @@ export default function App() {
         setTimeout(() => setShowToast(null), 4000);
         
         const next = { ...prev, [id]: true };
-        localStorage.setItem('ll_achievements', JSON.stringify(next));
+        try {
+          localStorage.setItem('ll_achievements', JSON.stringify(next));
+        } catch (e) {}
         return next;
       }
       return prev;
@@ -4283,7 +4287,9 @@ export default function App() {
   };
 
   useEffect(() => {
-    localStorage.setItem('lucas-leniar-theme', String(isDarkMode));
+    try {
+      localStorage.setItem('lucas-leniar-theme', String(isDarkMode));
+    } catch (e) {}
     if (isDarkMode) {
       unlockAchievement('nightOwl');
     }
@@ -4309,7 +4315,9 @@ export default function App() {
           const matchingSection = SECTIONS.find(s => sectionIdToPlainId(s.id) === entry.target.id);
           if (matchingSection) {
             setActiveSection(matchingSection.id);
-            window.history.replaceState(null, '', '#' + sectionIdToPlainId(matchingSection.id));
+            try {
+              window.history.replaceState(null, '', '#' + sectionIdToPlainId(matchingSection.id));
+            } catch (e) {}
           }
         }
       });
@@ -4323,18 +4331,23 @@ export default function App() {
       if (section) observer.observe(section);
     });
 
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
-    }
+    try {
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'manual';
+      }
+    } catch (e) {}
+
     // Force scroll to top and reset hash on load
     setTimeout(() => {
       if (mainRef.current) {
         mainRef.current.scrollTop = 0;
       }
       window.scrollTo(0, 0);
-      if (window.location.hash !== '#inicio') {
-        window.history.replaceState(null, '', '#inicio');
-      }
+      try {
+        if (window.location.hash !== '#inicio') {
+          window.history.replaceState(null, '', '#inicio');
+        }
+      } catch (e) {}
     }, 50);
 
     return () => {
@@ -4352,7 +4365,9 @@ export default function App() {
     if (element) {
       isNavigatingRef.current = true;
       setActiveSection(section);
-      window.history.replaceState(null, '', '#' + id);
+      try {
+        window.history.replaceState(null, '', '#' + id);
+      } catch (e) {}
       element.scrollIntoView({ behavior: 'smooth' });
       
       // Unlock observer after smooth scroll completes (~1s)
@@ -4383,23 +4398,23 @@ export default function App() {
 
       {/* Mobile Header Bar */}
       {!maximizedSection && (
-        <div className={`md:hidden flex items-center justify-between px-5 py-4 border-b shrink-0 z-30 transition-colors duration-300 ${
+        <header className={`md:hidden flex items-center justify-between px-5 py-4 border-b shrink-0 z-30 transition-colors duration-300 ${
           isDarkMode ? 'bg-slate-900 border-white/5 text-white' : 'bg-white border-black/5 text-black'
         }`}>
           <div>
-            <h1 className={`text-md font-bold tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>LUCAS LENIAR</h1>
+            <span className={`text-md font-bold tracking-tighter block ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>LUCAS LENIAR</span>
             <p className={`text-[8px] uppercase tracking-[0.15em] font-mono leading-none ${isDarkMode ? 'text-blue-400/40' : 'text-black/40'}`}>Tecnologia & Educação Prática</p>
           </div>
-        </div>
+        </header>
       )}
 
       {/* Desktop Sidebar Navigation */}
       {!maximizedSection && (
-        <nav className={`hidden md:flex w-20 md:w-64 border-r flex-col py-8 transition-all duration-300 z-20 shrink-0 ${
+        <header className={`hidden md:flex w-20 md:w-64 border-r flex-col py-8 transition-all duration-300 z-20 shrink-0 ${
           isDarkMode ? 'bg-slate-900 border-white/5' : 'bg-white border-black/5'
         }`}>
           <div className="px-6 mb-12 hidden md:block">
-            <h1 className={`text-xl font-bold tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>LUCAS LENIAR</h1>
+            <span className={`text-xl font-bold tracking-tighter block ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>LUCAS LENIAR</span>
             <p className={`text-[10px] uppercase tracking-[0.2em] font-mono font-semibold ${isDarkMode ? 'text-blue-400/40' : 'text-black/40'}`}>Tecnologia & Educação Prática</p>
           </div>
 
@@ -4509,7 +4524,7 @@ export default function App() {
              </div>
              <p className="text-[10px] font-mono">© {new Date().getFullYear()} ALL RIGHTS RESERVED</p>
           </div>
-        </nav>
+        </header>
       )}
 
       {/* Main Content Area */}
@@ -4568,6 +4583,10 @@ export default function App() {
         <div className="absolute bottom-4 left-4 w-16 h-16 border-b flex justify-start items-end border-l border-blue-500/30 pointer-events-none transition-colors duration-300">
           <div className="w-1.5 h-1.5 bg-blue-500/50 -mb-[1px] -ml-[1px]" />
         </div>
+        
+        <footer className={`mt-auto text-center p-6 text-xs uppercase tracking-[0.2em] font-mono ${isDarkMode ? 'text-white/30' : 'text-black/30'}`}>
+          &copy; {new Date().getFullYear()} Lucas Leniar - Professor de Computação e Tecnologia Educacional. Ponta Grossa, Paraná.
+        </footer>
       </main>
 
       {/* Bug Breakout overlay */}
@@ -4581,7 +4600,7 @@ export default function App() {
 
       {/* Mobile Bottom Navigation Bar */}
       {!maximizedSection && (
-        <div style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} className={`md:hidden fixed bottom-0 left-0 right-0 z-40 border-t transition-colors duration-300 ${
+        <nav style={{ paddingBottom: 'env(safe-area-inset-bottom)' }} className={`md:hidden fixed bottom-0 left-0 right-0 z-40 border-t transition-colors duration-300 ${
           isDarkMode ? 'bg-slate-900/90 backdrop-blur-lg border-white/10' : 'bg-white/90 backdrop-blur-lg border-black/10'
         }`}>
           <div className="flex items-center overflow-x-auto no-scrollbar px-2 pt-1 pb-2">
@@ -4630,7 +4649,7 @@ export default function App() {
               </button>
             ))}
           </div>
-        </div>
+        </nav>
       )}
 
       {/* Maximized Overlay */}
