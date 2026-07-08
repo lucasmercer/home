@@ -4,6 +4,8 @@
  */
 
 import React, { useState, useEffect, useRef, Component, ErrorInfo, ReactNode } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate, Link } from 'react-router-dom';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Home, 
@@ -4191,14 +4193,56 @@ class AppErrorBoundary extends React.Component<{children: ReactNode}, {hasError:
 
 export default function App() {
   return (
-    <AppErrorBoundary>
-      <MainApp />
-    </AppErrorBoundary>
+    <HelmetProvider>
+      <BrowserRouter>
+        <AppErrorBoundary>
+          <MainApp />
+        </AppErrorBoundary>
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
 
 function MainApp() {
-  const [activeSection, setActiveSection] = useState<SectionId>('home');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const pathToSectionId = (path: string): SectionId => {
+    switch (path) {
+      case '/': return 'home';
+      case '/sobre': return 'life';
+      case '/educacao': return 'methodology';
+      case '/projetos': return 'projects';
+      case '/iot': return 'iot';
+      case '/alunos': return 'students';
+      case '/utfpr': return 'utfpr';
+      case '/scripts': return 'scripts';
+      case '/conquistas': return 'gamification';
+      case '/laboratorio': return 'computational';
+      case '/noc': return 'tech';
+      default: return 'home';
+    }
+  };
+
+  const sectionIdToPath = (section: SectionId): string => {
+    switch (section) {
+      case 'home': return '/';
+      case 'life': return '/sobre';
+      case 'methodology': return '/educacao';
+      case 'projects': return '/projetos';
+      case 'iot': return '/iot';
+      case 'students': return '/alunos';
+      case 'utfpr': return '/utfpr';
+      case 'scripts': return '/scripts';
+      case 'gamification': return '/conquistas';
+      case 'computational': return '/laboratorio';
+      case 'tech': return '/noc';
+      default: return '/';
+    }
+  };
+
+  const activeSection = pathToSectionId(location.pathname);
+
   const [maximizedSection, setMaximizedSection] = useState<SectionId | null>(null);
   const [hoveredSection, setHoveredSection] = useState<SectionId | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -4305,77 +4349,12 @@ function MainApp() {
     };
   }, []);
 
-  useEffect(() => {
-    const sections = SECTIONS.map(s => document.getElementById(sectionIdToPlainId(s.id)));
-    
-    const observer = new IntersectionObserver((entries) => {
-      if (isNavigatingRef.current) return;
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const matchingSection = SECTIONS.find(s => sectionIdToPlainId(s.id) === entry.target.id);
-          if (matchingSection) {
-            setActiveSection(matchingSection.id);
-            try {
-              window.history.replaceState(null, '', '#' + sectionIdToPlainId(matchingSection.id));
-            } catch (e) {}
-          }
-        }
-      });
-    }, {
-      root: mainRef.current,
-      threshold: 0.2, // Trigger when 20% of section is visible
-      rootMargin: "-10% 0px -40% 0px"
-    });
-
-    sections.forEach(section => {
-      if (section) observer.observe(section);
-    });
-
-    try {
-      if ('scrollRestoration' in window.history) {
-        window.history.scrollRestoration = 'manual';
-      }
-    } catch (e) {}
-
-    // Force scroll to top and reset hash on load
-    setTimeout(() => {
-      if (mainRef.current) {
-        mainRef.current.scrollTop = 0;
-      }
-      window.scrollTo(0, 0);
-      try {
-        if (window.location.hash !== '#inicio') {
-          window.history.replaceState(null, '', '#inicio');
-        }
-      } catch (e) {}
-    }, 50);
-
-    return () => {
-      sections.forEach(section => {
-        if (section) observer.unobserve(section);
-      });
-    };
-  }, []);
-
-  const isNavigatingRef = useRef(false);
-
   const handleSectionChange = (section: SectionId) => {
-    const id = sectionIdToPlainId(section);
-    const element = document.getElementById(id);
-    if (element) {
-      isNavigatingRef.current = true;
-      setActiveSection(section);
-      try {
-        window.history.replaceState(null, '', '#' + id);
-      } catch (e) {}
-      element.scrollIntoView({ behavior: 'smooth' });
-      
-      // Unlock observer after smooth scroll completes (~1s)
-      setTimeout(() => {
-        isNavigatingRef.current = false;
-      }, 1000);
-    }
+    navigate(sectionIdToPath(section));
     setMaximizedSection(null);
+    if (mainRef.current) {
+      mainRef.current.scrollTop = 0;
+    }
   };
 
   const mainRef = useRef<HTMLElement>(null);
@@ -4420,13 +4399,10 @@ function MainApp() {
 
           <div className="flex-1 space-y-2 px-3">
             {SECTIONS.map((section) => (
-              <a
+              <Link
                 key={section.id}
-                href={`#${sectionIdToPlainId(section.id)}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSectionChange(section.id);
-                }}
+                to={sectionIdToPath(section.id)}
+                onClick={() => setMaximizedSection(null)}
                 onMouseEnter={() => setHoveredSection(section.id)}
                 onMouseLeave={() => setHoveredSection(null)}
                 aria-current={activeSection === section.id ? 'page' : undefined}
@@ -4491,7 +4467,7 @@ function MainApp() {
                     />
                   </div>
                 )}
-              </a>
+              </Link>
             ))}
           </div>
 
@@ -4548,33 +4524,95 @@ function MainApp() {
         />
         
         <div className={`relative z-10 w-full transition-all duration-300`}>
-          <div className="flex flex-col">
-              <section id="inicio" className="min-h-screen flex items-center justify-center p-6 md:p-12 border-b border-black/5 dark:border-white/5">
-                <HomeSection onNavigate={handleSectionChange} isDarkMode={isDarkMode} onUnlockEasterEgg={() => unlockAchievement('easterEgg')} onOpenBugGame={() => setShowBugGame(true)} />
-              </section>
-              <section id="sobre" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5">
-                <LifeSection isDarkMode={isDarkMode} />
-              </section>
-              <section id="methodology" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5">
-                <ComputationalThinking isDarkMode={isDarkMode} onUnlockComputational={() => unlockAchievement('computational')} />
-              </section>
-              <section id="projetos" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5">
-                <ProjectsSection isDarkMode={isDarkMode} />
-              </section>
-              <section id="iot" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5 flex flex-col justify-center">
-                <IoTSection isDarkMode={isDarkMode} />
-              </section>
-              <section id="alunos" className="min-h-screen p-6 md:p-12 border-b border-black/5 dark:border-white/5">
-                <RoboticsSection isDarkMode={isDarkMode} onUnlockRobotics={() => unlockAchievement('robotics')} />
-              </section>
-              <section id="utfpr" className="h-[100dvh] md:h-screen flex flex-col p-4 md:p-12 border-b border-black/5 dark:border-white/5">
-                <IFrameSection isActiveSection={activeSection === 'utfpr'} url="https://utfpr.lucasleniar.com.br/" title="UTFPR" isMaximized={false} onToggleMaximize={() => setMaximizedSection('utfpr')} isDarkMode={isDarkMode} />
-              </section>
-              <section id="scripts" className="min-h-screen flex flex-col p-4 md:p-12">
-                <ShellFilesSection isMaximized={false} onToggleMaximize={() => setMaximizedSection('scripts')} isDarkMode={isDarkMode} />
-              </section>
-
-          </div>
+          <Routes>
+            <Route path="/" element={
+              <>
+                <Helmet>
+                  <title>Lucas Leniar | Professor de Computação e Tecnologia Educacional</title>
+                  <meta name="description" content="Lucas Leniar - Professor focado em ensino prático de tecnologia, robótica e pensamento computacional." />
+                </Helmet>
+                <section className="min-h-screen flex items-center justify-center p-6 md:p-12">
+                  <HomeSection onNavigate={handleSectionChange} isDarkMode={isDarkMode} onUnlockEasterEgg={() => unlockAchievement('easterEgg')} onOpenBugGame={() => setShowBugGame(true)} />
+                </section>
+              </>
+            } />
+            <Route path="/sobre" element={
+              <>
+                <Helmet>
+                  <title>Sobre Lucas Leniar | Trajetória e Experiência</title>
+                  <meta name="description" content="Conheça a trajetória de Lucas Leniar, sua experiência na área de tecnologia educacional e projetos de inovação." />
+                </Helmet>
+                <section className="min-h-screen p-6 md:p-12">
+                  <LifeSection isDarkMode={isDarkMode} />
+                </section>
+              </>
+            } />
+            <Route path="/educacao" element={
+              <>
+                <Helmet>
+                  <title>Ensino de Pensamento Computacional | Metodologia</title>
+                  <meta name="description" content="Metodologias aplicadas por Lucas Leniar no ensino de tecnologia e lógica no Paraná." />
+                </Helmet>
+                <section className="min-h-screen p-6 md:p-12">
+                  <ComputationalThinking isDarkMode={isDarkMode} onUnlockComputational={() => unlockAchievement('computational')} />
+                </section>
+              </>
+            } />
+            <Route path="/projetos" element={
+              <>
+                <Helmet>
+                  <title>Projetos Web e Sistemas | Lucas Leniar</title>
+                  <meta name="description" content="Portfólio de projetos web, sistemas e ferramentas escaláveis criadas por Lucas Leniar." />
+                </Helmet>
+                <section className="min-h-screen p-6 md:p-12">
+                  <ProjectsSection isDarkMode={isDarkMode} />
+                </section>
+              </>
+            } />
+            <Route path="/iot" element={
+              <>
+                <Helmet>
+                  <title>Projetos Práticos de IoT e Automação</title>
+                  <meta name="description" content="Explorando o mundo da Internet das Coisas (IoT), automação com Arduino e ESP32 em aplicações práticas." />
+                </Helmet>
+                <section className="min-h-screen p-6 md:p-12 flex flex-col justify-center">
+                  <IoTSection isDarkMode={isDarkMode} />
+                </section>
+              </>
+            } />
+            <Route path="/alunos" element={
+              <>
+                <Helmet>
+                  <title>Projetos com Alunos | Robótica e Inovação Escolar</title>
+                  <meta name="description" content="Trabalhos e projetos desenvolvidos por alunos em robótica educacional e feiras de inovação." />
+                </Helmet>
+                <section className="min-h-screen p-6 md:p-12">
+                  <RoboticsSection isDarkMode={isDarkMode} onUnlockRobotics={() => unlockAchievement('robotics')} />
+                </section>
+              </>
+            } />
+            <Route path="/utfpr" element={
+              <>
+                <Helmet>
+                  <title>Experiência UTFPR | Lucas Leniar</title>
+                </Helmet>
+                <section className="h-[100dvh] md:h-screen flex flex-col p-4 md:p-12">
+                  <IFrameSection isActiveSection={activeSection === 'utfpr'} url="https://utfpr.lucasleniar.com.br/" title="UTFPR" isMaximized={false} onToggleMaximize={() => setMaximizedSection('utfpr')} isDarkMode={isDarkMode} />
+                </section>
+              </>
+            } />
+            <Route path="/scripts" element={
+              <>
+                <Helmet>
+                  <title>Arquivos SH e Scripts | Lucas Leniar</title>
+                </Helmet>
+                <section className="min-h-screen flex flex-col p-4 md:p-12">
+                  <ShellFilesSection isMaximized={false} onToggleMaximize={() => setMaximizedSection('scripts')} isDarkMode={isDarkMode} />
+                </section>
+              </>
+            } />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </div>
 
         <div className="absolute top-4 right-4 w-16 h-16 border-t flex justify-end items-start border-r border-blue-500/30 pointer-events-none transition-colors duration-300">
@@ -4605,12 +4643,9 @@ function MainApp() {
         }`}>
           <div className="flex items-center overflow-x-auto no-scrollbar px-2 pt-1 pb-2">
             {SECTIONS.map((section) => (
-              <button
+              <Link
                 key={section.id}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSectionChange(section.id);
-                }}
+                to={sectionIdToPath(section.id)}
                 className={`flex-shrink-0 flex flex-col items-center justify-center py-2 px-3 min-w-[4.5rem] group relative focus-visible:outline-none ${
                   activeSection === section.id
                     ? isDarkMode ? 'text-blue-400' : 'text-blue-600'
@@ -4646,7 +4681,7 @@ function MainApp() {
                 {activeSection === section.id && (
                   <motion.div layoutId="mobile-nav-indicator" className="absolute top-0 w-8 h-0.5 rounded-b-full bg-blue-500" />
                 )}
-              </button>
+              </Link>
             ))}
           </div>
         </nav>
