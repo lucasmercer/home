@@ -1,11 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /api/
 
-User-agent: Googlebot
-Allow: /
-
-User-agent: Googlebot-Image
-Allow: /
-
-Sitemap: https://www.lucasleniar.com.br/sitemap.xml
+# Sitemap Oficial
+Sitemap: https://lucasleniar.com.br/sitemap.xml
