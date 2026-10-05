@@ -5,11 +5,30 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  cleanServiceWorkers();
   initTheme();
   initScrollProgress();
   initCopyButtons();
   initSystemPing();
 });
+
+/**
+ * 0. Limpeza preventiva de Service Worker e Caches no ambiente preview
+ */
+function cleanServiceWorkers() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const reg of registrations) {
+        reg.unregister();
+      }
+    }).catch(() => {});
+  }
+  if (typeof window !== 'undefined' && 'caches' in window) {
+    caches.keys().then((keys) => {
+      keys.forEach((key) => caches.delete(key));
+    }).catch(() => {});
+  }
+}
 
 /**
  * 1. Gerenciamento de Tema (Dark / Light) com persistência em localStorage
@@ -53,7 +72,14 @@ function updateThemeIcon(theme) {
  * 2. Indicador de Progresso de Rolagem da Página
  */
 function initScrollProgress() {
-  const progressBar = document.querySelector('.scroll-progress-bar');
+  let progressBar = document.querySelector('.scroll-progress-bar');
+  if (!progressBar) {
+    const container = document.createElement('div');
+    container.className = 'scroll-progress-container';
+    container.innerHTML = '<div class="scroll-progress-bar"></div>';
+    document.body.prepend(container);
+    progressBar = container.querySelector('.scroll-progress-bar');
+  }
   if (!progressBar) return;
 
   window.addEventListener('scroll', () => {
@@ -68,12 +94,12 @@ function initScrollProgress() {
  * 3. Utilitário de Cópia com Toast de Feedback
  */
 function initCopyButtons() {
-  const copyButtons = document.querySelectorAll('.copy-script-btn, .copy-text-btn');
+  const copyButtons = document.querySelectorAll('.copy-script-btn, .copy-text-btn, .copy-btn');
   
   copyButtons.forEach(btn => {
     btn.addEventListener('click', async () => {
       const targetId = btn.getAttribute('data-target');
-      const directText = btn.getAttribute('data-copy-text');
+      const directText = btn.getAttribute('data-copy-text') || btn.getAttribute('data-clipboard-text');
       let textToCopy = directText || '';
 
       if (!textToCopy && targetId) {
@@ -144,6 +170,9 @@ export function showToast(message) {
   setTimeout(() => {
     toast.classList.remove('show');
   }, 3200);
+}
+if (typeof window !== 'undefined') {
+  window.showToast = showToast;
 }
 
 

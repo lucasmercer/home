@@ -3,8 +3,6 @@
    Folha de Estilos Principal (CSS3 Puro / Semântico / Otimizado)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap');
-
 :root {
   /* Paleta Tema Escuro (Padrão Tecnológico & Executivo) */
   --bg-primary: #07090e;
@@ -142,7 +140,8 @@ body {
 }
 
 /* Link de Salto de Acessibilidade */
-.skip-link {
+.skip-link,
+.skip-to-content {
   position: absolute;
   top: -100px;
   left: 1rem;
@@ -155,7 +154,8 @@ body {
   transition: top var(--transition-fast);
   text-decoration: none;
 }
-.skip-link:focus {
+.skip-link:focus,
+.skip-to-content:focus {
   top: 1rem;
 }
 

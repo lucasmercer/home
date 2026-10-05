@@ -2,6 +2,7 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  base: './',
   build: {
     rollupOptions: {
       input: {
@@ -11,13 +12,13 @@ export default defineConfig({
         utfpr: resolve(__dirname, 'utfpr.html'),
         scripts: resolve(__dirname, 'scripts.html'),
         contato: resolve(__dirname, 'contato.html'),
+        notfound: resolve(__dirname, '404.html'),
       },
     },
   },
   server: {
     port: 3000,
     host: '0.0.0.0',
-    hmr: process.env.DISABLE_HMR !== 'true',
-    watch: process.env.DISABLE_HMR === 'true' ? null : {},
+    hmr: false,
   },
 });

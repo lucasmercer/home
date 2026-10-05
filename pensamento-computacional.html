@@ -34,20 +34,25 @@
     <meta name="twitter:description" content="Especialista em tecnologia educacional, pensamento computacional e robótica educacional para alunos." />
     <meta name="twitter:image" content="https://lucasleniar.com.br/lucas.png" />
     <!-- Favicon & PWA -->
-    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
-    <link rel="apple-touch-icon" href="/assets/favicon.svg" />
-    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <link rel="apple-touch-icon" href="./assets/favicon.svg" />
+    <link rel="manifest" href="./manifest.webmanifest" />
     <meta name="theme-color" content="#00d2ff" />
 
+    <!-- Google Fonts Otimizado (Preconnect & Preload para alta performance) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" />
+
     <!-- CSS Puro -->
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/responsive.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/responsive.css" />
 
     <!-- Scripts -->
-    <script type="module" src="/js/main.js"></script>
-    <script type="module" src="/js/navigation.js"></script>
-    <script type="module" src="/js/animations.js"></script>
-    <script type="module" src="/js/interactions.js"></script>
+    <script type="module" src="./js/main.js"></script>
+    <script type="module" src="./js/navigation.js"></script>
+    <script type="module" src="./js/animations.js"></script>
+    <script type="module" src="./js/interactions.js"></script>
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
@@ -109,7 +114,7 @@
     <!-- Header -->
     <header class="site-header">
       <div class="container header-inner">
-        <a href="/" class="brand-link" aria-label="Lucas Leniar - Página Inicial">
+        <a href="./" class="brand-link" aria-label="Lucas Leniar - Página Inicial">
           <div class="brand-icon">L</div>
           <div class="brand-text">
             <span class="brand-name">Lucas Leniar</span>
@@ -119,12 +124,12 @@
 
         <nav class="site-nav" id="site-nav" aria-label="Navegação Principal">
           <ul class="nav-list">
-            <li><a href="/" class="nav-link">Início</a></li>
-            <li><a href="/sobre.html" class="nav-link">Sobre</a></li>
-            <li><a href="/pensamento-computacional.html" class="nav-link active">Pensamento Computacional</a></li>
-            <li><a href="/utfpr.html" class="nav-link">UTFPR</a></li>
-            <li><a href="/scripts.html" class="nav-link">Scripts</a></li>
-            <li><a href="/contato.html" class="nav-link">Contato</a></li>
+            <li><a href="./" class="nav-link">Início</a></li>
+            <li><a href="./sobre.html" class="nav-link">Sobre</a></li>
+            <li><a href="./pensamento-computacional.html" class="nav-link active">Pensamento Computacional</a></li>
+            <li><a href="./utfpr.html" class="nav-link">UTFPR</a></li>
+            <li><a href="./scripts.html" class="nav-link">Scripts</a></li>
+            <li><a href="./contato.html" class="nav-link">Contato</a></li>
           </ul>
         </nav>
 
@@ -148,7 +153,7 @@
         <!-- Breadcrumbs -->
         <nav class="breadcrumbs" aria-label="Trilha de Navegação (Breadcrumb)">
           <ol class="breadcrumb-list">
-            <li class="breadcrumb-item"><a href="/" class="breadcrumb-link">Início</a></li>
+            <li class="breadcrumb-item"><a href="./" class="breadcrumb-link">Início</a></li>
             <li class="breadcrumb-item"><span class="breadcrumb-separator">/</span></li>
             <li class="breadcrumb-item"><span class="breadcrumb-current" aria-current="page">Pensamento Computacional</span></li>
           </ol>
@@ -259,6 +264,67 @@
             </div>
           </section>
 
+          <!-- Simulador Interativo dos 4 Pilares -->
+          <section aria-labelledby="simulador-title" style="margin-bottom: 5rem;">
+            <header class="section-header reveal-on-scroll">
+              <span class="section-eyebrow">Laboratório Prático</span>
+              <h2 id="simulador-title" class="section-title">Simulador dos 4 Pilares em Ação</h2>
+              <p class="section-subtitle">
+                Selecione um desafio real do cotidiano ou de robótica e navegue pelas 4 etapas lógicas para ver a modelagem computacional passo a passo.
+              </p>
+            </header>
+
+            <div class="card reveal-on-scroll" style="max-width: 900px; margin: 0 auto; padding: 2.5rem; border-color: var(--border-hover); box-shadow: var(--glow-cyan);">
+              <!-- Seletor do Problema -->
+              <div class="sim-problem-select">
+                <label for="sim-problem-selector" class="form-label" style="display: flex; align-items: center; gap: 0.5rem; color: var(--accent-cyan);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                  <span>Escolha o Problema de Estudo:</span>
+                </label>
+                <select id="sim-problem-selector" class="sim-select-control" aria-label="Selecione um problema para simulação">
+                  <option value="semaforo" selected>1. Semáforo Inteligente com Arduino (Trânsito Dinâmico)</option>
+                  <option value="robo">2. Robô Seguidor de Linha (Sensores Ópticos &amp; Motores)</option>
+                  <option value="escola">3. Gestão de Presença Escolar Automatizada (RFID &amp; Alerta)</option>
+                </select>
+              </div>
+
+              <!-- Abas dos 4 Pilares -->
+              <nav class="sim-tabs-nav" aria-label="Abas dos Pilares do Pensamento Computacional">
+                <button type="button" class="sim-tab-btn active" data-pillar="decomposicao">
+                  1. Decomposição
+                </button>
+                <button type="button" class="sim-tab-btn" data-pillar="padroes">
+                  2. Padrões
+                </button>
+                <button type="button" class="sim-tab-btn" data-pillar="abstracao">
+                  3. Abstração
+                </button>
+                <button type="button" class="sim-tab-btn" data-pillar="algoritmo">
+                  4. Algoritmo
+                </button>
+              </nav>
+
+              <!-- Painel Dinâmico de Conteúdo do Passo -->
+              <div class="sim-content-pane">
+                <h3 id="sim-step-title" class="sim-step-title">1. Decomposição (Semáforo Inteligente)</h3>
+                <p id="sim-step-desc" style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.25rem;">
+                  Dividimos o problema geral "Controlar cruzamento com tráfego dinâmico" em partes menores e isoladas.
+                </p>
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+                  <span style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem; text-transform: uppercase;">
+                    Detalhamento do Raciocínio Computacional:
+                  </span>
+                  <pre id="sim-step-example" style="font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; color: var(--accent-cyan); white-space: pre-wrap; margin: 0;">• Módulo 1: Leitura do sensor ultrassônico/presença na via secundária.
+• Módulo 2: Temporização do ciclo verde/amarelo/vermelho na via principal.
+• Módulo 3: Lógica de segurança para travessia de pedestres (botão).
+• Módulo 4: Acionamento físico dos LEDs e relés de potência.</pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <!-- Relação com a BNCC e Educação Básica -->
           <section class="section" aria-labelledby="bncc-title">
             <header class="section-header reveal-on-scroll">
@@ -334,7 +400,7 @@
               Organizo formações para professores, palestras sobre tecnologia educacional e oficinas práticas com robótica pedagógica no Paraná.
             </p>
             <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-              <a href="/contato.html" class="btn btn-primary">Solicitar Proposta de Formação</a>
+              <a href="./contato.html" class="btn btn-primary">Solicitar Proposta de Formação</a>
             </div>
           </div>
         </section>

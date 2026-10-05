@@ -21,6 +21,7 @@ function initMobileMenu() {
     
     navToggleBtn.setAttribute('aria-expanded', String(nextState));
     siteNav.classList.toggle('is-open', nextState);
+    document.body.classList.toggle('nav-locked', nextState);
     
     // Atualiza ícone do botão
     const toggleIcon = navToggleBtn.querySelector('svg');
@@ -58,15 +59,17 @@ function highlightActiveLink() {
   const navLinks = document.querySelectorAll('.nav-link');
 
   navLinks.forEach(link => {
-    const href = link.getAttribute('href');
-    if (!href) return;
+    const rawHref = link.getAttribute('href');
+    if (!rawHref) return;
+    const href = rawHref.replace(/^\.\//, '');
 
-    // Correspondência exata ou para raiz
-    if (
-      href === currentPath || 
-      (href === '/' && (currentPath === '/' || currentPath === '/index.html' || currentPath.endsWith('index.html'))) ||
-      (currentPath.endsWith(href) && href !== '/')
-    ) {
+    const isHome = href === '' || href === 'index.html';
+    const pathIsHome = currentPath === '/' || currentPath.endsWith('/') || currentPath.endsWith('/index.html') || currentPath.endsWith('/leniar/') || currentPath.endsWith('/leniar');
+
+    if (isHome && pathIsHome) {
+      link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
+    } else if (!isHome && (currentPath.endsWith(href) || currentPath.endsWith('/' + href))) {
       link.classList.add('active');
       link.setAttribute('aria-current', 'page');
     } else {
